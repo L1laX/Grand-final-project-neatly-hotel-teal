@@ -1,44 +1,77 @@
+"use client";
+
+import PrimaryBtn from "@/components/common/PrimaryBtn";
+import SecondaryBtn from "@/components/common/SecondaryBtn";
+import DatePicker from "@/components/ui/DatePicker";
+import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 export default function RoomDetail() {
   return (
     <main>
-      <h1>Room Detail</h1>
-
-      <div className="room-card">
+      {/* search-bar */}
+      <div className="search-bar bg-white shadow">
+        <div className="select-date flex flex-col justify-center gap-5 px-5 py-5 md:flex-row md:gap-10 md:px-56 md:py-10">
+          <div className=" date-checkin-checkout flex flex-col">
+            <p className=" font-sans text-base font-normal text-[#2a2e3f]">
+              Checkin - Checkout
+            </p>
+            <DatePickerWithRange />
+          </div>
+          <div className="room-guest-select flex flex-col">
+            <p className=" font-sans text-base font-normal text-[#2a2e3f]">
+              Room & Guests
+            </p>
+            <Select>
+              <SelectTrigger className="w-[180px] text-[#9AA1B9]">
+                <SelectValue placeholder="1 room, 2 quests" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="light">
+                  1 room, 2 quests *ใช้APIจากroom_id
+                </SelectItem>
+                <SelectItem value="dark">Dark</SelectItem>
+                <SelectItem value="system">System</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <SecondaryBtn btnName="Search" />
+        </div>
+      </div>{" "}
+      {/* room card */}
+      <div className="room-card bg-slate-400">
         <img
           className=" shadow-lg"
           src="https://placehold.co/450x320"
           alt="preview-image"
         />
+
         <div className="room-detail">
           <div>
-            <h1>Superior Garden View</h1>
-            <span>2 Guests | 2 Double bed | 32 sqm</span>
-            <p>
+            <h4>Superior Garden View</h4>
+            <body1>2 Guests | 2 Double bed | 32 sqm</body1>
+            <body1>
               Rooms (36sqm) with full garden views, 1 single bed, bathroom with
-              bathtub & shower.
-            </p>
+              bathtub & shower. 555
+            </body1>
           </div>
           <div>
-            <p>THB 3,100.00 เปลี่ยนสีจาก baseได้</p>
-            <h2>THB 2,500.00</h2>
+            <p className="font-sans text-base font-normal text-[#646D89] line-through">
+              THB 3,100.00
+            </p>
+            <h5>THB 2,500.00</h5>
             <p>Per Night</p>
             <p>(Including Taxes & Fees)</p>
           </div>
           <div>
             <p className=" visitlink">Room Detail</p>
-            <button className=" btn-primary btn-primary:hover btn-primary:visited">
-              Book Now
-            </button>
-
-            <button className=" btn-secondary ">Book Now</button>
-          </div>
-          <h4>Status</h4>
-          <div>
-            <p className="status-green">Vacant</p>
-            <p className="status-blue">Occupied</p>
-            <p className="status-red">Assign</p>
-            <p className="status-yellow">Inspected</p>
-            <p className="status-gray">out of Order</p>
+            <PrimaryBtn btnName="Book Now" />
           </div>
         </div>
       </div>
