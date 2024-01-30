@@ -15,7 +15,7 @@ export default function RoomDetail() {
             <span>2 Guests | 2 Double bed | 32 sqm</span>
             <p>
               Rooms (36sqm) with full garden views, 1 single bed, bathroom with
-              bathtub & shower.
+              bathtub & shower. 555
             </p>
           </div>
           <div>
