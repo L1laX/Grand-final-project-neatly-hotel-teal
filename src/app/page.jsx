@@ -1,7 +1,11 @@
+import PrimaryBtn from "@/components/common/PrimaryBtn";
+import SecondaryBtn from "@/components/common/SecondaryBtn";
+
 export default function Home() {
   return (
     <main>
-      <button className="btn-submit">Hello</button>
+      <PrimaryBtn btnName={"Hello"} />
+      <SecondaryBtn btnName={"World"} />
     </main>
   );
 }
