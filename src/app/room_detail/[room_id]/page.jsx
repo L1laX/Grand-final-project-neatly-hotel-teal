@@ -43,9 +43,7 @@ export default function RoomDetailById({ params }) {
               </div>
               <div className="box2-3 ">
                 <div className=" ">
-                  <h2 className=" flex  rounded border-2 border-white text-2xl ">
-                    Room Amenities
-                  </h2>
+                  <h2 className=" flex   text-2xl ">Room Amenities</h2>
                 </div>
 
                 <div className=" flex flex-row space-x-10">
