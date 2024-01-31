@@ -110,6 +110,9 @@
     .status-gray {
       @apply rounded bg-[#F0F1F8] px-1 py-3 text-sm font-medium text-[#6E7288];
     }
+    .bullet-text {
+      @apply text-base font-normal text-[#646D89];
+    }
   }
 
   .btn-primary {
