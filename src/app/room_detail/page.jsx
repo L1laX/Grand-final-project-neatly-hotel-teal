@@ -33,7 +33,7 @@ export default function RoomDetail() {
             <p className=" font-sans text-base font-normal text-[#2a2e3f]">
               Room & Guests
             </p>
-            {/* selection */}
+            {/* selection : map ตรงนี้ */}
             <Select>
               <SelectTrigger className="w-[180px] text-[#9AA1B9]">
                 <SelectValue placeholder="1 room, 2 quests" />
@@ -50,12 +50,12 @@ export default function RoomDetail() {
           <SecondaryBtn btnName="Search" />
         </div>
       </div>
-      {/* room card */}
+      {/* room card : map ตรงนี้ */}
       <div className="divide-y-2 divide-gray-300 lg:m-20">
         <div className="room-card flex flex-col justify-center gap-12 px-5 py-10 lg:flex-row">
           {/* เมื่อ click จะแสดง Popuup Room_Gallery */}
           <div
-            className=" h-[320px] w-[413px] cursor-pointer bg-slate-200"
+            className=" h-[320px] w-[413px] cursor-pointer rounded-md bg-slate-200"
             onClick={() => {
               setShowGallery(true);
             }}
