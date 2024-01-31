@@ -5,12 +5,15 @@ import Link from "next/link";
 import Image from "next/legacy/image";
 import bg from "/src/asset/background/login-page/bg.png";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 const Login = () => {
   const [data, setData] = useState({});
+  const router = useRouter();
   const handleClick = (e) => {
     e.preventDefault();
-    alert(JSON.stringify(data));
+    alert("hello");
     setData({});
+    router.push("/");
   };
   return (
     <div className="main-content relative flex">
