@@ -25,7 +25,7 @@ export default function RoomDetail() {
         <div className="select-date flex flex-col justify-center gap-5 px-5 py-5 md:flex-row md:gap-10 md:px-56 md:py-10">
           <div className=" date-checkin-checkout flex flex-col">
             <p className=" font-sans text-base font-normal text-[#2a2e3f]">
-              Checkin - Checkout
+              Checkin - Checkout +
             </p>
             <DatePickerWithRange />
           </div>
