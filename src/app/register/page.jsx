@@ -1,15 +1,83 @@
 "use client";
-
+import bg1 from "@/asset/background/register/bg1.jpg";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
-
+import Image from "next/image";
+import { useEffect, useState } from "react";
 const Register = () => {
+  const [fullName, setFullName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [passWord, setPassword] = useState("");
+  const [date, setDate] = useState("");
+  const [email, setEmail] = useState("");
+  const [idNumber, setIdNumber] = useState("");
+  const [country, setCountry] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [expriry, setExpriry] = useState("");
+  const [cardOwner, setCardOwner] = useState("");
+  const [cvcCvv, setCvcCvv] = useState("");
+
+  function getFullName(e) {
+    setFullName(e.target.value);
+    console.log(fullName);
+  }
+  function getUserName(e) {
+    setUserName(e.target.value);
+    console.log(userName);
+  }
+  function getPassword(e) {
+    setPassword(e.target.value);
+    console.log(passWord);
+  }
+  function getDate(e) {
+    setDate(e.target.value);
+    console.log(date);
+  }
+
+  function getEmail(e) {
+    setEmail(e.target.value);
+    console.log(email);
+  }
+
+  function getEmail(e) {
+    setEmail(e.target.value);
+    console.log(email);
+  }
+
+  function getIdNumber(e) {
+    setIdNumber(e.target.value);
+    console.log(idNumber);
+  }
+
+  function getCountry(e) {
+    setCountry(e.target.value);
+    console.log(country);
+  }
+
+  function getCard(e) {
+    setCardNumber(e.target.value);
+    console.log(cardNumber);
+  }
+
+  function getExpriry(e) {
+    setExpriry(e.target.value);
+    console.log(expriry);
+  }
+
+  function getCardOwner(e) {
+    setCardOwner(e.target.value);
+    console.log(cardOwner);
+  }
+  function getCvcCvv(e) {
+    setCvcCvv(e.target.value);
+    console.log(cvcCvv);
+  }
+
   return (
-    <div
-      className="flex h-[1500px] w-auto items-center justify-center  bg-black p-20 md:h-[1777px] md:w-auto"
-      style={{ backgroundImage: "url('your-background-image.jpg')" }}
-    >
-      {/* Form Header */}
-      <from className="  h-[1300px] items-center justify-center  rounded bg-slate-50  p-10  shadow md:h-[1626px] md:w-[1092px]   ">
+    <div className="flex h-[1500px] w-auto items-center justify-center   md:h-[1777px] md:w-auto">
+      <div className="relative  h-[1777px]    w-auto ">
+        <Image src={bg1} layout="" />
+      </div>
+      <from className="  absolute h-[1300px] items-center  justify-center rounded  bg-slate-50  p-10 shadow md:h-[1626px]  md:w-[1092px]  ">
         <div className=" md:flex-col">
           <h2 className="mb-4 text-start text-[50px] font-bold  md:mb-[50px] md:text-start">
             Register
@@ -24,6 +92,7 @@ const Register = () => {
               FullName
             </h1>
             <input
+              onChange={getFullName}
               type="text"
               id="text-input"
               name="text-input"
@@ -37,6 +106,7 @@ const Register = () => {
                 UserName
               </h1>
               <input
+                onChange={getUserName}
                 type="text"
                 id="text-input"
                 name="text-input"
@@ -48,6 +118,7 @@ const Register = () => {
                 password
               </h1>
               <input
+                onChange={getPassword}
                 type="text"
                 id="text-input"
                 name="text-input"
@@ -59,7 +130,8 @@ const Register = () => {
                 Date of Birth
               </h1>
               <input
-                type="text"
+                onChange={getDate}
+                type="date"
                 id="text-input"
                 name="text-input"
                 class="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px]"
@@ -71,6 +143,7 @@ const Register = () => {
                 Email
               </h1>
               <input
+                onChange={getEmail}
                 type="text"
                 id="text-input"
                 name="text-input"
@@ -82,6 +155,7 @@ const Register = () => {
                 ID Number
               </h1>
               <input
+                onChange={getIdNumber}
                 type="text"
                 id="text-input"
                 name="text-input"
@@ -93,6 +167,7 @@ const Register = () => {
                 Country
               </h1>
               <input
+                onChange={getCountry}
                 type="text"
                 id="text-input"
                 name="text-input"
@@ -110,12 +185,14 @@ const Register = () => {
             <div className="md:mb-[50px] md:flex-col">
               <h4 className=" text-sm">Credit Card</h4>
             </div>
+            <br></br>
             <div className="  gap-5   md:flex md:w-[932px]  md:items-center md:justify-center md:justify-between md:justify-items-center ">
               <div className="md:justify-center">
                 <h1 for="text-input" class="text-sm font-medium text-gray-600">
                   Card Number
                 </h1>
                 <input
+                  onChange={getCard}
                   type="text"
                   id="text-input"
                   name="text-input"
@@ -127,6 +204,7 @@ const Register = () => {
                   Expiry Date
                 </h1>
                 <input
+                  onChange={getExpriry}
                   type="text"
                   id="text-input"
                   name="text-input"
@@ -139,6 +217,7 @@ const Register = () => {
                   Card Owner
                 </h1>
                 <input
+                  onChange={getCardOwner}
                   type="text"
                   id="text-input"
                   name="text-input"
@@ -150,6 +229,7 @@ const Register = () => {
                   CVC/CVV
                 </h1>
                 <input
+                  onChange={getCvcCvv}
                   type="text"
                   id="text-input"
                   name="text-input"
@@ -164,7 +244,7 @@ const Register = () => {
               <PrimaryBtn btnName="Register" />
             </div>
             <br></br>
-            <span>Already have an account?</span>
+            <span className=" mr-3">Already have an account?</span>
             <a
               href="https://www.example.com"
               target="_blank"
