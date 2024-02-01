@@ -20,7 +20,7 @@ const columns = [
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "amount",
+    id: "roomType",
     label: "Room type",
     minWidth: 100,
     align: "right",
@@ -31,112 +31,28 @@ const columns = [
     label: "Bed type",
     minWidth: 100,
     align: "right",
-    format: (value) => value.toFixed(2),
+    format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "status",
     label: "Status",
     minWidth: 100,
     align: "right",
-    format: (value) => value.toFixed(2),
+    format: (value) => value.toLocaleString("en-US"),
   },
 ];
 
-function createData(name, guest, roomType, amount, bedType, checkIn, checkOut) {
-  return { name, guest, roomType, amount, bedType, checkIn, checkOut };
+function createData(roomNo, roomType, bedType, status) {
+  return {
+    roomNo,
+    roomType,
+    bedType,
+    status,
+  };
 }
 
 const rows = [
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
+  createData("001", "Superior Garden View", "Single Bed", "Occupied"),
 ];
 
 function RoomManagement() {
@@ -170,6 +86,7 @@ function RoomManagement() {
                       key={column.id}
                       align={column.align}
                       style={{ minWidth: column.minWidth }}
+                      className="bg-gray-200 font-bold"
                     >
                       {column.label}
                     </TableCell>
