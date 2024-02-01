@@ -30,27 +30,7 @@ export default function PopupGallery({ isGallery, onCloseGal }) {
             </div>
             <div className="content p-4 md:mx-20">
               {/* Carousel แบบ fullscreen */}
-              <div className=" px-5 md:px-0">
-                <Carousel>
-                  <CarouselContent>
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <CarouselItem key={index}>
-                        <div className="p-1">
-                          <Card>
-                            <CardContent className="flex aspect-square items-center justify-center p-6">
-                              <span className="text-4xl font-semibold">
-                                {index + 1}
-                              </span>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious />
-                  <CarouselNext />
-                </Carousel>
-              </div>
+              <div className=" px-5 md:px-0">{/* Carousel here */}</div>
             </div>
           </div>
         </div>

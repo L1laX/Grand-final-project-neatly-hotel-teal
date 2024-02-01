@@ -1,10 +1,6 @@
 import PopupBox from "@/components/common/PopupBox";
 import PopupGallery from "@/components/common/PopupGallery";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
-import { useState } from "react";
-
-// const [showContent, setShowContent] = useState(false);
-// const [showGallery, setShowGallery] = useState(false);
 
 export const RoomCard = ({
   roomitem,
@@ -15,6 +11,9 @@ export const RoomCard = ({
   roomprice,
   roomdisc,
 }) => {
+  // const [showContent, setShowContent] = useState(false);
+  // const [showGallery, setShowGallery] = useState(false);
+
   return (
     <>
       {/* room card : map ตรงนี้ */}
