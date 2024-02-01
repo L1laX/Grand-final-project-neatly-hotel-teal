@@ -2,6 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
+import Logo from "@/asset/logo/logo-light.svg";
 
 const Sidebar = () => {
   const sidebarItem = [
@@ -26,7 +28,7 @@ const Sidebar = () => {
   return (
     <div className="flex h-screen w-64 flex-col bg-[#2F3E35] px-4 pb-4 pt-8 text-white sm:h-screen">
       <div className="flex h-40 flex-col items-center justify-center px-4">
-        <h1 className=" text-xl font-semibold text-white">Nealty</h1>
+        <Image src={Logo}></Image>
 
         <p className="mt-5 text-sm text-green-500">Admin Panel Control</p>
       </div>

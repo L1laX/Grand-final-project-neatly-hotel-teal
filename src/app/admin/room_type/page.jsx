@@ -114,7 +114,7 @@ const RoomType = () => {
   return (
     <div className="flex flex-row bg-gray-100">
       <Sidebar />
-      <div className="felx w-full flex-col">
+      <div className=" w-full flex-col">
         <NavBar
           navName={"Room & Property"}
           button={true}
