@@ -1,3 +1,4 @@
+"use client";
 import UserFooter from "@/components/UserFooter";
 import UserNavbar from "@/components/UserNavbar";
 

@@ -5,7 +5,7 @@ const SecondaryBtn = ({ btnName, handleClick }) => {
     <button
       className="btn-secondary btn-secondary:hover btn-secondary:active btn-secondary:disabled cursor-pointer"
       onClick={handleClick}
-      >
+    >
       {btnName}
     </button>
   );
