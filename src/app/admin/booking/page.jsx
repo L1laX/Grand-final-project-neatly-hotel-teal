@@ -179,6 +179,7 @@ function CustomerBooking() {
                       key={column.id}
                       align={column.align}
                       style={{ minWidth: column.minWidth }}
+                      className="bg-gray-200 font-bold"
                     >
                       {column.label}
                     </TableCell>

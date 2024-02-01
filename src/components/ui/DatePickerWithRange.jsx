@@ -15,12 +15,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export function DatePickerWithRange({ className }) {
+export function DatePickerWithRange({ className, checkInOut }) {
   const [date, setDate] = useState({
     from: new Date(2022, 0, 20),
     to: addDays(new Date(2022, 0, 20), 20),
   });
-
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
@@ -29,7 +28,8 @@ export function DatePickerWithRange({ className }) {
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal",
+              checkInOut,
+              "justify-start text-left font-normal",
               !date && "text-muted-foreground",
             )}
           >
