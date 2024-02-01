@@ -10,9 +10,37 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RoomCard } from "@/components/common/RoomCard";
+import { useEffect, useState } from "react";
+
+const [data, setData] = useState(null);
+const [searchRoom, setSearchRoom] = useState(null);
 
 export default function RoomDetail() {
   const roomsType = ["1", "2", "3"];
+
+  const getRoomType = async () => {
+    try {
+      const response = await axios.get("/api/roomtype");
+      console.log(response.data.data);
+      setData(response.data.data);
+    } catch (error) {
+      console.log("Cannot Fetching Data");
+    }
+  };
+
+  const getSearchData = async () => {
+    try {
+      const response = await axios.get("/api/search/roomtype");
+      console.log(response.data.data);
+      setSearchRoom(response.data.data);
+    } catch (error) {
+      console.log("Cannot Fetching Data");
+    }
+  };
+
+  useEffect(() => {
+    getRoomType(), getSearchData(data);
+  }, [searchRoom]);
 
   return (
     <main>
