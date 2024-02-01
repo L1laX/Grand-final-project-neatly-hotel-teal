@@ -26,9 +26,9 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="flex h-screen w-64 flex-col bg-[#2F3E35] px-4 pb-4 pt-8 text-white sm:h-screen">
-      <div className="flex h-40 flex-col items-center justify-center px-4">
-        <Image src={Logo}></Image>
+    <div className="flex h-screen w-64 flex-col bg-[#2F3E35] px-4 pb-4 pt-8 text-white ">
+      <div className="flex h-40 flex-col items-center justify-center px-4 ">
+        <Image src={Logo} className="inline h-10 cursor-pointer" />
 
         <p className="mt-5 text-sm text-green-500">Admin Panel Control</p>
       </div>
@@ -40,7 +40,7 @@ const Sidebar = () => {
               <li>
                 <a
                   href={item.href}
-                  className="flex items-center gap-4 rounded-md px-4 py-2 hover:text-white"
+                  className="flex items-center gap-4 rounded-md px-4 py-2 text-gray-200 duration-500 hover:text-white"
                 >
                   <svg
                     className="h-4 w-4 text-gray-400"

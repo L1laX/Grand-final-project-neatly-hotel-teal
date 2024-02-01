@@ -17,7 +17,7 @@ const Login = () => {
   };
   return (
     <div className="main-content relative flex">
-      <div className="image absolute -z-10 md:static md:block md:w-[100rem]">
+      <div className="image absolute -z-10 sm:flex sm:flex-col sm:bg-neutral-600 md:static md:block md:w-[100rem]">
         <Image src={bg} />
       </div>
       <div className="login-form  m-7 flex w-full flex-col items-center gap-10 rounded-xl bg-[#f7f7fb] md:ml-24 md:mt-32 md:items-start">
