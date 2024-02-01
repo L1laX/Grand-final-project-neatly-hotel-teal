@@ -1,6 +1,7 @@
 import Image from "next/legacy/image";
 import CloseIcon from "@/asset/icons/close-outline.svg";
-import { Card, CardContent } from "@/components/ui/card";
+
+import BG from "@/asset/background/login-page/bg.png";
 import {
   Carousel,
   CarouselContent,
@@ -33,22 +34,21 @@ export default function PopupBox({ isVisible, onClose }) {
               <div className=" px-5 md:px-0">
                 <Carousel>
                   <CarouselContent>
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <CarouselItem key={index}>
-                        <div className="p-1">
-                          <Card>
-                            <CardContent className="flex aspect-square items-center justify-center p-6">
-                              <span className="text-4xl font-semibold">
-                                {index + 1}
-                              </span>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </CarouselItem>
-                    ))}
+                    <CarouselItem className="basis-1/3">
+                      <Image src={BG} />
+                    </CarouselItem>
+                    <CarouselItem className="basis-1/3">
+                      <Image src={BG} />
+                    </CarouselItem>
+                    <CarouselItem className="basis-1/3">
+                      <Image src={BG} />
+                    </CarouselItem>
+                    <CarouselItem className="basis-1/3">
+                      <Image src={BG} />
+                    </CarouselItem>
                   </CarouselContent>
-                  <CarouselPrevious />
                   <CarouselNext />
+                  <CarouselPrevious />
                 </Carousel>
               </div>
               <div className="content-detail divide-y-2 divide-gray-300 p-4">
