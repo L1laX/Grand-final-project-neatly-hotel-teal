@@ -24,34 +24,44 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="bg-light border-2F3E35 flex h-[1024px] w-[240px]   flex-col  bg-[#2F3E35] p-24 px-4 pb-4 pt-8 text-white">
-      <div className="p-[40px 24px 40px 24px] h-[152.34px] w-full gap-16 text-center">
-        {/* header navbar */}
-        <h1>Nealty</h1>
-        <p className="text-[16px] text-sm text-green-400">
-          Admin Panel Control
-        </p>
+    <div className="flex h-screen w-64 flex-col bg-[#2F3E35] px-4 pb-4 pt-8 text-white sm:h-screen">
+      <div className="flex h-40 flex-col items-center justify-center px-4">
+        <h1 className=" text-xl font-semibold text-white">Nealty</h1>
+
+        <p className="mt-5 text-sm text-green-500">Admin Panel Control</p>
       </div>
 
-      <div className="h-[540px] w-[240px]">
-        <ul className="flex flex-col gap-16">
+      <div className=" flex flex-col gap-4">
+        <ul className="space-y-4 ">
           {sidebarItem.map((item, index) => (
-            <li key={index}>
-              <a
-                href={item.href}
-                className="flex flex-row items-center gap-16 text-sm"
-              >
-                <div className=" text-[#D5DFDA]">
-                  <p>{item.name}</p>
-                </div>
-              </a>
-            </li>
+            <div className="w-full hover:bg-green-600">
+              <li key={index}>
+                <a
+                  href={item.href}
+                  className="flex items-center gap-4 rounded-md px-4 py-2 hover:text-white"
+                >
+                  <svg
+                    className="h-4 w-4 text-gray-400"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    {/* Icon for the menu item */}
+                  </svg>
+                  <span className="text-sm">{item.name}</span>
+                </a>
+              </li>
+            </div>
           ))}
         </ul>
       </div>
-      <div>
-        <hr />
-        <Link href="/admin/login">Logout</Link>
+
+      <div className="mt-auto">
+        <hr className="my-4" />
+        <div className="w-full hover:bg-green-600">
+          <Link href="/admin/login" className="px-4 py-2 text-white  ">
+            Logout
+          </Link>
+        </div>
       </div>
     </div>
   );
