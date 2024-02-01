@@ -24,7 +24,7 @@ const UserNavbar = ({ about, service, rooms }) => {
             <Image src={Logo}></Image>
           </Link>
         </div>
-        <div className="menu ml-5 gap-5 md:flex">
+        <div className="menu ml-5 hidden gap-5 md:flex">
           <button
             onClick={() => {
               scrollToSection(aboutSection);

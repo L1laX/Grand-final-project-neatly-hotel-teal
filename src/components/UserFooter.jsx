@@ -9,7 +9,8 @@ import PinGreen from "@/asset/icons/pin-green.svg";
 
 const UserFooter = () => {
   return (
-    <section className="footer-background bg-[#2F3E35] md:h-[485px]">
+
+    <section className="footer-background -z-50 bg-[#2F3E35] md:h-[485px]">
       {/* UserFooter : LOGO */}
       <div className=" divide-y-2 divide-slate-300 pt-16">
         <div className="footer-content mb-20 flex flex-col justify-between p-5 md:mx-20 md:flex-row">

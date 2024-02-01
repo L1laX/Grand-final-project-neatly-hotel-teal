@@ -337,5 +337,3 @@ export default function Home() {
 
       <UserFooter />
     </>
-  );
-}

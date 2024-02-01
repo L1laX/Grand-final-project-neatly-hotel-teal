@@ -15,7 +15,7 @@ export default function PopupBox({ isVisible, onClose }) {
   }
   return (
     <>
-      <div className=" popup-bg fixed inset-0 flex items-center justify-center bg-slate-400 bg-opacity-25 backdrop-blur-sm">
+      <div className=" popup-bg fixed inset-0 z-50 flex items-center justify-center bg-slate-400 bg-opacity-25 backdrop-blur-sm">
         <div className="popup-content flex items-center justify-center bg-white">
           <div className="h-[577px] w-[450px] divide-y-2 divide-gray-300 overflow-auto rounded border border-gray-300 p-4 md:w-[800px]">
             <div className=" flex flex-row justify-between gap-5 p-4 md:ml-20">
