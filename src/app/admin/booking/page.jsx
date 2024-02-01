@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Sidebar from "../Sidebar/page.jsx";
-import NavBar from "/src/components/navBar/navbar.jsx";
+import NavBarAdmin from "@/components/navbar/NavbarAdmin.jsx";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -163,8 +163,8 @@ function CustomerBooking() {
   return (
     <div className="flex flex-row bg-gray-100">
       <Sidebar />
-      <div className="flex flex-col ">
-        <NavBar />
+      <div className="flex w-full flex-col">
+        <NavBarAdmin navName={"Customer Booking"} />
 
         <Paper
           sx={{ width: "95%", height: "90%", overflow: "hidden" }}
