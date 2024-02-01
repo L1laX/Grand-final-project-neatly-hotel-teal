@@ -122,7 +122,7 @@ const RoomType = () => {
         />
         <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
           <Paper
-            sx={{ width: "95%", height: "87%", overflow: "hidden" }}
+            sx={{ width: "100%", height: "100%", overflow: "hidden" }}
             className=" ml-10  "
           >
             <TableContainer sx={{ maxH: "10vh" }}>

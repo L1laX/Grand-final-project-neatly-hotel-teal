@@ -79,7 +79,7 @@ const HotelInfo = () => {
         <NavBarAdmin3 navName="Hotel Information" />
         <div className="room-type-table mr-7 mt-6 flex items-center justify-center">
           <Paper
-            sx={{ width: "95%", height: "100%", overflow: "hidden" }}
+            sx={{ width: "100%", height: "100%", overflow: "hidden" }}
             className="ml-10"
           >
             <form onSubmit={handleSubmit}>

@@ -27,39 +27,41 @@ const Sidebar = () => {
 
   return (
     <div className="flex h-screen w-64 flex-col bg-[#2F3E35] px-4 pb-4 pt-8 text-white ">
-      <div className="flex h-40 flex-col items-center justify-center px-4 ">
+      <div className="flex h-40 flex-col items-center justify-center px-4 shadow-sm ">
         <Image src={Logo} className="inline h-10 cursor-pointer" />
 
         <p className="mt-5 text-sm text-green-500">Admin Panel Control</p>
       </div>
 
-      <div className=" flex flex-col gap-4">
+      <div className=" flex flex-col gap-4  bg-inherit">
         <ul className="space-y-4 ">
           {sidebarItem.map((item, index) => (
-            <div className="w-full hover:bg-green-600" key={index}>
+            <div
+              className="flex w-full gap-4 whitespace-nowrap  p-6 text-base font-medium leading-6 tracking-tight  text-gray-300 hover:bg-green-600"
+              key={index}
+            >
               <li>
                 <a
                   href={item.href}
-                  className="flex items-center gap-4 rounded-md px-4 py-2 text-gray-200 duration-500 hover:text-white"
+                  className="flex items-center gap-4 rounded-md  px-4 py-2 text-gray-200 duration-500 hover:text-white"
                 >
                   <svg
-                    className="h-4 w-4 text-gray-400"
+                    className="h-4 w-4 text-gray-400 "
                     fill="currentColor"
                     aria-hidden="true"
-                  >
-                    {/* Icon for the menu item */}
-                  </svg>
-                  <span className="text-sm">{item.name}</span>
+                  ></svg>
+                  <span className=" text-sm">{item.name}</span>
                 </a>
               </li>
             </div>
           ))}
         </ul>
-      </div>
-
-      <div className="mt-auto">
-        <hr className="my-4" />
-        <div className="w-full hover:bg-green-600">
+        <div className="flex w-full gap-4 whitespace-nowrap  p-6 text-base font-medium leading-6 tracking-tight  text-gray-300 hover:bg-green-600">
+          <svg
+            className="h-4 w-4 text-gray-400 "
+            fill="currentColor"
+            aria-hidden="true"
+          ></svg>
           <Link href="/admin/login" className="px-4 py-2 text-white  ">
             Logout
           </Link>
