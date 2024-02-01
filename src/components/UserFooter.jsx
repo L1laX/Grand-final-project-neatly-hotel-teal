@@ -9,6 +9,7 @@ import PinGreen from "@/asset/icons/pin-green.svg";
 
 const UserFooter = () => {
   return (
+
     <section className="footer-background -z-50 bg-[#2F3E35] md:h-[485px]">
       {/* UserFooter : LOGO */}
       <div className=" divide-y-2 divide-slate-300 pt-16">
@@ -40,7 +41,7 @@ const UserFooter = () => {
           </div>
         </div>
         {/* Social Icon */}
-        <div className="footer-social mx-5 flex justify-between py-10 md:mx-20">
+        <div className="footer-social mx-5 flex justify-between pt-10 md:mx-20">
           <div className=" gap-3">
             <Image src={FacebookLightIcon} width={24} height={24} />
             <Image src={InstagramLightIcon} width={24} height={24} />
