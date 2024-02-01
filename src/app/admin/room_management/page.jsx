@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Sidebar from "../Sidebar/page.jsx";
-import NavBarAdmin2 from "@/components/navbar_admin2/navbar2.jsx";
+import NavBarAdmin from "@/components/navbar/NavbarAdmin.jsx";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -70,8 +70,8 @@ function RoomManagement() {
   return (
     <div className="flex flex-row bg-gray-100">
       <Sidebar />
-      <div className="flex flex-col ">
-        <NavBarAdmin2 />
+      <div className="flex w-full flex-col ">
+        <NavBarAdmin navName={"Room Management"} />
 
         <Paper
           sx={{ width: "95%", height: "87%", overflow: "hidden" }}

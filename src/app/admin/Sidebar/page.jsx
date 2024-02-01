@@ -34,8 +34,8 @@ const Sidebar = () => {
       <div className=" flex flex-col gap-4">
         <ul className="space-y-4 ">
           {sidebarItem.map((item, index) => (
-            <div className="w-full hover:bg-green-600">
-              <li key={index}>
+            <div className="w-full hover:bg-green-600" key={index}>
+              <li>
                 <a
                   href={item.href}
                   className="flex items-center gap-4 rounded-md px-4 py-2 hover:text-white"

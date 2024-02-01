@@ -1,13 +1,16 @@
 "use client";
 
 import React from "react";
-
-import Layout from "./Layout/page.jsx";
-
+import Sidebar from "./Sidebar/page";
 const Admin = () => {
   return (
     <div>
-      <Layout />
+      <div className="flex flex-row bg-gray-100">
+        <Sidebar />
+        <div className="flex w-full items-center justify-center">
+          Hello Admin
+        </div>
+      </div>
     </div>
   );
 };
