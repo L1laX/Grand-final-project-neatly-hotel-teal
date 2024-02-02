@@ -1,3 +1,7 @@
-export function GET(req) {
-  return Response.json("Hello this is GET", { status: 418 });
+import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
+
+export async function GET() {
+  const rooms = await prisma.room.findMany();
+  return NextResponse.json(rooms);
 }

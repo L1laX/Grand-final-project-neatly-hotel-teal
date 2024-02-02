@@ -17,7 +17,6 @@ const UserNavbar = ({ about, service, rooms }) => {
     });
   };
   const { data: session } = useSession();
-  console.log(session);
   return (
     <nav className="flex h-[100px] w-screen items-center justify-between bg-white">
       <div className="web-menu flex items-center">
@@ -52,7 +51,7 @@ const UserNavbar = ({ about, service, rooms }) => {
       </div>
 
       <div className="w-[2px]">
-        <p>Hello {session?.user.email}</p>
+        <p>Hello {session?.user.role}</p>
       </div>
       <div className="user-menu mx-48">
         <div className="none-user flex items-center justify-items-end gap-5 justify-self-end ">

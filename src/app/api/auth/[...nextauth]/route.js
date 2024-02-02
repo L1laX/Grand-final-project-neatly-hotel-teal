@@ -5,9 +5,13 @@ import { compare } from "bcrypt";
 import NextAuth from "next-auth/next";
 
 const handler = NextAuth({
+  secret: process.env.AUTH_SECRET,
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
+  },
+  pages: {
+    signIn: "/login",
   },
   providers: [
     CredentialsProvider({
@@ -25,6 +29,7 @@ const handler = NextAuth({
         },
       },
       async authorize(credentials) {
+        //validating data
         if (!credentials?.username || !credentials?.password) {
           return null;
         }
@@ -38,18 +43,15 @@ const handler = NextAuth({
             email: credentials.username,
           },
         });
-        console.log(username);
         if (!email && !username) {
           return null;
         }
+        //if login with username
         if (username) {
-          console.log("matching password");
           const passwordMatch = await compare(
             credentials.password,
             username.password,
           );
-          console.log("check", username);
-          console.log(passwordMatch);
           if (!passwordMatch) {
             return null;
           }
@@ -60,9 +62,9 @@ const handler = NextAuth({
             role: username.role,
             image: username.image,
           };
-          console.log("SendingData!", data);
           return data;
         }
+        //if login with email
         if (email) {
           const passwordMatch = await compare(
             credentials.password,
@@ -78,14 +80,32 @@ const handler = NextAuth({
             role: email.role,
             image: email.image,
           };
-          console.log("SendingData!", data);
           return data;
         }
       },
     }),
   ],
-  pages: {
-    signIn: "/login",
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+        token.username = user.username;
+        token.email = user.email;
+        token.image = user.image;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user.role = token.role;
+        session.user.username = token.username;
+        session.user.email = token.email;
+        session.user.image = token.image;
+      }
+      return session;
+    },
   },
 });
 

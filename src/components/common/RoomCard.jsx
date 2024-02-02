@@ -15,7 +15,7 @@ export const RoomCard = ({
   // const [showGallery, setShowGallery] = useState(false);
 
   return (
-    <>
+    <div>
       {/* room card : map ตรงนี้ */}
       <div>
         {roomitem}
@@ -26,25 +26,24 @@ export const RoomCard = ({
               setShowGallery(true);
             }}
           >
-            for image{roomimage}
+            {roomimage}
           </div>
           <section className="room-detail flex flex-col lg:justify-between">
             <div className="lg:flex">
               <div className="lg:w-1/2">
-                <h4>Superior Garden View{roomname}</h4>
+                <h4>{roomname}</h4>
                 <p className="font-sans text-base font-normal text-[#646D89]">
-                  2 Guests | 2 Double bed | 32 sqm {roomguest}
+                  {roomguest}
                 </p>
                 <p className="font-sans text-base font-normal text-[#646D89]">
-                  Rooms (36sqm) with full garden views, 1 single bed, bathroom
-                  with bathtub & shower. {roomdesc}
+                  {roomdesc}
                 </p>
               </div>
               <div className=" pt-5 lg:flex lg:w-1/2 lg:flex-col lg:items-end lg:pt-0">
                 <p className="text-left font-sans text-base font-normal text-[#646D89] line-through">
-                  THB 3,100.00{roomdisc}
+                  THB {roomdisc}
                 </p>
-                <h5>THB 2,500.00{roomprice}</h5>
+                <h5>THB {roomprice}</h5>
 
                 <p className="font-sans text-base font-normal text-[#646D89] lg:text-right">
                   Per Night <br /> (Including Taxes & Fees)
@@ -83,6 +82,6 @@ export const RoomCard = ({
       /> */}
 
       {/* <h1 className=" text-red-500">rendering_redtext : {roomitem}</h1> */}
-    </>
+    </div>
   );
 };

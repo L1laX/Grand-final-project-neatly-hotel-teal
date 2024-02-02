@@ -11,24 +11,20 @@ import { useRouter } from "next/navigation";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isValid, setIsValid] = useState(false);
   const router = useRouter();
   const { data: session } = useSession();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const data = { username: e.target[0].value, password: e.target[1].value };
-    signIn("credentials", {
+
+    const result = await signIn("credentials", {
       username: data.username,
       password: data.password,
-      redirect: true,
-      callbackUrl: "/",
     });
-    router.refresh();
-    if (!session) {
-      alert("Wrong username or password");
-    }
   };
-
   return (
     <div className="main-content relative flex">
       <div className="image absolute -z-10 md:static md:block md:w-[100rem]">
