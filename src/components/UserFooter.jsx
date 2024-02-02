@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/legacy/image";
 import FacebookLightIcon from "@/asset/social/facebook-circle-light.svg";
 import InstagramLightIcon from "@/asset/social/instagram-light.svg";
@@ -9,7 +10,6 @@ import PinGreen from "@/asset/icons/pin-green.svg";
 
 const UserFooter = () => {
   return (
-
     <section className="footer-background -z-50 bg-[#2F3E35] md:h-[485px]">
       {/* UserFooter : LOGO */}
       <div className=" divide-y-2 divide-slate-300 pt-16">

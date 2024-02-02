@@ -1,7 +1,10 @@
 "use client";
+import AvatarDropdown from "@/components/common/AvatarDropdown";
 
-const BookingPage = () => {
-  return <div>This is booking page</div>;
-};
-
-export default BookingPage;
+export default function Page() {
+  return (
+    <div>
+      <AvatarDropdown />
+    </div>
+  );
+}

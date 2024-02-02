@@ -19,10 +19,11 @@ const Login = () => {
     e.preventDefault();
 
     const data = { username: e.target[0].value, password: e.target[1].value };
-
     const result = await signIn("credentials", {
       username: data.username,
       password: data.password,
+      redirect: true,
+      callbackUrl: "/",
     });
   };
   return (
