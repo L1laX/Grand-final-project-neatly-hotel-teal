@@ -15,6 +15,8 @@ model User {
   email String  @unique
   username  String @unique
   password String
+  role String
+  image String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   userprofile userprofile?
@@ -39,4 +41,20 @@ model creditcard{
   expiryDate String
   cvc_cvv String
   userprofile userprofile?
+}
+
+
+model room{
+  id Int @id @default(autoincrement())
+  name String
+  size String
+  bedType String
+  status String
+  checkInDate DateTime? 
+  checkOutDate DateTime?
+  guests Int
+  description String
+  roomMainImage String
+  pricePerNight Int
+  promotionPrice Int
 }
