@@ -47,7 +47,7 @@ export default function RoomDetailById({ params }) {
         <div className="under-slide justify-c flex w-3/5 items-center  ">
           <div className="center-box  flex flex-col   ">
             <div className="box-2 flex flex-col gap-10 ">
-              <p className=" room-name   text-6xl text-green-800 ">
+              <p className=" room-name   text-6xl text-green-800 md:text-xl ">
                 Superior Garden View
               </p>
               <div className="box2-2 flex flex-row  gap-10 ">
