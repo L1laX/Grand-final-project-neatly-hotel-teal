@@ -75,13 +75,7 @@ const HotelInfo = () => {
   return (
     <div className="flex flex-row bg-gray-100">
       <Sidebar />
-<<<<<<< HEAD
-      <div className="flex-col">
-        <div className=" flex w-[1200px] ">This is Hotel Information page</div>
-        <Card className=" h-[550px] w-[1080px] " variant="outlined">
-          {"Content"}
-        </Card>
-=======
+
       <div className="flex w-full flex-col">
         <NavBarAdmin3 navName="Hotel Information" />
         <div className="room-type-table mr-7 mt-6 flex items-center justify-center">
@@ -144,7 +138,6 @@ const HotelInfo = () => {
             </form>
           </Paper>
         </div>
->>>>>>> 400fafa4fd70ccf55aa60fc0288ce0973fcc5d97
       </div>
     </div>
   );
