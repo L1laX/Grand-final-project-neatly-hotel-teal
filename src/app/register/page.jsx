@@ -1,4 +1,5 @@
 "use client";
+
 import bg1 from "@/asset/background/register/bg1.jpg";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import Image from "next/image";
