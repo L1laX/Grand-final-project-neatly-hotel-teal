@@ -4,7 +4,7 @@ import React from "react";
 
 function Layout() {
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-col ">
       <Sidebar />
     </div>
   );

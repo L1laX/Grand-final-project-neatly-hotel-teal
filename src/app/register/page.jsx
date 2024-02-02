@@ -6,6 +6,12 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 //import Validation from "./registervalidation.js";
 const Register = () => {
+  const signUp = async (data) => {
+    const result = await axios.post("/api/login", data);
+    if (result.data.staus === 200) {
+      router.push("/");
+    }
+  };
   const [values, setValues] = useState({
     fullname: "",
     username: "",
@@ -66,8 +72,9 @@ const Register = () => {
     return errors.dateofBirth;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
 
     setErrors({
       fullname: !values.fullname.trim(),

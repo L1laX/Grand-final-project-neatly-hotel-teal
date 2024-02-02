@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  username  String @unique
+  password String
+  role String
+  image String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  userprofile userprofile?
+}
+
+model userprofile{
+  id Int @id @default(autoincrement())
+  user User  @relation(fields: [user_id],references: [id])
+  user_id Int @unique
+  fullName String
+  id_number String
+  dateOfBirth String
+  country String
+  creditcard creditcard @relation(fields: [creditCard_id],references: [id])
+  creditCard_id Int @unique
+}
+
+model creditcard{
+  id Int @id @default(autoincrement())
+  cardNumber String
+  cardOwner String
+  expiryDate String
+  cvc_cvv String
+  userprofile userprofile?
+}
+
+
+model room{
+  id Int @id @default(autoincrement())
+  name String
+  size String
+  bedType String
+  status String
+  checkInDate DateTime? 
+  checkOutDate DateTime?
+  guests Int
+  description String
+  roomMainImage String
+  pricePerNight Int
+  promotionPrice Int
+}

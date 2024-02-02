@@ -29,6 +29,7 @@ import {
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import UserNavbar from "@/components/UserNavbar";
 
 export default function Home() {
   const settings = {
@@ -45,60 +46,61 @@ export default function Home() {
         breakpoint: 600,
         settings: {
           variableWidth: false,
-          centerMode: false
-        }
-      }
-    ]
+          centerMode: false,
+        },
+      },
+    ],
   };
   return (
     <>
+      <UserNavbar />
       <header className="relative flex h-[26rem] max-h-full items-center justify-center sm:h-[36rem] lg:h-[48rem] xl:h-[58rem]">
-          <Image
-            src={hero}
-            alt="Neatly Hero Section"
-            layout="fill"
-            objectFit="cover"
-          />
-          <div className="to-94% absolute inset-0 bg-gradient-to-b from-black from-5% to-transparent"></div>
-          <div className="z-10 flex h-full w-11/12 flex-col items-center justify-evenly border-4 border-double border-indigo-600 lg:w-5/6">
-            <div>
-              <h1 className="border-4 border-double border-indigo-600 text-center text-3xl text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
-                <p>A Best Place for Your</p>
-                <p>Neatly Experience</p>
-              </h1>
-            </div>
-            <div className="h-82 flex w-full flex-row rounded-lg border-4 border-double border-indigo-600 bg-white shadow md:h-44 lg:h-48 xl:h-56">
-              <div className="flex w-full flex-col items-center justify-around gap-2 border-4 border-double border-indigo-600 py-4 md:flex-row md:gap-8 md:px-16 lg:gap-10">
-                <div className=" date-checkin-checkout flex grow flex-col">
-                  <p className=" font-sans text-base font-normal text-[#2a2e3f]">
-                    Check In - Check Out
-                  </p>
-                  <DatePickerWithRange checkInOut="h-10 sm:h-14 w-56 sm:w-full" />
-                </div>
-                <div className="room-guest-select flex flex-1 flex-col">
-                  <p className=" font-sans text-base font-normal text-[#2a2e3f]">
-                    Room & Guests
-                  </p>
-                  <Select>
-                    <SelectTrigger className="h-10 w-full min-w-48 text-[#9AA1B9] sm:h-14">
-                      <SelectValue placeholder="1 room, 2 quests" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="light">
-                        1 room, 2 quests *ใช้APIจากroom_id
-                      </SelectItem>
-                      <SelectItem value="dark">Dark</SelectItem>
-                      <SelectItem value="system">System</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <PrimaryBtn
-                  primaryButton="mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1"
-                  btnName="Search"
-                />
-              </div>
-            </div>{" "}
+        <Image
+          src={hero}
+          alt="Neatly Hero Section"
+          layout="fill"
+          objectFit="cover"
+        />
+        <div className="to-94% absolute inset-0 bg-gradient-to-b from-black from-5% to-transparent"></div>
+        <div className="z-10 flex h-full w-11/12 flex-col items-center justify-evenly border-4 border-double border-indigo-600 lg:w-5/6">
+          <div>
+            <h1 className="border-4 border-double border-indigo-600 text-center text-3xl text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
+              <p>A Best Place for Your</p>
+              <p>Neatly Experience</p>
+            </h1>
           </div>
+          <div className="h-82 flex w-full flex-row rounded-lg border-4 border-double border-indigo-600 bg-white shadow md:h-44 lg:h-48 xl:h-56">
+            <div className="flex w-full flex-col items-center justify-around gap-2 border-4 border-double border-indigo-600 py-4 md:flex-row md:gap-8 md:px-16 lg:gap-10">
+              <div className=" date-checkin-checkout flex grow flex-col">
+                <p className=" font-sans text-base font-normal text-[#2a2e3f]">
+                  Check In - Check Out
+                </p>
+                <DatePickerWithRange checkInOut="h-10 sm:h-14 w-56 sm:w-full" />
+              </div>
+              <div className="room-guest-select flex flex-1 flex-col">
+                <p className=" font-sans text-base font-normal text-[#2a2e3f]">
+                  Room & Guests
+                </p>
+                <Select>
+                  <SelectTrigger className="h-10 w-full min-w-48 text-[#9AA1B9] sm:h-14">
+                    <SelectValue placeholder="1 room, 2 quests" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="light">
+                      1 room, 2 quests *ใช้APIจากroom_id
+                    </SelectItem>
+                    <SelectItem value="dark">Dark</SelectItem>
+                    <SelectItem value="system">System</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <PrimaryBtn
+                primaryButton="mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1"
+                btnName="Search"
+              />
+            </div>
+          </div>{" "}
+        </div>
       </header>
 
       <section className="flex justify-center">
@@ -118,71 +120,41 @@ export default function Home() {
             property and also rentals are provided to explore the area.
           </p>
         </div>
-
       </section>
 
       <section className="flex">
         <div className="w-full">
-        <h2>Center Mode</h2>
-        <Slider {...settings}>
-          <div>
-          <Image
-              className="h-48 w-auto"
-              src={SuperiorGardenView}
-              alt="Suite"
-            />
-          </div>
-          <div>
-          <Image
-              className=""
-              src={Suite}
-              alt="Suite"
-            />
-          </div>
-          <div>
-          <Image
-              className=""
-              src={SuperiorGardenView}
-              alt="Suite"
-            />
-          </div>
-          <div>
-          <Image
-              className=""
-              src={Suite}
-              alt="Suite"
-            />
-          </div>
-          <div>
-          <Image
-              className=""
-              src={SuperiorGardenView}
-              alt="Suite"
-            />
-          </div>
-          <div>
-          <Image
-              className=""
-              src={Suite}
-              alt="Suite"
-            />
-          </div>
-          <div>
-          <Image
-              className=""
-              src={SuperiorGardenView}
-              alt="Suite"
-            />
-          </div>
-          <div>
-          <Image
-              className=""
-              src={Suite}
-              alt="Suite"
-            />
-          </div>
-          
-        </Slider>
+          <h2>Center Mode</h2>
+          <Slider {...settings}>
+            <div>
+              <Image
+                className="h-48 w-auto"
+                src={SuperiorGardenView}
+                alt="Suite"
+              />
+            </div>
+            <div>
+              <Image className="" src={Suite} alt="Suite" />
+            </div>
+            <div>
+              <Image className="" src={SuperiorGardenView} alt="Suite" />
+            </div>
+            <div>
+              <Image className="" src={Suite} alt="Suite" />
+            </div>
+            <div>
+              <Image className="" src={SuperiorGardenView} alt="Suite" />
+            </div>
+            <div>
+              <Image className="" src={Suite} alt="Suite" />
+            </div>
+            <div>
+              <Image className="" src={SuperiorGardenView} alt="Suite" />
+            </div>
+            <div>
+              <Image className="" src={Suite} alt="Suite" />
+            </div>
+          </Slider>
         </div>
       </section>
 
@@ -238,13 +210,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="flex flex-col items-center xl:py-40 lg:py-36 md:py-28 sm:py-22 py-14">
-        <h2 className="xl:mb-28 lg:mb-24 md:mb-20 sm:mb-14 mb-10 border-4 border-double border-indigo-600 text-center xl:text-8xl lg:text-7xl md:text-6xl sm:text-5xl text-4xl">
+      <section className="sm:py-22 flex flex-col items-center py-14 md:py-28 lg:py-36 xl:py-40">
+        <h2 className="mb-10 border-4 border-double border-indigo-600 text-center text-4xl sm:mb-14 sm:text-5xl md:mb-20 md:text-6xl lg:mb-24 lg:text-7xl xl:mb-28 xl:text-8xl">
           Service & Facilities
         </h2>
 
-        <div className="md:grid lg:h-[120rem] md:h-[84rem] w-11/12 grid-cols-5 grid-rows-9 gap-4 lg:w-5/6 flex flex-col">
-          <div className="relative col-span-5 row-span-3 flex w-full max-md:h-60 max-sm:h-48 cursor-pointer">
+        <div className="flex w-11/12 grid-cols-5 grid-rows-9 flex-col gap-4 md:grid md:h-[84rem] lg:h-[120rem] lg:w-5/6">
+          <div className="relative col-span-5 row-span-3 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
             <Image
               className="transform brightness-75 transition-transform duration-500 hover:scale-110"
               src={SuperiorGardenView}
@@ -252,13 +224,17 @@ export default function Home() {
               layout="fill"
               objectFit="cover"
             />
-            <div className="z-10 xl:mb-16 xl:ml-12 md:mb-12 md:ml-10 sm:mb-9 sm:ml-7 mb-7 ml-5 self-end">
-              <p className="xl:text-5xl lg:text-4xl md:text-3xl sm:text-2xl text-xl text-white">Superior Garden View</p>
-              <p className="xl:mt-6 lg:mt-5 md:mt-4 sm:mt-3 mt-2 lg:text-xl md:text-lg text-sm text-white">Explore Room →</p>
+            <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
+              <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
+                Superior Garden View
+              </p>
+              <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
+                Explore Room →
+              </p>
             </div>
           </div>
 
-          <div className="relative col-span-3 row-span-2 row-start-4 flex w-full max-md:h-60 max-sm:h-48 cursor-pointer">
+          <div className="relative col-span-3 row-span-2 row-start-4 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
             <Image
               className="transform brightness-75 transition-transform duration-500 hover:scale-110"
               src={Deluxe}
@@ -266,13 +242,17 @@ export default function Home() {
               layout="fill"
               objectFit="cover"
             />
-            <div className="z-10 xl:mb-16 xl:ml-12 md:mb-12 md:ml-10 sm:mb-9 sm:ml-7 mb-7 ml-5 self-end">
-              <p className="xl:text-5xl lg:text-4xl md:text-3xl sm:text-2xl text-xl text-white">Deluxe</p>
-              <p className="xl:mt-6 lg:mt-5 md:mt-4 sm:mt-3 mt-2 lg:text-xl md:text-lg text-sm text-white">Explore Room →</p>
+            <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
+              <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
+                Deluxe
+              </p>
+              <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
+                Explore Room →
+              </p>
             </div>
           </div>
 
-          <div className="relative col-span-2 col-start-4 row-span-2 row-start-4 flex w-full max-md:h-60 max-sm:h-48 cursor-pointer">
+          <div className="relative col-span-2 col-start-4 row-span-2 row-start-4 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
             <Image
               className="transform brightness-75 transition-transform duration-500 hover:scale-110"
               src={Superior}
@@ -280,13 +260,17 @@ export default function Home() {
               layout="fill"
               objectFit="cover"
             />
-            <div className="z-10 xl:mb-16 xl:ml-12 md:mb-12 md:ml-10 sm:mb-9 sm:ml-7 mb-7 ml-5 self-end">
-              <p className="xl:text-5xl lg:text-4xl md:text-3xl sm:text-2xl text-xl text-white">Superior</p>
-              <p className="xl:mt-6 lg:mt-5 md:mt-4 sm:mt-3 mt-2 lg:text-xl md:text-lg text-sm text-white">Explore Room →</p>
+            <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
+              <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
+                Superior
+              </p>
+              <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
+                Explore Room →
+              </p>
             </div>
           </div>
 
-          <div className="relative col-span-2 row-span-4 row-start-6 flex w-full max-md:h-60 max-sm:h-48 cursor-pointer">
+          <div className="relative col-span-2 row-span-4 row-start-6 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
             <Image
               className="transform brightness-75 transition-transform duration-500 hover:scale-110"
               src={PremierSeaView}
@@ -294,13 +278,17 @@ export default function Home() {
               layout="fill"
               objectFit="cover"
             />
-            <div className="z-10 xl:mb-16 xl:ml-12 md:mb-12 md:ml-10 sm:mb-9 sm:ml-7 mb-7 ml-5 self-end">
-              <p className="xl:text-5xl lg:text-4xl md:text-3xl sm:text-2xl text-xl text-white">Premier Sea View</p>
-              <p className="xl:mt-6 lg:mt-5 md:mt-4 sm:mt-3 mt-2 lg:text-xl md:text-lg text-sm text-white">Explore Room →</p>
+            <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
+              <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
+                Premier Sea View
+              </p>
+              <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
+                Explore Room →
+              </p>
             </div>
           </div>
 
-          <div className="relative col-span-3 col-start-3 row-span-2 row-start-6 flex w-full max-md:h-60 max-sm:h-48 cursor-pointer">
+          <div className="relative col-span-3 col-start-3 row-span-2 row-start-6 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
             <Image
               className="transform brightness-75 transition-transform duration-500 hover:scale-110"
               src={Supreme}
@@ -308,13 +296,17 @@ export default function Home() {
               layout="fill"
               objectFit="cover"
             />
-            <div className="z-10 xl:mb-16 xl:ml-12 md:mb-12 md:ml-10 sm:mb-9 sm:ml-7 mb-7 ml-5 self-end">
-              <p className="xl:text-5xl lg:text-4xl md:text-3xl sm:text-2xl text-xl text-white">Supreme</p>
-              <p className="xl:mt-6 lg:mt-5 md:mt-4 sm:mt-3 mt-2 lg:text-xl md:text-lg text-sm text-white">Explore Room →</p>
+            <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
+              <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
+                Supreme
+              </p>
+              <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
+                Explore Room →
+              </p>
             </div>
           </div>
 
-          <div className="relative col-span-3 col-start-3 row-span-2 row-start-8 flex w-full max-md:h-60 max-sm:h-48 cursor-pointer">
+          <div className="relative col-span-3 col-start-3 row-span-2 row-start-8 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
             <Image
               className="transform brightness-75 transition-transform duration-500 hover:scale-110"
               src={Suite}
@@ -322,18 +314,30 @@ export default function Home() {
               layout="fill"
               objectFit="cover"
             />
-            <div className="z-10 xl:mb-16 xl:ml-12 md:mb-12 md:ml-10 sm:mb-9 sm:ml-7 mb-7 ml-5 self-end">
-              <p className="xl:text-5xl lg:text-4xl md:text-3xl sm:text-2xl text-xl text-white">Suite</p>
-              <p className="xl:mt-6 lg:mt-5 md:mt-4 sm:mt-3 mt-2 lg:text-xl md:text-lg text-sm text-white">Explore Room →</p>
+            <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
+              <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
+                Suite
+              </p>
+              <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
+                Explore Room →
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       <section className="flex flex-col items-center bg-[#E6EBE9]">
-          <h2 className="border-4 border-double border-indigo-600 text-center xl:text-8xl lg:text-7xl md:text-6xl sm:text-5xl text-4xl">Our Customer Says</h2>
-          <p>“lorem ipsum dolor sit amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint, velit official consequat duis enim velit mollit, exercitation minim amet consequat sunt.”</p>
+        <h2 className="border-4 border-double border-indigo-600 text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
+          Our Customer Says
+        </h2>
+        <p>
+          “lorem ipsum dolor sit amet minim mollit non deserunt ullamco est sit
+          aliqua dolor do amet sint, velit official consequat duis enim velit
+          mollit, exercitation minim amet consequat sunt.”
+        </p>
       </section>
 
       <UserFooter />
     </>
+  );
+}
