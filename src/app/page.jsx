@@ -29,6 +29,7 @@ import {
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import UserNavbar from "@/components/UserNavbar";
 
 export default function Home() {
   const settings = {
@@ -52,6 +53,7 @@ export default function Home() {
   };
   return (
     <>
+      <UserNavbar />
       <header className="relative flex h-[26rem] max-h-full items-center justify-center sm:h-[36rem] lg:h-[48rem] xl:h-[58rem]">
         <Image
           src={hero}
