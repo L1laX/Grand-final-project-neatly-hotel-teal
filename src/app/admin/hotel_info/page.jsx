@@ -10,8 +10,6 @@ const HotelInfo = () => {
     <div className="flex flex-row bg-gray-100">
       <Sidebar />
       <div className="flex-col">
-        <NavBarAdmin3 />
-
         <div className=" flex w-[1200px] ">This is Hotel Information page</div>
         <Card className=" h-[550px] w-[1080px] " variant="outlined">
           {"Content"}
