@@ -11,46 +11,30 @@ import {
 } from "@/components/ui/select";
 import { RoomCard } from "@/components/common/RoomCard";
 import { useEffect, useState } from "react";
-
-// const [data, setData] = useState({});
-//
+import axios from "axios";
 
 export default function RoomDetail() {
   const roomsType = ["1", "2", "3"];
+  const [rooms, setRooms] = useState([]);
 
-  const [showContent, setShowContent] = useState(false);
-  const [showGallery, setShowGallery] = useState(false);
-  const [searchRoom, setSearchRoom] = useState(null);
+  const getRoom = async () => {
+    const result = await axios.get("/api/roomdetail");
+    console.log(result.data);
+    setRooms(result.data);
+  };
 
-  // const getRoomType = async () => {
-  //   try {
-  //     const response = await axios.get("/api/roomtype");
-  //     console.log(response.data.data);
-  //     setData(response.data.data);
-  //   } catch (error) {
-  //     console.log("Cannot Fetching Data");
-  //   }
-  // };
+  useEffect(() => {
+    getRoom();
+  }, []);
 
-  // const getSearchData = async () => {
-  //   try {
-  //     const response = await axios.get("/api/search/roomtype");
-  //     console.log(response.data.data);
-  //     setSearchRoom(response.data.data);
-  //   } catch (error) {
-  //     console.log("Cannot Fetching Data");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getRoomType(), getSearchData(data);
-  // }, [searchRoom]);
+  const [searchRoom, setSearchRoom] = useState(false);
 
   return (
     <main>
       {/* search-bar */}
       <div className="search-bar bg-white shadow-md">
         <div className="select-date flex flex-col justify-center gap-5 px-5 py-5 md:flex-row md:gap-10 md:px-56 md:py-10">
+          {/* search : CheckIn - Check-Out */}
           <div className=" date-checkin-checkout flex flex-col">
             <p className=" font-sans text-base font-normal text-[#2a2e3f]">
               Checkin - Checkout +
@@ -75,13 +59,27 @@ export default function RoomDetail() {
               </SelectContent>
             </Select>
           </div>
-          <SecondaryBtn btnName="Search" />
+          <SecondaryBtn btnName="Search" handleClick={setSearchRoom} />
         </div>
       </div>
       <div className="divide-y-2 divide-gray-300 lg:m-20">
-        {roomsType.map((item, index) => (
-          <RoomCard key={index} roomitem={item} />
-        ))}
+        {rooms.map((item) => {
+          console.log(item.id);
+          return (
+            <RoomCard
+              key={item.id}
+              roomitem={item.id}
+              roomname={item.name}
+              roomimage={item.roomMainImage}
+              roomguest={item.guests}
+              roomdesc={item.description}
+              roomprice={item.pricePerNight}
+              roomdisc={item.promotionPrice}
+              roombedtype={item.bedType}
+              roomsize={item.size}
+            />
+          );
+        })}
       </div>
     </main>
   );

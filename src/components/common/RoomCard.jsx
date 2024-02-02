@@ -1,6 +1,9 @@
+"use client";
+
 import PopupBox from "@/components/common/PopupBox";
 import PopupGallery from "@/components/common/PopupGallery";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
+import { useState } from "react";
 
 export const RoomCard = ({
   roomitem,
@@ -10,9 +13,23 @@ export const RoomCard = ({
   roomdesc,
   roomprice,
   roomdisc,
+  roombedtype,
+  roomsize,
 }) => {
-  // const [showContent, setShowContent] = useState(false);
-  // const [showGallery, setShowGallery] = useState(false);
+  const [showContent, setShowContent] = useState(false);
+  const [showGallery, setShowGallery] = useState(false);
+
+  const isVisible = () => {
+    setShowContent(true);
+  };
+
+  const isGallery = () => {
+    setShowGallery(true);
+  };
+
+  const handleBooking = () => {
+    alert("rediect to Booking Page: /booking/id");
+  };
 
   return (
     <>
@@ -23,7 +40,7 @@ export const RoomCard = ({
           <div
             className=" h-[320px] w-[413px] cursor-pointer rounded-md bg-slate-200"
             onClick={() => {
-              setShowGallery(true);
+              isGallery(true);
             }}
           >
             for image{roomimage}
@@ -37,21 +54,20 @@ export const RoomCard = ({
                     roomlink;
                   }}
                 >
-                  Superior Garden View{roomname}
+                  Superior Garden View : {roomname}
                 </h4>
                 <p className="font-sans text-base font-normal text-[#646D89]">
-                  2 Guests | 2 Double bed | 32 sqm {roomguest}
+                  {roomguest} Guests | {roombedtype} | {roomsize}
                 </p>
                 <p className="font-sans text-base font-normal text-[#646D89]">
-                  Rooms (36sqm) with full garden views, 1 single bed, bathroom
-                  with bathtub & shower. {roomdesc}
+                  {roomdesc}
                 </p>
               </div>
               <div className=" pt-5 lg:flex lg:w-1/2 lg:flex-col lg:items-end lg:pt-0">
                 <p className="text-left font-sans text-base font-normal text-[#646D89] line-through">
-                  THB 3,100.00{roomdisc}
+                  THB {roomdisc}
                 </p>
-                <h5>THB 2,500.00{roomprice}</h5>
+                <h5>THB {roomprice}</h5>
 
                 <p className="font-sans text-base font-normal text-[#646D89] lg:text-right">
                   Per Night <br /> (Including Taxes & Fees)
@@ -62,12 +78,12 @@ export const RoomCard = ({
               <p
                 className=" visitlink"
                 onClick={() => {
-                  setShowContent(true);
+                  isVisible(true);
                 }}
               >
                 Room Detail
               </p>
-              <PrimaryBtn btnName="Book Now" />
+              <PrimaryBtn btnName="Book Now" handleClick={handleBooking} />
             </div>
           </section>
           <hr />
@@ -75,21 +91,13 @@ export const RoomCard = ({
       </div>
 
       {/* Popup Room detail */}
-      {/* <PopupBox
-        isVisible={showContent}
-        onClose={() => {
-          setShowContent(false);
-        }}
-      /> */}
+      {isVisible && (
+        <PopupBox isVisible={showContent} onClose={setShowContent} />
+      )}
 
-      {/* <PopupGallery
-        isGallery={showGallery}
-        onCloseGal={() => {
-          setShowGallery(false);
-        }}
-      /> */}
-
-      {/* <h1 className=" text-red-500">rendering_redtext : {roomitem}</h1> */}
+      {isGallery && (
+        <PopupGallery isGallery={showGallery} onCloseGal={setShowGallery} />
+      )}
     </>
   );
 };

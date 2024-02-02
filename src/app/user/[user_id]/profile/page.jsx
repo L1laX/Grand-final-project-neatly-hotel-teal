@@ -77,7 +77,7 @@ export default function UserProfile() {
         <div className="user-profile-form items-center">
           <h5 className="text-[#9AA1B9]">Basic Information</h5>
           <form className="my-10 flex flex-col gap-3 ">
-            <div className=" grid grid-cols-1 gap-4">
+            <div className="fullname-container grid grid-cols-1 gap-4">
               <label htmlFor="fullname">
                 Fullname
                 <Input
@@ -89,21 +89,25 @@ export default function UserProfile() {
                   }}
                   value={fullname}
                 />
+                <h5 className=" text-red-500">1 line</h5>
               </label>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <label htmlFor="email">
-                Email
-                <Input
-                  className="grid outline-none"
-                  type="email"
-                  name="email"
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                  value={email}
-                />
-              </label>
+              <div>
+                <label htmlFor="email">
+                  Email
+                  <Input
+                    className="grid outline-none"
+                    type="email"
+                    name="email"
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                    value={email}
+                  />
+                  <h5 className=" text-red-500">1 line</h5>
+                </label>
+              </div>
               <label htmlFor="identitynumber">
                 ID Number
                 <Input
