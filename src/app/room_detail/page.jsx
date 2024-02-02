@@ -13,13 +13,14 @@ import { RoomCard } from "@/components/common/RoomCard";
 import { useEffect, useState } from "react";
 
 // const [data, setData] = useState({});
-// const [searchRoom, setSearchRoom] = useState(null);
+//
 
 export default function RoomDetail() {
   const roomsType = ["1", "2", "3"];
 
-  // const [showContent, setShowContent] = useState(false);
-  // const [showGallery, setShowGallery] = useState(false);
+  const [showContent, setShowContent] = useState(false);
+  const [showGallery, setShowGallery] = useState(false);
+  const [searchRoom, setSearchRoom] = useState(null);
 
   // const getRoomType = async () => {
   //   try {

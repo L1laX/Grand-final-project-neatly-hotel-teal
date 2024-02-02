@@ -31,7 +31,14 @@ export const RoomCard = ({
           <section className="room-detail flex flex-col lg:justify-between">
             <div className="lg:flex">
               <div className="lg:w-1/2">
-                <h4>Superior Garden View{roomname}</h4>
+                <h4
+                  className=" cursor-pointer"
+                  onClick={() => {
+                    roomlink;
+                  }}
+                >
+                  Superior Garden View{roomname}
+                </h4>
                 <p className="font-sans text-base font-normal text-[#646D89]">
                   2 Guests | 2 Double bed | 32 sqm {roomguest}
                 </p>
@@ -51,7 +58,7 @@ export const RoomCard = ({
                 </p>
               </div>
             </div>
-            <div className=" flex items-center justify-center gap-5 pt-5 lg:items-center lg:justify-end">
+            <div className=" flex cursor-pointer items-center justify-center gap-5 pt-5 lg:items-center lg:justify-end">
               <p
                 className=" visitlink"
                 onClick={() => {
