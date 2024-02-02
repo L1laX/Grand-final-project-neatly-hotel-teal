@@ -4,6 +4,7 @@ import Image from "next/image";
 import Logo from "@/asset/logo/logo-dark.svg";
 import Link from "next/link";
 import PrimaryBtn from "./common/PrimaryBtn";
+import { useSession, signIn, signOut } from "next-auth/react";
 const UserNavbar = ({ about, service, rooms }) => {
   const aboutSection = useRef(about || null);
   const serviceSection = useRef(service || null);
@@ -15,7 +16,8 @@ const UserNavbar = ({ about, service, rooms }) => {
       behavior: "smooth",
     });
   };
-
+  const { data: session } = useSession();
+  console.log(session);
   return (
     <nav className="flex h-[100px] w-screen items-center justify-between bg-white">
       <div className="web-menu flex items-center">
@@ -48,14 +50,29 @@ const UserNavbar = ({ about, service, rooms }) => {
           </button>
         </div>
       </div>
+
+      <div className="w-[2px]">
+        <p>Hello {session?.user.email}</p>
+      </div>
       <div className="user-menu mx-48">
         <div className="none-user flex items-center justify-items-end gap-5 justify-self-end ">
-          <Link
-            href={"/login"}
-            className="text-orange-500 hover:text-orange-300"
-          >
-            Login
-          </Link>
+          {session ? (
+            <button
+              className="text-orange-500 hover:text-orange-300"
+              onClick={() => signOut()}
+            >
+              Logout
+            </button>
+          ) : (
+            <>
+              <button
+                className="text-orange-500 hover:text-orange-300"
+                onClick={() => signIn()}
+              >
+                Login
+              </button>
+            </>
+          )}
           <PrimaryBtn btnName="BookNow" />
         </div>
       </div>

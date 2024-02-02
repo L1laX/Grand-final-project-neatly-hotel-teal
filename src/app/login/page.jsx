@@ -6,20 +6,27 @@ import Link from "next/link";
 import Image from "next/legacy/image";
 import bg from "/src/asset/background/login-page/bg.png";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const { data: session } = useSession();
 
-  const handleSubmit = () => {
-    const data = { username: username, password: password };
-    console.log(data);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = { username: e.target[0].value, password: e.target[1].value };
     signIn("credentials", {
-      ...data,
-      redirect: false,
+      username: data.username,
+      password: data.password,
+      redirect: true,
+      callbackUrl: "/",
     });
-    console.log(result);
+    router.refresh();
+    if (!session) {
+      alert("Wrong username or password");
+    }
   };
 
   return (
@@ -37,6 +44,7 @@ const Login = () => {
               type="text"
               name="username"
               value={username}
+              placeholder="Enter your username or email"
               onChange={(e) => setUsername(e.target.value)}
               required
             />
@@ -46,6 +54,7 @@ const Login = () => {
               type="password"
               name="password"
               value={password}
+              placeholder="Enter your password"
               onChange={(e) => setPassword(e.target.value)}
               required
             />

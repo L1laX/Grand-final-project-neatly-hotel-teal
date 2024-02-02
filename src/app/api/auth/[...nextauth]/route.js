@@ -25,17 +25,6 @@ const handler = NextAuth({
         },
       },
       async authorize(credentials) {
-        //   const res = await fetch("https://www.melivecode.com/api/login", {
-        //     method: "POST",
-        //     body: JSON.stringify(credentials),
-        //     headers: { "Content-Type": "application/json" },
-        //   });
-        //   const data = await res.json();
-        //   console.log(data);
-        //   if (data.status === "ok") {
-        //     return data.user;
-        //   }
-        //   return null;
         if (!credentials?.username || !credentials?.password) {
           return null;
         }
@@ -49,11 +38,32 @@ const handler = NextAuth({
             email: credentials.username,
           },
         });
-
+        console.log(username);
         if (!email && !username) {
           return null;
         }
-        if (!username && email) {
+        if (username) {
+          console.log("matching password");
+          const passwordMatch = await compare(
+            credentials.password,
+            username.password,
+          );
+          console.log("check", username);
+          console.log(passwordMatch);
+          if (!passwordMatch) {
+            return null;
+          }
+          const data = {
+            id: username.id,
+            username: username.username,
+            email: username.email,
+            role: username.role,
+            image: username.image,
+          };
+          console.log("SendingData!", data);
+          return data;
+        }
+        if (email) {
           const passwordMatch = await compare(
             credentials.password,
             email.password,
@@ -61,24 +71,15 @@ const handler = NextAuth({
           if (!passwordMatch) {
             return null;
           }
-          return {
+          const data = {
             id: email.id,
             username: email.username,
             email: email.email,
+            role: email.role,
+            image: email.image,
           };
-        } else {
-          const passwordMatch = await compare(
-            credentials.password,
-            user.password,
-          );
-          if (!passwordMatch) {
-            return null;
-          }
-          return {
-            id: username.id,
-            username: username.username,
-            email: username.email,
-          };
+          console.log("SendingData!", data);
+          return data;
         }
       },
     }),

@@ -15,6 +15,7 @@ export async function POST(req) {
     cardOwner,
     expiryDate,
     cvc_cvv,
+    role,
   } = body;
   const validEmailRegex =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -69,6 +70,7 @@ export async function POST(req) {
       data: {
         email: email,
         username: username,
+        role: role,
         password: hashedPassword,
       },
     });
