@@ -4,6 +4,7 @@ import Image from "next/image";
 import Logo from "@/asset/logo/logo-dark.svg";
 import Link from "next/link";
 import PrimaryBtn from "./common/PrimaryBtn";
+
 const UserNavbar = ({ about, service, rooms }) => {
   const aboutSection = useRef(about || null);
   const serviceSection = useRef(service || null);
@@ -17,7 +18,7 @@ const UserNavbar = ({ about, service, rooms }) => {
   };
 
   return (
-    <nav className="flex h-[100px] w-screen items-center justify-between bg-white">
+    <nav className="l flex h-[100px] w-screen grow items-center justify-between bg-white ">
       <div className="web-menu flex items-center">
         <div className="logo m-4 ml-24 flex h-[25px] w-[140px] items-center">
           <Link href={"/"}>

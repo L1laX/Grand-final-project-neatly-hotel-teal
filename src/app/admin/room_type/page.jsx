@@ -114,7 +114,7 @@ const RoomType = () => {
   return (
     <div className="flex flex-row bg-gray-100">
       <Sidebar />
-      <div className="felx w-full flex-col">
+      <div className=" w-full flex-col">
         <NavBar
           navName={"Room & Property"}
           button={true}
@@ -122,7 +122,7 @@ const RoomType = () => {
         />
         <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
           <Paper
-            sx={{ width: "95%", height: "87%", overflow: "hidden" }}
+            sx={{ width: "100%", height: "100%", overflow: "hidden" }}
             className=" ml-10  "
           >
             <TableContainer sx={{ maxH: "10vh" }}>
