@@ -4,24 +4,30 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "@/asset/logo/logo-light.svg";
+import { Checkbox } from "@mui/material";
+import { CheckboxIcon } from "@radix-ui/react-icons";
 
 const Sidebar = () => {
   const sidebarItem = [
     {
       name: "Customer Booking",
       href: "/admin/booking",
+      svg: "",
     },
     {
       name: "Room Management",
       href: "/admin/room_management",
+      svg: "",
     },
     {
       name: "Hotel Information",
       href: "/admin/hotel_info",
+      svg: "",
     },
     {
       name: "Room & Property",
       href: "/admin/room_type",
+      svg: "",
     },
   ];
 
@@ -45,26 +51,35 @@ const Sidebar = () => {
                   href={item.href}
                   className="flex items-center gap-4 rounded-md  px-4 py-2 text-gray-200 duration-500 hover:text-white"
                 >
-                  <svg
+                  <CheckboxIcon
                     className="h-4 w-4 text-gray-400 "
+                    src={item.svg}
                     fill="currentColor"
                     aria-hidden="true"
-                  ></svg>
+                  />
                   <span className=" text-sm">{item.name}</span>
                 </a>
               </li>
             </div>
           ))}
         </ul>
-        <div className="flex w-full gap-4 whitespace-nowrap  p-6 text-base font-medium leading-6 tracking-tight  text-gray-300 hover:bg-green-600">
-          <svg
-            className="h-4 w-4 text-gray-400 "
-            fill="currentColor"
-            aria-hidden="true"
-          ></svg>
-          <Link href="/admin/login" className="px-4 py-2 text-white  ">
-            Logout
-          </Link>
+        <hr />
+        <div className="flex w-full justify-center gap-4  whitespace-nowrap p-6 text-base font-medium leading-6 tracking-tight text-gray-300 hover:bg-green-600">
+          <div className=" flex items-center ">
+            <CheckboxIcon
+              className="h-4 w-4 text-gray-400 "
+              fill="currentColor"
+              aria-hidden="true"
+            />
+            <div className="pr-[45px]">
+              <Link
+                href="/admin/login"
+                className="flex items-center gap-4 rounded-md  px-4 text-gray-200 duration-500 hover:text-white"
+              >
+                Logout
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>
