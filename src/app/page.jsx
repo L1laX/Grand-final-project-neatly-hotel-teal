@@ -1,5 +1,4 @@
 "use client";
-
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import SecondaryBtn from "@/components/common/SecondaryBtn";
 import UserFooter from "@/components/UserFooter";

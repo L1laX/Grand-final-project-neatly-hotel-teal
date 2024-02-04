@@ -13,8 +13,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isValid, setIsValid] = useState(false);
   const router = useRouter();
+  //get session data
   const { data: session } = useSession();
-
+  console.log(session);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -55,15 +56,18 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <PrimaryBtn btnName="Log In" className="w-full" />
+            <PrimaryBtn
+              btnName="Log In"
+              className="w-full"
+              onClick={handleSubmit}
+            />
           </div>
-          <div className="to-register  mt-5 text-center md:text-start">
+          <div className="to-register mt-5 text-center md:text-start">
             Don't have an account?
             <Link
               href={"/register"}
               className="visitlink visitlink:hover visitlink:disabled"
             >
-              {" "}
               Register
             </Link>
           </div>

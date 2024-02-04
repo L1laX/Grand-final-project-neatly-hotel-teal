@@ -16,6 +16,7 @@ export async function POST(req) {
     expiryDate,
     cvc_cvv,
     role,
+    image,
   } = body;
   const validEmailRegex =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -72,6 +73,7 @@ export async function POST(req) {
         username: username,
         role: role,
         password: hashedPassword,
+        image: image,
       },
     });
     const newCreditCard = await prisma.creditcard.create({

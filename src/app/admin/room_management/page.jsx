@@ -69,7 +69,7 @@ function RoomManagement() {
   };
   return (
     <div className="flex flex-row bg-gray-100">
-      <Sidebar />
+      <Sidebar setActive={2} />
       <div className="flex w-full flex-col ">
         <NavBarAdmin navName={"Room Management"} />
 

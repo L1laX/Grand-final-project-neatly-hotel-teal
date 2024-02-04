@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 
-const Sidebar = () => {
+const Sidebar = ({ setActive }) => {
   const sidebarItem = [
     {
       name: "Customer Booking",
@@ -34,7 +34,10 @@ const Sidebar = () => {
       <div className=" flex flex-col gap-4">
         <ul className="space-y-4 ">
           {sidebarItem.map((item, index) => (
-            <div className="w-full hover:bg-green-600" key={index}>
+            <div
+              className={`w-full hover:bg-green-600 ${index + 1 === setActive ? "bg-green-600" : ""}`}
+              key={index}
+            >
               <li>
                 <a
                   href={item.href}

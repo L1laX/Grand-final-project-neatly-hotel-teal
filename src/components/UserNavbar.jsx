@@ -26,8 +26,8 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
         </div>
         <div className="menu ml-5 hidden gap-5 md:flex">
           <a
-            href={aboutid}
-            className="hover:opacity-75"
+            href={aboutid || "/"}
+            className="cursor-pointer hover:opacity-75"
             onClick={() => {
               scrollToSection(aboutid);
             }}
@@ -35,8 +35,8 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
             About Nearly
           </a>
           <a
-            href={serviceid}
-            className="hover:opacity-75"
+            href={serviceid || "/"}
+            className="cursor-pointer hover:opacity-75"
             onClick={() => {
               scrollToSection(serviceid);
             }}
@@ -44,8 +44,8 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
             Service & Facilities
           </a>
           <a
-            href={roomsid}
-            className="hover:opacity-75"
+            href={roomsid || "/"}
+            className="cursor-pointer hover:opacity-75"
             onClick={() => {
               scrollToSection(roomsid);
             }}
@@ -74,12 +74,14 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
           ) : (
             <div className="flex items-center gap-5">
               <button
-                className="text-orange-500 hover:text-orange-300"
+                className="visitlink visitlink:hover visitlink:disabled"
                 onClick={() => signIn()}
               >
                 Login
               </button>
-              <PrimaryBtn btnName="BookNow" />
+              <Link href={"/booking"}>
+                <PrimaryBtn btnName="BookNow" />
+              </Link>
             </div>
           )}
         </div>
