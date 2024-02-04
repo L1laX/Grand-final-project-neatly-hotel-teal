@@ -153,14 +153,16 @@ const Register = () => {
     e.preventDefault();
     //validate Email
     const validEmailRegex =
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     //1st validation
     const errors = {
       fullName: values.fullName.length <= 1,
       username: values.username.length <= 1,
       password: values.password.length <= 12,
       dateOfBirth: validateDateofBirth(values.dateOfBirth),
-      email: values.email.length === 0 && !values.email.match(validEmailRegex),
+      email:
+        values.email.length === 0 &&
+        !values.email.toLowerCase().match(validEmailRegex),
       id_number: values.id_number.length !== 13,
       country: values.country.length < 1,
       cardNumber: values.cardNumber.length !== 16,
@@ -180,8 +182,8 @@ const Register = () => {
       const sendingData = { ...values, image: publicUrl };
       try {
         const result = await axios.post("/api/register", sendingData);
-        if(result.status === 201){
-          router.push("/login")
+        if (result.status === 201) {
+          router.push("/login");
         }
       } catch (e) {
         console.error(e);
