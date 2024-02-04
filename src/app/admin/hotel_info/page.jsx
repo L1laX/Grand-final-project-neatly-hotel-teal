@@ -1,21 +1,28 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/page";
 import NavBarAdmin3 from "@/components/navbar_admin3/navbar3";
 import Paper from "@mui/material/Paper";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import CloseIcon from "@mui/icons-material/Close";
 
 const HotelInfo = () => {
-  const [text, setText] = useState("");
   const [image, setImage] = useState(null);
   const [hotelName, setHotelName] = useState("");
   const [hotelDescription, setHotelDescription] = useState("");
-  const [hotelLogo, setHotelLogo] = useState(null);
   const [hotelLogoPreview, setHotelLogoPreview] = useState(null);
+  const [, setApiData] = useState(null);
 
   const router = useRouter();
+
+  useEffect(() => {
+    // Fetch API data here
+    // Example:
+    fetch("https://api/hotel_info")
+      .then((response) => response.json())
+      .then((data) => setApiData(data))
+      .catch((error) => console.log(error));
+  }, []);
 
   const handleDeleteLogoPreview = () => {
     setHotelLogoPreview(null);
@@ -23,10 +30,15 @@ const HotelInfo = () => {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-
-      console.log("Enter key pressed");
+      const input = e.target;
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      const value = input.value;
+      const newValue = value.substring(0, start) + "\n" + value.substring(end);
+      setHotelDescription(newValue);
+      input.selectionStart = input.selectionEnd = start + 1;
     }
   };
 
@@ -35,7 +47,7 @@ const HotelInfo = () => {
     const data = {
       hotelName: hotelName,
       hotelDescription: hotelDescription,
-      hotelLogo: hotelLogo,
+      hotelLogo: image,
     };
     console.log(data);
     router.push("/admin/hotel_info");
@@ -47,18 +59,6 @@ const HotelInfo = () => {
 
   const handleHotelDescriptionChange = (e) => {
     setHotelDescription(e.target.value);
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setHotelLogoPreview(reader.result);
-        setImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   const handleHotelLogoPreviewChange = (e) => {
@@ -96,11 +96,11 @@ const HotelInfo = () => {
                 <label className="mt-10 max-md:max-w-full">
                   Hotel description *
                 </label>
-                <input
-                  type="text"
+                <textarea
                   placeholder="Hotel description"
                   value={hotelDescription}
                   onChange={handleHotelDescriptionChange}
+                  onKeyDown={handleKeyDown}
                   className="mt-1 rounded border border-solid border-[color:var(--gray-400,#D6D9E4)] bg-white p-3 pb-12 pr-16 text-black max-md:max-w-full"
                 />
                 <label className="mt-10 max-md:max-w-full">Hotel logo *</label>{" "}
@@ -109,16 +109,18 @@ const HotelInfo = () => {
                     htmlFor="image-upload"
                     className="block h-[167px] w-[167px] cursor-pointer rounded border-2 border-dashed border-gray-300 p-4 text-center"
                   >
-                    {image && (
+                    {hotelLogoPreview && (
                       <div>
                         <div
                           className="absolute right-0 top-0 cursor-pointer"
                           onClick={handleDeleteLogoPreview}
                         >
-                          <CloseIcon />
+                          <div className="black rounded-full border bg-gray-200">
+                            <CloseIcon />
+                          </div>
                         </div>
                         <img
-                          src={image}
+                          src={hotelLogoPreview}
                           alt="Uploaded Preview"
                           className="block h-[100px] w-[100px] cursor-pointer rounded   border-gray-300  "
                         />
@@ -129,7 +131,7 @@ const HotelInfo = () => {
                       id="image-upload"
                       type="file"
                       accept="image/*"
-                      onChange={handleImageChange}
+                      onChange={handleHotelLogoPreviewChange}
                       className="hidden"
                     />
                   </label>

@@ -11,9 +11,9 @@ const Login = () => {
   const router = useRouter();
   const handleClick = (e) => {
     e.preventDefault();
-    alert("hello");
+    alert("hello Admin");
     setData({});
-    router.push("/");
+    router.push("/admin");
   };
   return (
     <div className="main-content relative flex">
@@ -21,7 +21,7 @@ const Login = () => {
         <Image src={bg} />
       </div>
       <div className="login-form  m-7 flex w-full flex-col items-center gap-10 rounded-xl bg-[#f7f7fb] md:ml-24 md:mt-32 md:items-start">
-        <h1 className="mt-5 text-5xl md:text-[68px]">Log In</h1>
+        <h1 className="mt-5 text-5xl md:text-[68px]">Admin Log In</h1>
         <form action="" className="flex w-1/2 flex-col">
           <div className="input-content flex flex-col gap-3">
             <label htmlFor="usernameOrEmail">Username or Email</label>

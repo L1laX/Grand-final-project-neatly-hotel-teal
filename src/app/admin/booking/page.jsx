@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/page.jsx";
 import NavBarAdmin from "@/components/navbar/NavbarAdminBooking.jsx";
 import Paper from "@mui/material/Paper";
@@ -54,87 +54,29 @@ const columns = [
 function createData(name, guest, roomType, amount, bedType, checkIn, checkOut) {
   return { name, guest, roomType, amount, bedType, checkIn, checkOut };
 }
-
-const rows = [
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-];
-
 function CustomerBooking() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [data, setData] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleChangePage = (event, newPage) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/admin/CustomerBooking");
+        const { data } = await response.json();
+        setRows(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data from API:", error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleChangePage = (_event, newPage) => {
     setPage(newPage);
   };
 
@@ -142,48 +84,11 @@ function CustomerBooking() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
   return (
     <div className="flex flex-row bg-gray-100">
       <Sidebar />
       <div className="flex w-full flex-col">
-<<<<<<< HEAD
-        <NavBar
-          navName={"Room & Property"}
-          button={true}
-          buttonName={"+Create Room"}
-        />
-
-        <Paper
-          sx={{ width: "95%", height: "90%", overflow: "hidden" }}
-          className=" ml-10  "
-        >
-          <TableContainer sx={{ maxH: "100vh" }}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align={column.align}
-                      style={{ minWidth: column.minWidth }}
-                      className="bg-gray-200 font-bold"
-                    >
-                      {column.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row.code}
-=======
         <NavBarAdmin navName={"Customer Booking"} />
         <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
           <Paper
@@ -200,7 +105,6 @@ function CustomerBooking() {
                         align={column.align}
                         style={{ minWidth: column.minWidth }}
                         className="bg-gray-200 font-bold"
->>>>>>> 400fafa4fd70ccf55aa60fc0288ce0973fcc5d97
                       >
                         {column.label}
                       </TableCell>
@@ -208,29 +112,40 @@ function CustomerBooking() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={row.code}
-                        >
-                          {columns.map((column) => {
-                            const value = row[column.id];
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                {column.format && typeof value === "number"
-                                  ? column.format(value)
-                                  : value}
-                              </TableCell>
-                            );
-                          })}
-                        </TableRow>
-                      );
-                    })}
+                  {loading ? (
+                    <TableRow>
+                      <TableCell colSpan={columns.length} align="center">
+                        Loading...
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    rows
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage,
+                      )
+                      .map((row) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={row.code}
+                          >
+                            {columns.map((column) => {
+                              const value = row[column.id];
+                              return (
+                                <TableCell key={column.id} align={column.align}>
+                                  {column.format && typeof value === "number"
+                                    ? column.format(value)
+                                    : value}
+                                </TableCell>
+                              );
+                            })}
+                          </TableRow>
+                        );
+                      })
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
