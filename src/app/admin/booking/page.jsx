@@ -1,7 +1,8 @@
 "use client";
-import React from "react";
+
+import { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/page.jsx";
-import NavBarAdmin from "@/components/navbar/NavbarAdmin.jsx";
+import NavBarAdmin from "@/components/navbar/NavbarAdminBooking.jsx";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -11,148 +12,30 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
-const columns = [
-  { id: "name", label: "Customer name", minWidth: 100 },
-  { id: "guest", label: "Guest(s)", minWidth: 100 },
-  {
-    id: "roomType",
-    label: "Room type",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "amount",
-    label: "Amount",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "bedType",
-    label: "Bed type",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: "checkIn",
-    label: "Check-in",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: "checkOut",
-    label: "Check-out",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-];
-
-function createData(name, guest, roomType, amount, bedType, checkIn, checkOut) {
-  return { name, guest, roomType, amount, bedType, checkIn, checkOut };
-}
-
-const rows = [
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-];
-
 function CustomerBooking() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rows, setRows] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [loading, setLoading] = useState(true);
 
-  const handleChangePage = (event, newPage) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/admin/CustomerBooking");
+        const data = await response.json();
+
+        setRows(data.data);
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data from API:", error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleChangePage = (_event, newPage) => {
     setPage(newPage);
   };
 
@@ -160,69 +43,88 @@ function CustomerBooking() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const columns = [
+    { id: "customerName", label: "Customer name", minWidth: 100 },
+    { id: "guest", label: "Guest(s)", minWidth: 100 },
+    { id: "roomType", label: "Room type", minWidth: 100, align: "right" },
+    { id: "amount", label: "Amount", minWidth: 100, align: "right" },
+    { id: "bedType", label: "Bed type", minWidth: 100, align: "right" },
+    { id: "checkIn", label: "Check-in", minWidth: 100, align: "right" },
+    { id: "checkOut", label: "Check-out", minWidth: 100, align: "right" },
+  ];
+
   return (
     <div className="flex flex-row bg-gray-100">
       <Sidebar setActive={1} />
       <div className="flex w-full flex-col">
         <NavBarAdmin navName={"Customer Booking"} />
-
-        <Paper
-          sx={{ width: "95%", height: "90%", overflow: "hidden" }}
-          className=" ml-10  "
-        >
-          <TableContainer sx={{ maxH: "100vh" }}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align={column.align}
-                      style={{ minWidth: column.minWidth }}
-                      className="bg-gray-200 font-bold"
-                    >
-                      {column.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row.code}
+        <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
+          <Paper
+            sx={{ width: "100%", height: "100%", overflow: "hidden" }}
+            className="ml-10"
+          >
+            <TableContainer sx={{ maxHeight: "100vh" }}>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    {columns.map((column) => (
+                      <TableCell
+                        key={column.id}
+                        align={column.align}
+                        style={{ minWidth: column.minWidth }}
+                        className="bg-gray-200 font-bold"
                       >
-                        {columns.map((column) => {
-                          const value = row[column.id];
-                          return (
+                        {column.label}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {loading ? (
+                    <TableRow>
+                      <TableCell colSpan={columns.length} align="center">
+                        Loading...
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    rows
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage,
+                      )
+                      .map((row) => (
+                        <TableRow
+                          key={row.id}
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                        >
+                          {columns.map((column) => (
                             <TableCell key={column.id} align={column.align}>
-                              {column.format && typeof value === "number"
-                                ? column.format(value)
-                                : value}
+                              {column.id === "checkIn" ||
+                              column.id === "checkOut"
+                                ? new Date(row[column.id]).toLocaleString()
+                                : row[column.id]}
                             </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
-            component="div"
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
+                          ))}
+                        </TableRow>
+                      ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 100]}
+              component="div"
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+        </div>
       </div>
     </div>
   );

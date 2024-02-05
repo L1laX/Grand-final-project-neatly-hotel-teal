@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/page";
 import NavBar from "@/components/navbar/NavbarAdmin";
 import Paper from "@mui/material/Paper";
@@ -103,7 +103,7 @@ const RoomType = () => {
   const router = useRouter();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_event, newPage) => {
     setPage(newPage);
   };
 
@@ -122,7 +122,7 @@ const RoomType = () => {
         />
         <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
           <Paper
-            sx={{ width: "95%", height: "87%", overflow: "hidden" }}
+            sx={{ width: "100%", height: "100%", overflow: "hidden" }}
             className=" ml-10  "
           >
             <TableContainer sx={{ maxH: "10vh" }}>

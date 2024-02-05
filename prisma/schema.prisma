@@ -58,3 +58,24 @@ model room{
   pricePerNight Int
   promotionPrice Int
 }
+
+
+model CustomerBooking{
+  id        Int     @id @default(autoincrement())
+  customerName String
+  guest       Int
+  roomType    String
+  amount      Int
+  bedType     String
+  checkIn     DateTime
+  checkOut    DateTime
+}
+
+model hotelInfo{
+  id Int @id @default(autoincrement())
+  hotelName String
+  image String
+  hotelDescription String
+
+}
+
