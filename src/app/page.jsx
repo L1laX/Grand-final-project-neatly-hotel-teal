@@ -51,8 +51,13 @@ export default function Home() {
     to: addDays(new Date(), 2),
   });
 
-  const [room, setRoom] = useState(1);
-  const [guest, setGuest] = useState(1);
+  // const [room, setRoom] = useState(1);
+  // const [guest, setGuest] = useState(1);
+
+  const [roomAndGuest,setRoomAndGuest] = useState({
+    room:1,
+    guest:1
+  })
 
   const settingsSlide = {
     className: "center",
@@ -96,21 +101,18 @@ export default function Home() {
           </div>
           <div className="h-82 flex w-full flex-row rounded-lg border-4 border-double border-indigo-600 bg-white shadow md:h-44 lg:h-48 xl:h-56">
             <div className="flex w-full flex-col items-center justify-around gap-2 border-4 border-double border-indigo-600 py-4 md:flex-row md:gap-8 md:px-16 lg:gap-10">
-              <DateRangeRoomGuest
-                handleDateRangeRoomGuest={{
-                  buttonName: "Search",
-                  calendarDesign: "h-10 sm:h-14 w-56 sm:w-full",
-                  buttonDesign:
-                    "btn-primary btn-primary:hover btn-primary:active btn-primary:disabled cursor-pointer mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1",
-                  date: date,
-                  setDate: setDate,
-                  room: room,
-                  setRoom: setRoom,
-                  guest: guest,
-                  setGuest: setGuest,
-                  pathname: "/room_detail",
-                }}
-              />
+            <DateRangeRoomGuest
+              handleDateRangeRoomGuest={{
+                buttonName: "Search",
+                calendarDesign: "h-10 sm:h-14 w-56 sm:w-full",
+                buttonDesign: "btn-primary btn-primary:hover btn-primary:active btn-primary:disabled cursor-pointer mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1",
+                date: date,
+                setDate: setDate ,
+                roomAndGuest: roomAndGuest,
+                setRoomAndGuest: setRoomAndGuest,
+                pathname: "/room_detail"
+              }}
+            />
             </div>
           </div>{" "}
         </div>
