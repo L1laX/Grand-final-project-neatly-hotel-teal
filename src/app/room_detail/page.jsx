@@ -13,26 +13,46 @@ import { RoomCard } from "@/components/common/RoomCard";
 import { useEffect, useState } from "react";
 import { addDays, format } from "date-fns";
 import { DateRangeRoomGuest } from "@/components/ui/DateRangeRoomGuest";
+import axios from "axios";
 
 // const [data, setData] = useState({});
 // const [searchRoom, setSearchRoom] = useState(null);
 
 export default function RoomDetail({ searchParams }) {
+
   const roomsType = ["1", "2", "3"];
 
   const [date, setDate] = useState(JSON.parse(searchParams.dateString));
   const [room, setRoom] = useState(parseInt(searchParams.room, 10));
   const [guest, setGuest] = useState(parseInt(searchParams.guest, 10));
 
-  const handleClickSearch = () => {
-    alert("test search")
+  const { from: checkIn, to: checkOut } = date;
+
+  //ถ้าไม่เปลี่ยน format เมื่อส่ง query ไป +จะหาย จาก 2024-03-30T00:00:00.000+07:00 กลายเป็น 2024-03-30T00:00:00.000 07:00
+  const checkInDate = format(new Date(checkIn), 'yyyy-MM-dd');
+  const checkOutDate = format(new Date(checkOut), 'yyyy-MM-dd');
+
+  const getRoomList = async()=>{
+    const result = await axios.get(`http://localhost:3000/api/roomdetail?checkin=${checkInDate}&checkout=${checkOutDate}`)
+    console.log(result.data)
   }
 
-  console.log(searchParams.date)
+  useEffect(()=>{
+    getRoomList()
+  },[])
+
+  const handleClickSearch = () => {
+    getRoomList()
+  }
+
+  // console.log(date)
+  console.log(checkIn)
+  console.log(checkOut)
   console.log(searchParams.room)
   console.log(searchParams.guest)
   console.log(searchParams.dateString)
   console.log(JSON.parse(searchParams.dateString))
+  //console.log(format(new Date(searchParams.date.from), 'LLL dd, y'));
 
   // const [showContent, setShowContent] = useState(false);
   // const [showGallery, setShowGallery] = useState(false);

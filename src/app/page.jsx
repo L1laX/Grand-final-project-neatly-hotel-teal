@@ -219,8 +219,6 @@ export default function Home() {
 
         <div className="flex w-11/12 grid-cols-5 grid-rows-9 flex-col gap-4 md:grid md:h-[84rem] lg:h-[120rem] lg:w-5/6">
           <div className="relative col-span-5 row-span-3 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
-        <div className="flex w-11/12 grid-cols-5 grid-rows-9 flex-col gap-4 md:grid md:h-[84rem] lg:h-[120rem] lg:w-5/6">
-          <div className="relative col-span-5 row-span-3 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
             <Image
               className="transform brightness-75 transition-transform duration-500 hover:scale-110"
               src={SuperiorGardenView}
@@ -235,17 +233,9 @@ export default function Home() {
               <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
                 Explore Room →
               </p>
-            <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
-              <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
-                Superior Garden View
-              </p>
-              <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
-                Explore Room →
-              </p>
             </div>
           </div>
 
-          <div className="relative col-span-3 row-span-2 row-start-4 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
           <div className="relative col-span-3 row-span-2 row-start-4 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
             <Image
               className="transform brightness-75 transition-transform duration-500 hover:scale-110"
@@ -261,17 +251,9 @@ export default function Home() {
               <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
                 Explore Room →
               </p>
-            <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
-              <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
-                Deluxe
-              </p>
-              <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
-                Explore Room →
-              </p>
             </div>
           </div>
 
-          <div className="relative col-span-2 col-start-4 row-span-2 row-start-4 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
           <div className="relative col-span-2 col-start-4 row-span-2 row-start-4 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
             <Image
               className="transform brightness-75 transition-transform duration-500 hover:scale-110"
@@ -287,17 +269,9 @@ export default function Home() {
               <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
                 Explore Room →
               </p>
-            <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
-              <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
-                Superior
-              </p>
-              <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
-                Explore Room →
-              </p>
             </div>
           </div>
 
-          <div className="relative col-span-2 row-span-4 row-start-6 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
           <div className="relative col-span-2 row-span-4 row-start-6 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
             <Image
               className="transform brightness-75 transition-transform duration-500 hover:scale-110"
@@ -313,17 +287,9 @@ export default function Home() {
               <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
                 Explore Room →
               </p>
-            <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
-              <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
-                Premier Sea View
-              </p>
-              <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
-                Explore Room →
-              </p>
             </div>
           </div>
 
-          <div className="relative col-span-3 col-start-3 row-span-2 row-start-6 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
           <div className="relative col-span-3 col-start-3 row-span-2 row-start-6 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
             <Image
               className="transform brightness-75 transition-transform duration-500 hover:scale-110"
@@ -339,17 +305,9 @@ export default function Home() {
               <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
                 Explore Room →
               </p>
-            <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
-              <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
-                Supreme
-              </p>
-              <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
-                Explore Room →
-              </p>
             </div>
           </div>
 
-          <div className="relative col-span-3 col-start-3 row-span-2 row-start-8 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
           <div className="relative col-span-3 col-start-3 row-span-2 row-start-8 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
             <Image
               className="transform brightness-75 transition-transform duration-500 hover:scale-110"
@@ -358,13 +316,6 @@ export default function Home() {
               layout="fill"
               objectFit="cover"
             />
-            <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
-              <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
-                Suite
-              </p>
-              <p className="mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-xl xl:mt-6">
-                Explore Room →
-              </p>
             <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
               <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
                 Suite
@@ -407,7 +358,5 @@ export default function Home() {
 
       <UserFooter />
     </>
-  );
-}
   );
 }
