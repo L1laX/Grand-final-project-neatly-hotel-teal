@@ -30,7 +30,6 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         //validating data
-        console.log(credentials);
         if (!credentials?.username || !credentials?.password) {
           return null;
         }
@@ -44,7 +43,6 @@ const handler = NextAuth({
             email: credentials.username,
           },
         });
-        console.log(username);
 
         if (!email && !username) {
           return null;
@@ -73,11 +71,11 @@ const handler = NextAuth({
             credentials.password,
             email.password,
           );
-          console.log(1);
+
           if (!passwordMatch) {
             return null;
           }
-          console.log(2);
+
           const data = {
             id: email.id,
             username: email.username,
@@ -85,7 +83,7 @@ const handler = NextAuth({
             role: email.role,
             image: email.image,
           };
-          console.log(3);
+
           return data;
         }
       },

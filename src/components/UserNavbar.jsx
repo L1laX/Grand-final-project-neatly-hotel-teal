@@ -59,10 +59,10 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
         <div className="none-user flex items-center justify-items-end gap-5 justify-self-end ">
           {session ? (
             <div className="dropdown relative flex w-[7rem] items-center gap-10">
-              <div className="h-15 w-15 cursor-pointer hover:animate-bounce">
+              <div className="h-15 w-15 cursor-pointer ">
                 <Image
                   src={Frame}
-                  className=" h-5 w-5 cursor-pointer opacity-50"
+                  className=" h-5 w-5 cursor-pointer opacity-50 hover:animate-bounce"
                 />
               </div>
 
