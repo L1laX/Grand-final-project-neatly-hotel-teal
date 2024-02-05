@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
+
+import { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/page.jsx";
 import NavBarAdmin from "@/components/navbar/NavbarAdminBooking.jsx";
 import Paper from "@mui/material/Paper";
@@ -11,62 +12,20 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
-const columns = [
-  { id: "name", label: "Customer name", minWidth: 100 },
-  { id: "guest", label: "Guest(s)", minWidth: 100 },
-  {
-    id: "roomType",
-    label: "Room type",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "amount",
-    label: "Amount",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "bedType",
-    label: "Bed type",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: "checkIn",
-    label: "Check-in",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: "checkOut",
-    label: "Check-out",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-];
-
-function createData(name, guest, roomType, amount, bedType, checkIn, checkOut) {
-  return { name, guest, roomType, amount, bedType, checkIn, checkOut };
-}
 function CustomerBooking() {
-  const [data, setData] = useState([]);
+  const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("/api/admin/CustomerBooking");
-        const { data } = await response.json();
-        setRows(data);
+        const data = await response.json();
+
+        setRows(data.data);
+
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data from API:", error.message);
@@ -85,6 +44,16 @@ function CustomerBooking() {
     setPage(0);
   };
 
+  const columns = [
+    { id: "customerName", label: "Customer name", minWidth: 100 },
+    { id: "guest", label: "Guest(s)", minWidth: 100 },
+    { id: "roomType", label: "Room type", minWidth: 100, align: "right" },
+    { id: "amount", label: "Amount", minWidth: 100, align: "right" },
+    { id: "bedType", label: "Bed type", minWidth: 100, align: "right" },
+    { id: "checkIn", label: "Check-in", minWidth: 100, align: "right" },
+    { id: "checkOut", label: "Check-out", minWidth: 100, align: "right" },
+  ];
+
   return (
     <div className="flex flex-row bg-gray-100">
       <Sidebar />
@@ -93,9 +62,9 @@ function CustomerBooking() {
         <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
           <Paper
             sx={{ width: "100%", height: "100%", overflow: "hidden" }}
-            className=" ml-10  "
+            className="ml-10"
           >
-            <TableContainer sx={{ maxH: "100vh" }}>
+            <TableContainer sx={{ maxHeight: "100vh" }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
@@ -124,27 +93,23 @@ function CustomerBooking() {
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage,
                       )
-                      .map((row) => {
-                        return (
-                          <TableRow
-                            hover
-                            role="checkbox"
-                            tabIndex={-1}
-                            key={row.code}
-                          >
-                            {columns.map((column) => {
-                              const value = row[column.id];
-                              return (
-                                <TableCell key={column.id} align={column.align}>
-                                  {column.format && typeof value === "number"
-                                    ? column.format(value)
-                                    : value}
-                                </TableCell>
-                              );
-                            })}
-                          </TableRow>
-                        );
-                      })
+                      .map((row) => (
+                        <TableRow
+                          key={row.id}
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                        >
+                          {columns.map((column) => (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.id === "checkIn" ||
+                              column.id === "checkOut"
+                                ? new Date(row[column.id]).toLocaleString()
+                                : row[column.id]}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))
                   )}
                 </TableBody>
               </Table>

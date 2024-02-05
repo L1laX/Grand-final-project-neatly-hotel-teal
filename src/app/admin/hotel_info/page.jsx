@@ -1,7 +1,10 @@
 "use client";
+
+import { supabase } from "../../../utils/supabase.js";
+
 import React, { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/page";
-import NavBarAdmin3 from "@/components/navbar_admin3/navbar3";
+
 import Paper from "@mui/material/Paper";
 import { useRouter } from "next/navigation";
 import CloseIcon from "@mui/icons-material/Close";
@@ -16,13 +19,22 @@ const HotelInfo = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Fetch API data here
-    // Example:
-    fetch("https://api/hotel_info")
-      .then((response) => response.json())
-      .then((data) => setApiData(data))
-      .catch((error) => console.log(error));
+    fetchHotelInfo();
   }, []);
+
+  const fetchHotelInfo = async () => {
+    try {
+      const { data, error } = await supabase.from("hotelInfo").select("*");
+
+      if (error) {
+        console.error("Error fetching Hotel Information:", error);
+      } else {
+        setApiData(data);
+      }
+    } catch (error) {
+      console.error("Error fetching Hotel Information:", error);
+    }
+  };
 
   const handleDeleteLogoPreview = () => {
     setHotelLogoPreview(null);
@@ -41,16 +53,36 @@ const HotelInfo = () => {
       input.selectionStart = input.selectionEnd = start + 1;
     }
   };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = {
-      hotelName: hotelName,
-      hotelDescription: hotelDescription,
-      hotelLogo: image,
-    };
-    console.log(data);
-    router.push("/admin/hotel_info");
+
+    const formData = new FormData();
+    formData.append("hotelName", hotelName);
+    formData.append("hotelDescription", hotelDescription);
+
+    if (image) {
+      formData.set("image", image, image.name);
+    }
+
+    try {
+      const { data, error } = await supabase.from("hotelInfo").insert([
+        {
+          hotelName: formData.get("hotelName"),
+          hotelDescription: formData.get("hotelDescription"),
+          image: formData.get("image"),
+        },
+      ]);
+
+      if (error) {
+        console.error("Error submitting hotel information:", error);
+      } else {
+        console.log("Hotel information submitted successfully");
+      }
+
+      router.push("/api/admin/hotel_info");
+    } catch (error) {
+      console.error("Error submitting hotel information:", error);
+    }
   };
 
   const handleHotelNameChange = (e) => {
@@ -69,6 +101,7 @@ const HotelInfo = () => {
         setHotelLogoPreview(reader.result);
       };
       reader.readAsDataURL(file);
+      setImage(file);
     }
   };
 
@@ -77,13 +110,23 @@ const HotelInfo = () => {
       <Sidebar />
 
       <div className="flex w-full flex-col">
-        <NavBarAdmin3 navName="Hotel Information" />
+        <header className="flex gap-4 border-b border-solid border-b-[color:var(--gray-300,#E4E6ED)] bg-white px-16 py-4 font-semibold max-md:flex-wrap max-md:px-5">
+          <h1 className="my-auto grow text-xl stacked-fractions leading-8 tracking-tight text-slate-800 max-md:max-w-full">
+            Hotel Information
+          </h1>
+          <button
+            onClick={handleSubmit}
+            className="btn-primary btn-primary:hover btn-primary:active btn-primary:disabled justify-center whitespace-nowrap rounded bg-orange-700 px-8 py-4 text-base leading-4 text-white max-md:px-5"
+          >
+            Update
+          </button>
+        </header>
         <div className="room-type-table mr-7 mt-6 flex items-center justify-center">
           <Paper
             sx={{ width: "100%", height: "100%", overflow: "hidden" }}
             className="ml-10"
           >
-            <form onSubmit={handleSubmit}>
+            <form>
               <div className="flex flex-col rounded border border-solid border-[color:var(--gray-300,#E4E6ED)] bg-white px-20 py-11 max-md:max-w-full max-md:px-5">
                 <label className="max-md:max-w-full">Hotel name *</label>
                 <input
@@ -121,19 +164,28 @@ const HotelInfo = () => {
                         </div>
                         <img
                           src={hotelLogoPreview}
-                          alt="Uploaded Preview"
-                          className="block h-[100px] w-[100px] cursor-pointer rounded   border-gray-300  "
+                          alt="Hotel logo preview"
+                          className="mx-auto mb-4 h-[90px] w-[90px]"
                         />
+                        <div>
+                          <p>Click to change logo</p>
+                        </div>
                       </div>
                     )}
-                    Click to Upload Image
-                    <input
-                      id="image-upload"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleHotelLogoPreviewChange}
-                      className="hidden"
-                    />
+                    {!hotelLogoPreview && (
+                      <div>
+                        <input
+                          type="file"
+                          id="image-upload"
+                          accept="image/*"
+                          onChange={handleHotelLogoPreviewChange}
+                          className="hidden"
+                        />
+                        <div>
+                          <p>Click to add a logo</p>
+                        </div>
+                      </div>
+                    )}
                   </label>
                 </div>
               </div>
