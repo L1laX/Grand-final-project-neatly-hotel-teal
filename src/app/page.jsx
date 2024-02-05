@@ -1,9 +1,10 @@
 "use client";
+import { useState } from "react";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import SecondaryBtn from "@/components/common/SecondaryBtn";
 import UserFooter from "@/components/UserFooter";
 import Image from "next/legacy/image";
-import hero from "/src/asset/homepage/hero.jpg";
+import Hero from "/src/asset/homepage/hero.jpg";
 import SuperiorGardenView from "/src/asset/homepage/Superior-Garden-View.jpg";
 import Deluxe from "/src/asset/homepage/Deluxe.jpg";
 import Superior from "/src/asset/homepage/Superior.jpg";
@@ -28,28 +29,39 @@ import {
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "./react-slick.css";
 import UserNavbar from "@/components/UserNavbar";
+import { DateRangeRoomGuest } from "@/components/ui/DateRangeRoomGuest";
+import Link from "next/link";
+import { addDays, format } from "date-fns";
 
 export default function Home() {
-  const settings = {
+
+  const [date, setDate] = useState({
+    from: new Date(),
+    to: addDays(new Date(), 2),
+  });
+
+  const [room, setRoom] = useState(1);
+  const [guest, setGuest] = useState(1);
+
+  const settingsSlide = {
     className: "center",
     centerMode: true,
     infinite: true,
     centerPadding: "60px",
     slidesToShow: 3,
     speed: 500,
-    arrows: false,
-    adaptiveHeight: false,
-    responsive: [
-      {
-        breakpoint: 600,
-        settings: {
-          variableWidth: false,
-          centerMode: false,
-        },
-      },
-    ],
   };
+
+  const settingsComments = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
   return (
     <section>
       <UserNavbar
@@ -59,12 +71,12 @@ export default function Home() {
       />
       <header className="relative flex h-[26rem] max-h-full items-center justify-center sm:h-[36rem] lg:h-[48rem] xl:h-[58rem]">
         <Image
-          src={hero}
+          src={Hero}
           alt="Neatly Hero Section"
           layout="fill"
           objectFit="cover"
         />
-        <div className="to-94% absolute inset-0 bg-gradient-to-b from-black from-5% to-transparent"></div>
+        <div className="to-94% from-1% absolute inset-0 bg-gradient-to-b from-neutral-900 to-transparent"></div>
         <div className="z-10 flex h-full w-11/12 flex-col items-center justify-evenly border-4 border-double border-indigo-600 lg:w-5/6">
           <div>
             <h1 className="border-4 border-double border-indigo-600 text-center text-3xl text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
@@ -74,33 +86,20 @@ export default function Home() {
           </div>
           <div className="h-82 flex w-full flex-row rounded-lg border-4 border-double border-indigo-600 bg-white shadow md:h-44 lg:h-48 xl:h-56">
             <div className="flex w-full flex-col items-center justify-around gap-2 border-4 border-double border-indigo-600 py-4 md:flex-row md:gap-8 md:px-16 lg:gap-10">
-              <div className=" date-checkin-checkout flex grow flex-col">
-                <p className=" font-sans text-base font-normal text-[#2a2e3f]">
-                  Check In - Check Out
-                </p>
-                <DatePickerWithRange checkInOut="h-10 sm:h-14 w-56 sm:w-full" />
-              </div>
-              <div className="room-guest-select flex flex-1 flex-col">
-                <p className=" font-sans text-base font-normal text-[#2a2e3f]">
-                  Room & Guests
-                </p>
-                <Select>
-                  <SelectTrigger className="h-10 w-full min-w-48 text-[#9AA1B9] sm:h-14">
-                    <SelectValue placeholder="1 room, 2 quests" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="light">
-                      1 room, 2 quests *ใช้APIจากroom_id
-                    </SelectItem>
-                    <SelectItem value="dark">Dark</SelectItem>
-                    <SelectItem value="system">System</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <PrimaryBtn
-                primaryButton="mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1"
-                btnName="Search"
-              />
+            <DateRangeRoomGuest
+              handleDateRangeRoomGuest={{
+                buttonName: "Search",
+                calendarDesign: "h-10 sm:h-14 w-56 sm:w-full",
+                buttonDesign: "btn-primary btn-primary:hover btn-primary:active btn-primary:disabled cursor-pointer mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1",
+                date: date,
+                setDate: setDate ,
+                room: room,
+                setRoom: setRoom,
+                guest: guest,
+                setGuest: setGuest,
+                pathname: "/room_detail"
+              }}
+            />
             </div>
           </div>{" "}
         </div>
@@ -127,32 +126,36 @@ export default function Home() {
 
       <section id="service" className="flex">
         <div className="w-full">
-          <h2>Center Mode</h2>
-          <Slider {...settings}>
+          <Slider {...settingsSlide}>
+            <div>
+              <Image className="" src={SuperiorGardenView} alt="Suite" />
+            </div>
             <div>
               <Image
-                className="h-48 w-auto"
-                src={SuperiorGardenView}
+                className=""
+                src={Superior}
                 alt="Suite"
+                height={1329.25}
+                objectFit="cover"
+              />
+            </div>
+            <div>
+              <Image
+                className=""
+                src={Hero}
+                alt="Suite"
+                height={1279.5}
+                objectFit="cover"
               />
             </div>
             <div>
               <Image className="" src={Suite} alt="Suite" />
             </div>
             <div>
-              <Image className="" src={SuperiorGardenView} alt="Suite" />
+              <Image className="" src={PremierSeaView} alt="Suite" />
             </div>
             <div>
-              <Image className="" src={Suite} alt="Suite" />
-            </div>
-            <div>
-              <Image className="" src={SuperiorGardenView} alt="Suite" />
-            </div>
-            <div>
-              <Image className="" src={Suite} alt="Suite" />
-            </div>
-            <div>
-              <Image className="" src={SuperiorGardenView} alt="Suite" />
+              <Image className="" src={Supreme} alt="Suite" />
             </div>
             <div>
               <Image className="" src={Suite} alt="Suite" />
@@ -215,7 +218,7 @@ export default function Home() {
 
       <section className="sm:py-22 flex flex-col items-center py-14 md:py-28 lg:py-36 xl:py-40">
         <h2 className="mb-10 border-4 border-double border-indigo-600 text-center text-4xl sm:mb-14 sm:text-5xl md:mb-20 md:text-6xl lg:mb-24 lg:text-7xl xl:mb-28 xl:text-8xl">
-          Service & Facilities
+          Rooms & Suits
         </h2>
 
         <div className="flex w-11/12 grid-cols-5 grid-rows-9 flex-col gap-4 md:grid md:h-[84rem] lg:h-[120rem] lg:w-5/6">
@@ -330,14 +333,31 @@ export default function Home() {
       </section>
 
       <section className="flex flex-col items-center bg-[#E6EBE9]">
-        <h2 className="border-4 border-double border-indigo-600 text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
-          Our Customer Says
-        </h2>
-        <p>
-          “lorem ipsum dolor sit amet minim mollit non deserunt ullamco est sit
-          aliqua dolor do amet sint, velit official consequat duis enim velit
-          mollit, exercitation minim amet consequat sunt.”
-        </p>
+        <div className="flex h-full w-11/12 flex-col items-center justify-evenly border-4 border-double border-indigo-600 lg:w-5/6">
+          <h2 className="my-10 border-4 border-double border-indigo-600 text-center text-4xl sm:my-14 sm:text-5xl md:my-20 md:text-6xl lg:my-24 lg:text-7xl xl:my-28 xl:text-8xl">
+            Our Customer Says
+          </h2>
+          <div className="mb-10 w-full sm:mb-14 sm:text-5xl md:mb-20 md:text-6xl lg:mb-24 lg:text-7xl xl:mb-28">
+            <Slider {...settingsComments}>
+              <div>
+                <h3 className="border-4 border-double border-indigo-600 px-10 text-center max-sm:text-3xl lg:px-20">
+                  “lorem ipsum dolor sit amet minim mollit non deserunt ullamco
+                  est sit aliqua dolor do amet sint, velit official consequat
+                  duis enim velit mollit, exercitation minim amet consequat
+                  sunt.”
+                </h3>
+              </div>
+              <div>
+                <h3 className="border-4 border-double border-indigo-600 px-10 text-center max-sm:text-3xl lg:px-20">
+                  “lorem ipsum dolor sit amet minim mollit non deserunt ullamco
+                  est sit aliqua dolor do amet sint, velit official consequat
+                  duis enim velit mollit, exercitation minim amet consequat
+                  sunt.”
+                </h3>
+              </div>
+            </Slider>
+          </div>
+        </div>
       </section>
 
       <UserFooter />
