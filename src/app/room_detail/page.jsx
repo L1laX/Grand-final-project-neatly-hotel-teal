@@ -18,7 +18,7 @@ export default function RoomDetail() {
   const [rooms, setRooms] = useState([]);
 
   const getRoom = async () => {
-    const result = await axios.get("/api/roomdetail");
+    const result = await axios.get(`/api/roomdetail`);
     console.log(result.data);
     setRooms(result.data);
   };
