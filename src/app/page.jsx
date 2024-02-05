@@ -63,8 +63,12 @@ export default function Home() {
   };
 
   return (
-    <>
-      {/* <UserNavbar/> */}
+    <section>
+      <UserNavbar
+        aboutid={"#about"}
+        serviceid={"#service"}
+        roomsid={"#rooms"}
+      />
       <header className="relative flex h-[26rem] max-h-full items-center justify-center sm:h-[36rem] lg:h-[48rem] xl:h-[58rem]">
         <Image
           src={Hero}
@@ -101,7 +105,7 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="flex justify-center">
+      <section id="about" className=" flex justify-center">
         <div className="flex h-full w-11/12 flex-col items-center border-4 border-double border-indigo-600 py-16 sm:py-20 md:py-24 lg:w-5/6 lg:py-28 xl:py-32">
           <h2 className="self-start text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
             Neatly Hotel
@@ -120,7 +124,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="flex">
+      <section id="service" className="flex">
         <div className="w-full">
           <Slider {...settingsSlide}>
             <div>
@@ -160,7 +164,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section>
+      <section id="rooms">
         <div className="flex flex-col items-center bg-[#465C50]">
           <h2 className="my-16 border-4 border-double border-indigo-600 text-[2.175rem] text-white sm:my-20 sm:text-[3.5rem] md:my-24 xl:my-28 xl:text-7xl">
             Service & Facilities
@@ -357,6 +361,6 @@ export default function Home() {
       </section>
 
       <UserFooter />
-    </>
+    </section>
   );
 }

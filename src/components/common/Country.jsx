@@ -1,16 +1,22 @@
 import React from "react";
 
-const Country = ({ setCountry }) => {
+const Country = ({ setCountry, className }) => {
   return (
     <div>
-      <label htmlFor="country">Country</label>
-
       <select
         id="country"
-        className="country"
-        class="form-control"
-        onChange={(e) => setCountry(e.target.value)}
+        name="country"
+        defaultValue=""
+        className={
+          className
+            ? "mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[446px]"
+            : "country"
+        }
+        onChange={(e) => setCountry(e)}
       >
+        <option value="" disabled>
+          Select your country
+        </option>
         <option value="Afghanistan">Afghanistan</option>
         <option value="Åland Islands">Åland Islands</option>
         <option value="Albania">Albania</option>

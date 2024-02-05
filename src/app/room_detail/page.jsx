@@ -21,7 +21,7 @@ import axios from "axios";
 export default function RoomDetail({ searchParams }) {
 
   const roomsType = ["1", "2", "3"];
-
+  const [rooms, setRooms] = useState([]);
   const [date, setDate] = useState(JSON.parse(searchParams.dateString));
   const [room, setRoom] = useState(parseInt(searchParams.room, 10));
   const [guest, setGuest] = useState(parseInt(searchParams.guest, 10));
@@ -31,7 +31,6 @@ export default function RoomDetail({ searchParams }) {
   //ถ้าไม่เปลี่ยน format เมื่อส่ง query ไป +จะหาย จาก 2024-03-30T00:00:00.000+07:00 กลายเป็น 2024-03-30T00:00:00.000 07:00
   const checkInDate = format(new Date(checkIn), 'yyyy-MM-dd');
   const checkOutDate = format(new Date(checkOut), 'yyyy-MM-dd');
-
   const getRoomList = async()=>{
     const result = await axios.get(`http://localhost:3000/api/roomdetail?checkin=${checkInDate}&checkout=${checkOutDate}`)
     console.log(result.data)
@@ -67,20 +66,6 @@ export default function RoomDetail({ searchParams }) {
   //   }
   // };
 
-  // const getSearchData = async () => {
-  //   try {
-  //     const response = await axios.get("/api/search/roomtype");
-  //     console.log(response.data.data);
-  //     setSearchRoom(response.data.data);
-  //   } catch (error) {
-  //     console.log("Cannot Fetching Data");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getRoomType(), getSearchData(data);
-  // }, [searchRoom]);
-
   return (
     <main>
       {/* search-bar */}
@@ -101,11 +86,25 @@ export default function RoomDetail({ searchParams }) {
               }}
             />
             </div>
-          </div>{" "}
+          </div>
       <div className="divide-y-2 divide-gray-300 lg:m-20">
-        {roomsType.map((item, index) => (
-          <RoomCard key={index} roomitem={item} />
-        ))}
+        {rooms.map((item) => {
+          console.log(item.id);
+          return (
+            <RoomCard
+              key={item.id}
+              roomitem={item.id}
+              roomname={item.name}
+              roomimage={item.roomMainImage}
+              roomguest={item.guests}
+              roomdesc={item.description}
+              roomprice={item.pricePerNight}
+              roomdisc={item.promotionPrice}
+              roombedtype={item.bedType}
+              roomsize={item.size}
+            />
+          );
+        })}
       </div>
     </main>
   );

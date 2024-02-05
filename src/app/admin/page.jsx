@@ -1,9 +1,8 @@
 "use client";
 
-"use client";
-import React from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar/page.jsx";
-import NavBarAdmin from "@/components/navbar/NavbarAdmin.jsx";
+import NavBarAdmin from "@/components/navbar/NavbarAdminBooking.jsx";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -13,130 +12,30 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
-const columns = [
-  { id: "name", label: "Customer name", minWidth: 100 },
-  { id: "guest", label: "Guest(s)", minWidth: 100 },
-  {
-    id: "roomType",
-    label: "Room type",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "amount",
-    label: "Amount",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "bedType",
-    label: "Bed type",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: "checkIn",
-    label: "Check-in",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: "checkOut",
-    label: "Check-out",
-    minWidth: 100,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-];
+function Admin() {
+  const [rows, setRows] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [loading, setLoading] = useState(true);
 
-function createData(name, guest, roomType, amount, bedType, checkIn, checkOut) {
-  return { name, guest, roomType, amount, bedType, checkIn, checkOut };
-}
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/admin/CustomerBooking");
+        const data = await response.json();
 
-const rows = [
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-  createData(
-    "Chayanon",
-    "2",
-    "Superior Garden View",
-    "1",
-    "SingleBed",
-    "Th,19 Oct 2022",
-    "Fri , 20 Oct 2022",
-  ),
-];
+        setRows(data.data);
 
-const Admin = () => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data from API:", error.message);
+      }
+    };
 
-  const handleChangePage = (event, newPage) => {
+    fetchData();
+  }, []);
+
+  const handleChangePage = (_event, newPage) => {
     setPage(newPage);
   };
 
@@ -145,6 +44,16 @@ const Admin = () => {
     setPage(0);
   };
 
+  const columns = [
+    { id: "customerName", label: "Customer name", minWidth: 100 },
+    { id: "guest", label: "Guest(s)", minWidth: 100 },
+    { id: "roomType", label: "Room type", minWidth: 100, align: "right" },
+    { id: "amount", label: "Amount", minWidth: 100, align: "right" },
+    { id: "bedType", label: "Bed type", minWidth: 100, align: "right" },
+    { id: "checkIn", label: "Check-in", minWidth: 100, align: "right" },
+    { id: "checkOut", label: "Check-out", minWidth: 100, align: "right" },
+  ];
+
   return (
     <div className="flex flex-row bg-gray-100">
       <Sidebar />
@@ -152,10 +61,10 @@ const Admin = () => {
         <NavBarAdmin navName={"Customer Booking"} />
         <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
           <Paper
-            sx={{ width: "95%", height: "100%", overflow: "hidden" }}
-            className=" ml-10  "
+            sx={{ width: "100%", height: "100%", overflow: "hidden" }}
+            className="ml-10"
           >
-            <TableContainer sx={{ maxH: "100vh" }}>
+            <TableContainer sx={{ maxHeight: "100vh" }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
@@ -172,29 +81,36 @@ const Admin = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
-                      return (
+                  {loading ? (
+                    <TableRow>
+                      <TableCell colSpan={columns.length} align="center">
+                        Loading...
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    rows
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage,
+                      )
+                      .map((row) => (
                         <TableRow
+                          key={row.id}
                           hover
                           role="checkbox"
                           tabIndex={-1}
-                          key={row.code}
                         >
-                          {columns.map((column) => {
-                            const value = row[column.id];
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                {column.format && typeof value === "number"
-                                  ? column.format(value)
-                                  : value}
-                              </TableCell>
-                            );
-                          })}
+                          {columns.map((column) => (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.id === "checkIn" ||
+                              column.id === "checkOut"
+                                ? new Date(row[column.id]).toLocaleString()
+                                : row[column.id]}
+                            </TableCell>
+                          ))}
                         </TableRow>
-                      );
-                    })}
+                      ))
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -212,6 +128,6 @@ const Admin = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Admin;

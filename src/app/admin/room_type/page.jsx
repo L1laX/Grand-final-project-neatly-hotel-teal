@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/page";
 import NavBar from "@/components/navbar/NavbarAdmin";
 import Paper from "@mui/material/Paper";
@@ -103,7 +103,7 @@ const RoomType = () => {
   const router = useRouter();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_event, newPage) => {
     setPage(newPage);
   };
 
@@ -113,8 +113,8 @@ const RoomType = () => {
   };
   return (
     <div className="flex flex-row bg-gray-100">
-      <Sidebar />
-      <div className=" w-full flex-col">
+      <Sidebar setActive={4} />
+      <div className="felx w-full flex-col">
         <NavBar
           navName={"Room & Property"}
           button={true}

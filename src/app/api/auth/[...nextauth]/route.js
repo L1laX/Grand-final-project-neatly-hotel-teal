@@ -5,9 +5,13 @@ import { compare } from "bcrypt";
 import NextAuth from "next-auth/next";
 
 const handler = NextAuth({
+  secret: process.env.AUTH_SECRET,
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
+  },
+  pages: {
+    signIn: "/login",
   },
   providers: [
     CredentialsProvider({
@@ -25,17 +29,7 @@ const handler = NextAuth({
         },
       },
       async authorize(credentials) {
-        //   const res = await fetch("https://www.melivecode.com/api/login", {
-        //     method: "POST",
-        //     body: JSON.stringify(credentials),
-        //     headers: { "Content-Type": "application/json" },
-        //   });
-        //   const data = await res.json();
-        //   console.log(data);
-        //   if (data.status === "ok") {
-        //     return data.user;
-        //   }
-        //   return null;
+        //validating data
         if (!credentials?.username || !credentials?.password) {
           return null;
         }
@@ -53,38 +47,69 @@ const handler = NextAuth({
         if (!email && !username) {
           return null;
         }
-        if (!username && email) {
+        //if login with username
+        if (username) {
+          const passwordMatch = await compare(
+            credentials.password,
+            username.password,
+          );
+          if (!passwordMatch) {
+            return null;
+          }
+          const data = {
+            id: username.id,
+            username: username.username,
+            email: username.email,
+            role: username.role,
+            image: username.image,
+          };
+          return data;
+        }
+        //if login with email
+        if (email) {
           const passwordMatch = await compare(
             credentials.password,
             email.password,
           );
+
           if (!passwordMatch) {
             return null;
           }
-          return {
+
+          const data = {
             id: email.id,
             username: email.username,
             email: email.email,
+            role: email.role,
+            image: email.image,
           };
-        } else {
-          const passwordMatch = await compare(
-            credentials.password,
-            user.password,
-          );
-          if (!passwordMatch) {
-            return null;
-          }
-          return {
-            id: username.id,
-            username: username.username,
-            email: username.email,
-          };
+
+          return data;
         }
       },
     }),
   ],
-  pages: {
-    signIn: "/login",
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+        token.username = user.username;
+        token.email = user.email;
+        token.image = user.image;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user.role = token.role;
+        session.user.username = token.username;
+        session.user.email = token.email;
+        session.user.image = token.image;
+      }
+      return session;
+    },
   },
 });
 

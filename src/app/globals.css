@@ -65,7 +65,9 @@
     --ring: 212.7 26.8% 83.9%;
   }
 }
-
+html {
+  scroll-behavior: smooth;
+}
 @layer base {
   body {
     @apply bg-[#f7f7fb];
@@ -286,7 +288,6 @@
     color: #c8ccdb;
   }
 }
-
 .textCircle {
   width: 1.5rem; 
   height: 1.5rem; 
@@ -298,3 +299,4 @@
   align-items: center;
   justify-content: center;
 }
+

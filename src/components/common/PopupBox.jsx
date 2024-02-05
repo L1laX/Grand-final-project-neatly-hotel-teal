@@ -20,7 +20,7 @@ export default function PopupBox({ isVisible, onClose }) {
         <div className="popup-content flex items-center justify-center bg-white">
           <div className="h-[577px] w-[450px] divide-y-2 divide-gray-300 overflow-auto rounded border border-gray-300 p-4 md:w-[800px]">
             <div className=" flex flex-row justify-between gap-5 p-4 md:ml-20">
-              <h5>Superior Garden View</h5>
+              <h5>Superior Garden View </h5>
               <Image
                 className=" cursor-pointer"
                 src={CloseIcon}

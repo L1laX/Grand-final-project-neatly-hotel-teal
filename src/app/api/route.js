@@ -1,5 +1,5 @@
-export function GET() {
-  return new Response("Hello this is GET", {
-    status: 200,
-  });
+import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
+export async function GET() {
+  return NextResponse.json({ message: "Hello" });
 }

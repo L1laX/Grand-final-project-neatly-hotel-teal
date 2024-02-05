@@ -9,7 +9,6 @@ export async function GET(req, res) {
   const checkin = new Date(searchParams.get("checkin"));
   const checkout = new Date(searchParams.get("checkout"));
 
-
   const data = await prisma.room.findMany({
     orderBy: [{ id: "asc" }],
     where: {
@@ -34,6 +33,5 @@ export async function GET(req, res) {
 //   console.log(checkin);
 //   console.log(checkout);
   // console.log(data);
-
   return NextResponse.json(data);
 }
