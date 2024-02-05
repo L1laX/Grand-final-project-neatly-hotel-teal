@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "../../../utils/supabase.js";
+import { supabaseneung } from "@/lib/neungSUPABASE.js";
 
 import React, { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/page";

@@ -10,8 +10,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
+model user {
+  user_id    Int     @id @default(autoincrement())
   email String  @unique
   username  String @unique
   password String
@@ -19,63 +19,104 @@ model User {
   image String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  userprofile userprofile?
+  user_profile user_profile?
+  customer_booking customer_booking[]
 }
 
-model userprofile{
-  id Int @id @default(autoincrement())
-  user User  @relation(fields: [user_id],references: [id])
+model user_profile{
+  user_profile_id Int @id @default(autoincrement())
+  user user  @relation(fields: [user_id],references: [user_id])
   user_id Int @unique
   fullName String
   id_number String
-  dateOfBirth String
+  dateOfBirth DateTime
   country String
-  creditcard creditcard @relation(fields: [creditCard_id],references: [id])
+  creditcard creditcard @relation(fields: [creditCard_id],references: [creditcard_id])
   creditCard_id Int @unique
 }
-
 model creditcard{
-  id Int @id @default(autoincrement())
+  creditcard_id Int @id @default(autoincrement())
   cardNumber String
   cardOwner String
   expiryDate String
   cvc_cvv String
-  userprofile userprofile?
+  user_profile user_profile?
 }
 
+//new on 5/feb
 
 model room{
-  id Int @id @default(autoincrement())
+  room_id Int @id @default(autoincrement())
   name String
   size String
   bedType String
   status String
+  guests Int
   checkInDate DateTime? 
   checkOutDate DateTime?
-  guests Int
   description String
   roomMainImage String
   pricePerNight Int
   promotionPrice Int
+  customer_booking customer_booking[]
+  room_amminity room_amminity[]
+  room_gallery room_gallery[]
+}
+model room_amminity{
+room_amminity_id Int @id @default(autoincrement())
+room room @relation(fields: [room_id],references: [room_id])
+room_id Int
+}
+model room_gallery{
+room_gallery_id Int @id @default(autoincrement())
+room room @relation(fields: [room_id],references: [room_id])
+room_id Int
+image String
 }
 
 
-model CustomerBooking{
-  id        Int     @id @default(autoincrement())
+model customer_booking{
+  customer_booking_id  Int @id @default(autoincrement())
+  user user @relation(fields: [user_id],references: [user_id])
+  user_id Int
   customerName String
-  guest       Int
-  roomType    String
-  amount      Int
-  bedType     String
-  checkIn     DateTime
-  checkOut    DateTime
+  customerEmail String
+  customer_id_number String
+  customerCountry String
+  customerDateOfBirth DateTime 
+  paymentType String
+  paymentStatus String
+  discount Int
+  guestCount Int
+  totalPrice Int
+  additionalRequest String?
+  room room @relation(fields: [room_id],references: [room_id])
+  room_id Int
+  checkInDate     DateTime
+  checkOutDate    DateTime
+  created_at DateTime @default(now())
+  last_updated_at DateTime @updatedAt
+  booking_request booking_request[]
 }
 
-model hotelInfo{
-  id Int @id @default(autoincrement())
+model booking_request{
+  booking_request_id  Int @id @default(autoincrement())
+  customer_booking customer_booking @relation(fields: [booking_id],references: [customer_booking_id])
+  booking_id Int
+  name String
+  price Int
+}
+
+
+model hotel_info{
+  hotel_info_id Int @id @default(autoincrement())
   hotelName String
   image String
   hotelDescription String
-
 }
 
+model promotion{
+  promotion_id  Int @id @default(autoincrement())
+  promotionCode String
+  discount Int
+}
