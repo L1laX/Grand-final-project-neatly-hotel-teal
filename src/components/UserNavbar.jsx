@@ -1,5 +1,5 @@
 "use client";
-
+import { useRouter } from "next/navigation";
 import Frame from "@/asset/icons/Frame.svg";
 import Image from "next/image";
 import Logo from "@/asset/logo/logo-dark.svg";
@@ -7,14 +7,19 @@ import Link from "next/link";
 import PrimaryBtn from "./common/PrimaryBtn";
 import AvatarDropdown from "./common/AvatarDropdown";
 import { useSession, signIn } from "next-auth/react";
-const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
-  const scrollToSection = (elementRef) => {
-    console.log(elementRef);
-    window.scrollTo({
-      behavior: "smooth",
-    });
-  };
+import { useSearchParams } from "next/navigation";
+const UserNavbar = ({ aboutid, serviceid, roomsid, isHomepage }) => {
+  let ishomePage = isHomepage || null;
+  // const toSection = (section) => {
+  //   if (!ishomePage) {
+  //     router.push(`/?section=${section}&isClick=true`);
+  //   }
 
+  //   if (ishomePage) {
+  //     alert("Hello");
+  //   }
+  // };
+  const router = useRouter();
   const { data: session } = useSession();
   return (
     <section className="flex h-[100px] w-screen items-center justify-between bg-white">
@@ -26,29 +31,29 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
         </div>
         <div className="menu ml-5 hidden gap-5 md:flex">
           <a
-            href={aboutid || "/"}
+            href={aboutid || "about"}
             className="cursor-pointer hover:opacity-75"
-            onClick={() => {
-              scrollToSection(aboutid);
-            }}
+            // onClick={() => {
+            //   toSection(aboutid);
+            // }}
           >
-            About Nearly
+            About Neatly
           </a>
           <a
             href={serviceid || "/"}
             className="cursor-pointer hover:opacity-75"
-            onClick={() => {
-              scrollToSection(serviceid);
-            }}
+            // onClick={() => {
+            //   toSection(serviceid);
+            // }}
           >
             Service & Facilities
           </a>
           <a
-            href={roomsid || "/"}
+            href={roomsid || "rooms"}
             className="cursor-pointer hover:opacity-75"
-            onClick={() => {
-              scrollToSection(roomsid);
-            }}
+            // onClick={() => {
+            //   toSection(roomsid);
+            // }}
           >
             Rooms & Suits
           </a>
