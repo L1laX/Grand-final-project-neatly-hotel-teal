@@ -107,8 +107,7 @@ const HotelInfo = () => {
 
   return (
     <div className="flex flex-row bg-gray-100">
-      <Sidebar />
-
+      <Sidebar setActive={3} />
       <div className="flex w-full flex-col">
         <header className="flex gap-4 border-b border-solid border-b-[color:var(--gray-300,#E4E6ED)] bg-white px-16 py-4 font-semibold max-md:flex-wrap max-md:px-5">
           <h1 className="my-auto grow text-xl stacked-fractions leading-8 tracking-tight text-slate-800 max-md:max-w-full">

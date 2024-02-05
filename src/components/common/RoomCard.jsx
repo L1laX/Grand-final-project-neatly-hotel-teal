@@ -40,7 +40,7 @@ export const RoomCard = ({
   };
 
   return (
-    <>
+    <div>
       {/* room card : map ตรงนี้ */}
       <div className={roomitem}>
         <div className="room-card flex flex-col justify-center gap-12 px-5 py-10 lg:flex-row">
@@ -198,6 +198,6 @@ export const RoomCard = ({
           <hr />
         </div>
       </div>
-    </>
+    </div>
   );
 };

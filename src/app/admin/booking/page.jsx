@@ -56,7 +56,7 @@ function CustomerBooking() {
 
   return (
     <div className="flex flex-row bg-gray-100">
-      <Sidebar />
+      <Sidebar setActive={1} />
       <div className="flex w-full flex-col">
         <NavBarAdmin navName={"Customer Booking"} />
         <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
