@@ -33,48 +33,46 @@ const Sidebar = () => {
 
   return (
     <div className="flex h-screen w-64 flex-col bg-[#2F3E35] px-4 pb-4 pt-8 text-white ">
-      <div className="flex h-40 flex-col items-center justify-center px-4 shadow-sm ">
-        <Image src={Logo} className="inline h-10 cursor-pointer" />
-
+      <div className="flex h-40 flex-col items-center justify-center px-4 shadow-sm">
+        <Link href="/">
+          <Image src={Logo} alt="Logo" className="inline h-10 cursor-pointer" />
+        </Link>
         <p className="mt-5 text-sm text-green-500">Admin Panel Control</p>
       </div>
 
-      <div className=" flex flex-col gap-4  bg-inherit">
-        <ul className="space-y-4 ">
+      <div className="flex flex-col gap-4 bg-inherit">
+        <ul className="space-y-4">
           {sidebarItem.map((item, index) => (
-            <div
-              className="flex w-full gap-4 whitespace-nowrap  p-6 text-base font-medium leading-6 tracking-tight  text-gray-300 hover:bg-green-600"
+            <li
               key={index}
+              className="flex w-full gap-4 whitespace-nowrap p-6 text-base font-medium leading-6 tracking-tight text-gray-300 hover:bg-green-600"
             >
-              <li>
-                <a
-                  href={item.href}
-                  className="flex items-center gap-4 rounded-md  px-4 py-2 text-gray-200 duration-500 hover:text-white"
-                >
-                  <CheckboxIcon
-                    className="h-4 w-4 text-gray-400 "
-                    src={item.svg}
-                    fill="currentColor"
-                    aria-hidden="true"
-                  />
-                  <span className=" text-sm">{item.name}</span>
-                </a>
-              </li>
-            </div>
+              <a
+                href={item.href}
+                className="flex items-center gap-4 rounded-md px-4 py-2 text-gray-200 duration-500 hover:text-white"
+              >
+                <CheckboxIcon
+                  className="h-4 w-4 text-gray-400"
+                  fill="currentColor"
+                  aria-hidden="true"
+                />
+                <span className="text-sm">{item.name}</span>
+              </a>
+            </li>
           ))}
         </ul>
         <hr />
-        <div className="flex w-full justify-center gap-4  whitespace-nowrap p-6 text-base font-medium leading-6 tracking-tight text-gray-300 hover:bg-green-600">
-          <div className=" flex items-center ">
+        <div className="flex w-full justify-center gap-4 whitespace-nowrap p-6 text-base font-medium leading-6 tracking-tight text-gray-300 hover:bg-green-600">
+          <div className="flex items-center">
             <CheckboxIcon
-              className="h-4 w-4 text-gray-400 "
+              className="h-4 w-4 text-gray-400"
               fill="currentColor"
               aria-hidden="true"
             />
             <div className="pr-[45px]">
               <Link
                 href="/admin/login"
-                className="flex items-center gap-4 rounded-md  px-4 text-gray-200 duration-500 hover:text-white"
+                className="flex items-center gap-4 rounded-md px-4 text-gray-200 duration-500 hover:text-white"
               >
                 Logout
               </Link>

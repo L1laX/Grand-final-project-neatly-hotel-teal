@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/page.jsx";
 import NavBarAdmin from "@/components/navbar/NavbarAdmin.jsx";
 import Paper from "@mui/material/Paper";
@@ -10,6 +10,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import { set } from "date-fns";
 
 const columns = [
   {
@@ -42,37 +43,42 @@ const columns = [
   },
 ];
 
-function createData(roomNo, roomType, bedType, status) {
-  return {
-    roomNo,
-    roomType,
-    bedType,
-    status,
-  };
-}
-
-const rows = [
-  createData("001", "Superior Garden View", "Single Bed", "Occupied"),
-  createData("002", "Superior Garden View", "Single Bed", "Occupied"),
-  createData("003", "Superior Garden View", "Single Bed", "Occupied"),
-  createData("004", "Superior Garden View", "Single Bed", "Occupied"),
-  createData("005", "Superior Garden View", "Single Bed", "Occupied"),
-  createData("005", "Superior Garden View", "Single Bed", "Occupied"),
-  createData("005", "Superior Garden View", "Single Bed", "Occupied"),
-];
-
 function RoomManagement() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searchInput, setSearchInput] = useState("");
+  const [rows, setRows] = useState([]);
 
-  const handleChangePage = (event, newPage) => {
+  useEffect(() => {
+    // Fetch data from API and update rows state
+    const fetchData = async () => {
+      try {
+        const response = await fetch("API_ENDPOINT");
+        const data = await response.json();
+        setRows(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleChangePage = (_event, newPage) => {
     setPage(newPage);
+    setLoading(true);
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const handleSearchInputChange = (event) => {
+    setSearchInput(event.target.value);
+  };
+
   return (
     <div className="flex flex-row bg-gray-100">
       <Sidebar />
@@ -100,29 +106,40 @@ function RoomManagement() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={row.code}
-                        >
-                          {columns.map((column) => {
-                            const value = row[column.id];
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                {column.format && typeof value === "number"
-                                  ? column.format(value)
-                                  : value}
-                              </TableCell>
-                            );
-                          })}
-                        </TableRow>
-                      );
-                    })}
+                  {loading ? (
+                    <TableRow>
+                      <TableCell colSpan={columns.length} align="center">
+                        Loading...
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    rows
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage,
+                      )
+                      .map((row) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={row.code}
+                          >
+                            {columns.map((column) => {
+                              const value = row[column.id];
+                              return (
+                                <TableCell key={column.id} align={column.align}>
+                                  {column.format && typeof value === "number"
+                                    ? column.format(value)
+                                    : value}
+                                </TableCell>
+                              );
+                            })}
+                          </TableRow>
+                        );
+                      })
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
