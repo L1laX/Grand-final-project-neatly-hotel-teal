@@ -23,16 +23,16 @@ export default function RoomDetailById({ params }) {
   // add2 usestate
   const [carouselImages, setCarouselImages] = useState([]);
 
-  useEffect(() => {
-    const fetchCarouselImages = async () => {
-      try {
-        const images = await prisma.image.findMany(); // Fetch images from Prisma
-        setCarouselImages(images);
-      } catch (error) {
-        console.error("Error fetching carousel images:", error);
-      }
-    };
+  const fetchCarouselImages = async () => {
+    try {
+      const images = await prisma.image.findMany(); // Fetch images from Prisma
+      setCarouselImages(images);
+    } catch (error) {
+      console.error("Error fetching carousel images:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchCarouselImages();
   }, []);
 
@@ -47,16 +47,28 @@ export default function RoomDetailById({ params }) {
           <Carousel>
             <CarouselContent>
               <CarouselItem className="basis-1/3">
-                <Image src={BG} />
+                <Image
+                  className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                  src={BG}
+                />
               </CarouselItem>
               <CarouselItem className="basis-1/3">
-                <Image src={BG} />
+                <Image
+                  className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                  src={BG}
+                />
               </CarouselItem>
               <CarouselItem className="basis-1/3">
-                <Image src={BG} />
+                <Image
+                  className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                  src={BG}
+                />
               </CarouselItem>
               <CarouselItem className="basis-1/3">
-                <Image src={BG} />
+                <Image
+                  className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                  src={BG}
+                />
               </CarouselItem>
             </CarouselContent>
             <CarouselNext />
@@ -162,7 +174,10 @@ export default function RoomDetailById({ params }) {
                   <Carousel>
                     <CarouselContent className="flex items-center justify-center">
                       <CarouselItem className="  relative basis-1/3">
-                        <Image src={BG} />
+                        <Image
+                          className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                          src={BG}
+                        />
                         <div className="absolute left-10 top-60 flex h-full w-full flex-col items-start ">
                           <h5 className="text-2xl font-bold text-white">
                             Deluxe
@@ -171,7 +186,10 @@ export default function RoomDetailById({ params }) {
                         </div>
                       </CarouselItem>
                       <CarouselItem className=" relative basis-1/3">
-                        <Image src={BG} />
+                        <Image
+                          className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                          src={BG}
+                        />
                         <div className="absolute left-10 top-60 flex h-full w-full flex-col items-start ">
                           <h5 className="text-2xl font-bold text-white">
                             Superior
