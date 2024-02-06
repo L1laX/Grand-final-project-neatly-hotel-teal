@@ -21,7 +21,7 @@ function CustomerBooking() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/admin/CustomerBooking");
+        const response = await fetch("/api/admin/customer_booking");
         const data = await response.json();
 
         setRows(data.data);
@@ -46,12 +46,12 @@ function CustomerBooking() {
 
   const columns = [
     { id: "customerName", label: "Customer name", minWidth: 100 },
-    { id: "guest", label: "Guest(s)", minWidth: 100 },
-    { id: "roomType", label: "Room type", minWidth: 100, align: "right" },
-    { id: "amount", label: "Amount", minWidth: 100, align: "right" },
-    { id: "bedType", label: "Bed type", minWidth: 100, align: "right" },
-    { id: "checkIn", label: "Check-in", minWidth: 100, align: "right" },
-    { id: "checkOut", label: "Check-out", minWidth: 100, align: "right" },
+    { id: "guestCount", label: "Guest(s)", minWidth: 100 },
+    { id: "room.name", label: "Room type", minWidth: 100, align: "right" },
+    { id: "totalPrice", label: "Amount", minWidth: 100, align: "right" },
+    { id: "room.bedType", label: "Bed type", minWidth: 100, align: "right" },
+    { id: "checkInDate", label: "Check-in", minWidth: 100, align: "right" },
+    { id: "checkOutDate", label: "Check-out", minWidth: 100, align: "right" },
   ];
 
   return (
@@ -102,10 +102,13 @@ function CustomerBooking() {
                         >
                           {columns.map((column) => (
                             <TableCell key={column.id} align={column.align}>
-                              {column.id === "checkIn" ||
-                              column.id === "checkOut"
+                              {column.id === "checkInDate" ||
+                              column.id === "checkOutDate"
                                 ? new Date(row[column.id]).toLocaleString()
-                                : row[column.id]}
+                                : column.id === "room.name" ||
+                                    column.id === "room.bedType"
+                                  ? row.room[column.id.split(".")[1]]
+                                  : row[column.id]}
                             </TableCell>
                           ))}
                         </TableRow>

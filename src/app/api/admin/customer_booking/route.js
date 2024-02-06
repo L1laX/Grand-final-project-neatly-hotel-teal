@@ -1,16 +1,32 @@
+import { prisma } from "@/lib/prisma.js";
 import { NextResponse } from "next/server";
-import { supabaseneung } from "@/lib/neungSUPABASE.js";
 
 export async function GET() {
   try {
-    const { data, error } = await supabaseneung
-      .from("CustomerBooking")
-      .select("*");
-    if (error) {
-      console.error("Error fetching customer bookings:", error);
-      return NextResponse.error("Error fetching customer bookings");
-    }
-    return NextResponse.json({ data });
+    const customerBookings = await prisma.customerBooking.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            created_at: true,
+            updated_at: true,
+          },
+        },
+        room: {
+          select: {
+            name: true,
+            bedType: true,
+          },
+        },
+        bookingRequest: true,
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: customerBookings,
+    });
   } catch (error) {
     console.error("Error fetching customer bookings:", error);
     return NextResponse.error("Error fetching customer bookings");
