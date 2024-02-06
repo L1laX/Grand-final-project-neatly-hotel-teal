@@ -24,14 +24,6 @@ import Link from "next/link";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 
 export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
-  //เอาไปไว้หน้า page.jsx
-  // const [date, setDate] = useState({
-  //   from: new Date(),
-  //   to: addDays(new Date(), 3),
-  // });
-
-  // const [room, setRoom] = useState(1);
-  // const [guest, setGuest] = useState(1);
 
 // แบบนี้วันที่ -1
   // const dateString = JSON.stringify({
@@ -39,24 +31,28 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
   //   to: date.to?.toISOString(),
   // });
   
-  const { date,setDate,room,setRoom,guest,setGuest,buttonName,buttonDesign,calendarDesign,pathname,handleClickSearch } = handleDateRangeRoomGuest;
+  const { date,setDate,roomAndGuest,setRoomAndGuest,buttonName,buttonDesign,calendarDesign,pathname,handleClickSearch } = handleDateRangeRoomGuest;
 
   const dateString = JSON.stringify({
     from: date?.from ? format(date?.from, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
     to: date?.to ? format(date?.to, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
   });
 
+  const roomAndGuestString = JSON.stringify({
+    room: roomAndGuest?.room ? roomAndGuest?.room : null,
+    guest: roomAndGuest?.guest ? roomAndGuest?.guest : null,
+  });
+
   const sendValueToRoomDetails = {
     dateString,
-    room,
-    guest,
+    roomAndGuestString
   };
   console.log(sendValueToRoomDetails)
   
-  console.log(date)
-  console.log(room)
-  console.log(guest)
-  console.log(dateString)
+  // console.log(date)
+  // console.log(room)
+  // console.log(guest)
+  // console.log(dateString)
   return (
     <>
       <div className=" date-checkin-checkout flex grow flex-col">
@@ -112,38 +108,30 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
         <Select>
           <SelectTrigger className="h-10 w-full min-w-48 text-[#9AA1B9] sm:h-14 hover:bg-[#F1F5F9] transition-all duration-200 ease-in-out">
             <span className="text-black">
-              {room > 1 ? `${room} rooms, ` : `${room} room, `}
-              {guest > 1 ? `${guest} guests` : `${guest} guest`}
+              {roomAndGuest.room > 1 ? `${roomAndGuest.room} rooms, ` : `${roomAndGuest.room} room, `}
+              {roomAndGuest.guest > 1 ? `${roomAndGuest.guest} guests` : `${roomAndGuest.guest} guest`}
             </span>
           </SelectTrigger>
           <SelectContent className="mt-0.5">
             <div className="flex w-full justify-between p-2">
               <div className="flex flex-col justify-center"><span className="mb-1">Room</span></div>
               <div className="border-4 border-double border-indigo-600 w-32 flex justify-end">
-                <button disabled={room <= 1 ? true : false} className="cursor-pointer" onClick={() => setRoom(room - 1)}><div class="textCircle"><span className="mb-[2.75px] text-lg">-</span></div></button>
-                <div className="border-4 border-double border-indigo-600 inline w-10 text-center">{room}</div>
-                <button onClick={() => setRoom(room + 1)}><div class="textCircle"><span className="mb-[2.75px] text-lg">+</span></div></button>
+                <button disabled={roomAndGuest.room <= 1 ? true : false} className="cursor-pointer" onClick={() => setRoomAndGuest((prev) => ({ ...prev, room: prev.room - 1 }))}><div class="textCircle"><span className="mb-[2.75px] text-lg">-</span></div></button>
+                <div className="border-4 border-double border-indigo-600 inline w-10 text-center">{roomAndGuest.room}</div>
+                <button onClick={() => setRoomAndGuest((prev) => ({ ...prev, room: prev.room + 1 }))}><div class="textCircle"><span className="mb-[2.75px] text-lg">+</span></div></button>
               </div>
             </div>
             <div className="flex w-full justify-between p-2">
             <div className="flex flex-col justify-center"><span className="mb-1">Guest</span></div>
               <div className="border-4 border-double border-indigo-600 w-32 flex justify-end">
-                <button disabled={guest <= 1 ? true : false} className="cursor-pointer" onClick={() => setGuest(guest - 1)}><div class="textCircle"><span className="mb-[2.75px] text-lg">-</span></div></button>
-                <div className="border-4 border-double border-indigo-600 inline w-10 text-center">{guest}</div>
-                <button onClick={() => setGuest(guest + 1)}><div class="textCircle"><span className="mb-[2.75px] text-lg">+</span></div></button>
+                <button disabled={roomAndGuest.guest <= 1 ? true : false} className="cursor-pointer" onClick={() => setRoomAndGuest((prev) => ({ ...prev, guest: prev.guest - 1 }))}><div class="textCircle"><span className="mb-[2.75px] text-lg">-</span></div></button>
+                <div className="border-4 border-double border-indigo-600 inline w-10 text-center">{roomAndGuest.guest}</div>
+                <button onClick={() => setRoomAndGuest((prev) => ({ ...prev, guest: prev.guest + 1 }))}><div class="textCircle"><span className="mb-[2.75px] text-lg">+</span></div></button>
               </div>
             </div>
           </SelectContent>
         </Select>
       </div>
-      <Link
-        href={{
-          pathname: pathname || "",
-          query: pathname === "" ? null : { ...sendValueToRoomDetails },
-        }}
-      >
-        <button className={buttonDesign} onClick={handleClickSearch||null}>{buttonName}</button>
-      </Link>
     </>
   );
 }

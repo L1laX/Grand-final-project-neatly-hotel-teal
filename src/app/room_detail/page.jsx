@@ -20,21 +20,41 @@ import axios from "axios";
 
 export default function RoomDetail({ searchParams }) {
   const roomsType = ["1", "2", "3"];
+
+  const initialDate = searchParams.dateString
+    ? JSON.parse(searchParams.dateString)
+    : {
+        from: new Date(),
+        to: addDays(new Date(), 2),
+      };
+
+  const initialRoomAndGuest = searchParams.roomAndGuestString
+    ? JSON.parse(searchParams.roomAndGuestString)
+    : {
+        room: 1,
+        guest: 1,
+      };
+  console.log(searchParams.roomAndGuestString)
   const [rooms, setRooms] = useState([]);
-  const [date, setDate] = useState(JSON.parse(searchParams.dateString));
-  const [room, setRoom] = useState(parseInt(searchParams.room, 10));
-  const [guest, setGuest] = useState(parseInt(searchParams.guest, 10));
+  // const [date, setDate] = useState(JSON.parse(searchParams.dateString));
+  const [date, setDate] = useState(initialDate);
+  const [roomAndGuest,setRoomAndGuest] = useState(initialRoomAndGuest)
+  // const [room, setRoom] = useState(parseInt(searchParams.room, 10));
+  // const [guest, setGuest] = useState(parseInt(searchParams.guest, 10));
 
-  const { from: checkIn, to: checkOut } = date;
-
-  //ถ้าไม่เปลี่ยน format เมื่อส่ง query ไป +จะหาย จาก 2024-03-30T00:00:00.000+07:00 กลายเป็น 2024-03-30T00:00:00.000 07:00
-  const checkInDate = format(new Date(checkIn), "yyyy-MM-dd");
-  const checkOutDate = format(new Date(checkOut), "yyyy-MM-dd");
   const getRoomList = async () => {
+    const { from: checkIn, to: checkOut } = date;
+    //ถ้าไม่เปลี่ยน format เมื่อส่ง query ไป +จะหาย จาก 2024-03-30T00:00:00.000+07:00 กลายเป็น 2024-03-30T00:00:00.000 07:00
+    const checkInDate = format(new Date(checkIn), "yyyy-MM-dd");
+    const checkOutDate = format(new Date(checkOut), "yyyy-MM-dd");
     const result = await axios.get(
-      `http://localhost:3000/api/roomdetail?checkin=${checkInDate}&checkout=${checkOutDate}`,
+      `http://localhost:3000/api/room_detail?checkin=${checkInDate}&checkout=${checkOutDate}`,
     );
     setRooms(result.data);
+    console.log(result.data);
+    console.log(rooms);
+    // console.log(checkIn)
+    // console.log(checkOut)
   };
 
   useEffect(() => {
@@ -46,12 +66,10 @@ export default function RoomDetail({ searchParams }) {
   };
 
   // console.log(date)
-  console.log(checkIn);
-  console.log(checkOut);
-  console.log(searchParams.room);
-  console.log(searchParams.guest);
-  console.log(searchParams.dateString);
-  console.log(JSON.parse(searchParams.dateString));
+  // console.log(searchParams.room)
+  // console.log(searchParams.guest)
+  // console.log(searchParams.dateString)
+  // console.log(JSON.parse(searchParams.dateString))
   //console.log(format(new Date(searchParams.date.from), 'LLL dd, y'));
 
   // const [showContent, setShowContent] = useState(false);
@@ -74,39 +92,25 @@ export default function RoomDetail({ searchParams }) {
         <div className="flex w-11/12 flex-col items-center justify-around gap-2 border-4 border-double border-indigo-600 py-4 md:flex-row md:gap-8 md:px-16 lg:gap-10">
           <DateRangeRoomGuest
             handleDateRangeRoomGuest={{
-              buttonName: "Search",
               calendarDesign: "h-10 sm:h-14 w-56 sm:w-full",
-              buttonDesign:
-                "btn-secondary btn-secondary:hover btn-secondary:active btn-secondary:disabled cursor-pointer mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1",
               date: date,
               setDate: setDate,
-              room: room,
-              setRoom: setRoom,
-              guest: guest,
-              setGuest: setGuest,
-              handleClickSearch: handleClickSearch,
+              roomAndGuest: roomAndGuest,
+              setRoomAndGuest: setRoomAndGuest,
             }}
           />
+
+          <SecondaryBtn
+            btnName="Search"
+            secondaryButton="mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1"
+            handleClick={handleClickSearch}
+          />
         </div>
-      </div>
+      </div>{" "}
       <div className="divide-y-2 divide-gray-300 lg:m-20">
-        {rooms.map((item) => {
-          console.log(item.id);
-          return (
-            <RoomCard
-              key={item.id}
-              roomitem={item.id}
-              roomname={item.name}
-              roomimage={item.roomMainImage}
-              roomguest={item.guests}
-              roomdesc={item.description}
-              roomprice={item.pricePerNight}
-              roomdisc={item.promotionPrice}
-              roombedtype={item.bedType}
-              roomsize={item.size}
-            />
-          );
-        })}
+        {rooms.map((item, index) => (
+          <RoomCard key={index} roomitem={item.name} />
+        ))}
       </div>
     </main>
   );
