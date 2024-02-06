@@ -108,7 +108,7 @@ model bookingRequest{
 }
 
 
-model hotel_info{
+model hotelInfo{
   id Int @id @default(autoincrement())
   hotelName String
   image String

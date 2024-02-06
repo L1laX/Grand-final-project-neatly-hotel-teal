@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { supabase } from "@/lib/supabase";
+import { prisma } from "@/lib/prisma";
 //import Validation from "./registervalidation.js";
 const Register = () => {
   const router = useRouter();
@@ -178,8 +179,17 @@ const Register = () => {
     if (
       Object.keys(errors).filter((error) => errors[error] === true).length === 0
     ) {
+      const checkUser = await axios.post("/api/register/checkUser", {
+        username: values.username,
+        email: values.email,
+      });
+      if (checkUser.data.message === "Username already exists") {
+        return alert("Username already exists");
+      }
+      if (checkUser.data.message === "Email already exists") {
+        return alert("Email already exists");
+      }
       const data = await uploadAvatar(e);
-      console.log(data);
       const publicUrl = data.data.publicUrl;
       const sendingData = { ...values, image: publicUrl };
       try {
