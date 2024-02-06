@@ -48,7 +48,7 @@ export default function RoomDetail({ searchParams }) {
     const checkInDate = format(new Date(checkIn), "yyyy-MM-dd");
     const checkOutDate = format(new Date(checkOut), "yyyy-MM-dd");
     const result = await axios.get(
-      `http://localhost:3000/api/roomdetail?checkin=${checkInDate}&checkout=${checkOutDate}`,
+      `http://localhost:3000/api/room_detail?checkin=${checkInDate}&checkout=${checkOutDate}`,
     );
     setRooms(result.data);
     console.log(result.data);
@@ -92,16 +92,18 @@ export default function RoomDetail({ searchParams }) {
         <div className="flex w-11/12 flex-col items-center justify-around gap-2 border-4 border-double border-indigo-600 py-4 md:flex-row md:gap-8 md:px-16 lg:gap-10">
           <DateRangeRoomGuest
             handleDateRangeRoomGuest={{
-              buttonName: "Search",
               calendarDesign: "h-10 sm:h-14 w-56 sm:w-full",
-              buttonDesign:
-                "btn-secondary btn-secondary:hover btn-secondary:active btn-secondary:disabled cursor-pointer mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1",
               date: date,
               setDate: setDate,
               roomAndGuest: roomAndGuest,
               setRoomAndGuest: setRoomAndGuest,
-              handleClickSearch: handleClickSearch,
             }}
+          />
+
+          <SecondaryBtn
+            btnName="Search"
+            secondaryButton="mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1"
+            handleClick={handleClickSearch}
           />
         </div>
       </div>{" "}

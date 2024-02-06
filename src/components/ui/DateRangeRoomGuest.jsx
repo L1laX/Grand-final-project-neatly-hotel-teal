@@ -132,14 +132,6 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
           </SelectContent>
         </Select>
       </div>
-      <Link
-        href={{
-          pathname: pathname || "",
-          query: pathname === "" ? null : { ...sendValueToRoomDetails },
-        }}
-      >
-        <button className={buttonDesign} onClick={()=>date?.from && date?.to?handleClickSearch||null:alert("please choose checkin/checkout date")}>{buttonName}</button>
-      </Link>
     </>
   );
 }

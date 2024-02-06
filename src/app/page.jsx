@@ -35,6 +35,7 @@ import UserNavbar from "@/components/UserNavbar";
 import { DateRangeRoomGuest } from "@/components/ui/DateRangeRoomGuest";
 // import Link from "next/link";
 import { addDays, format } from "date-fns";
+import Link from "next/link";
 // import { useSearchParams } from "next/navigation";
 export default function Home() {
   // const searchParams = useSearchParams();
@@ -76,6 +77,22 @@ export default function Home() {
     slidesToScroll: 1,
   };
 
+  const dateString = JSON.stringify({
+    from: date?.from ? format(date?.from, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
+    to: date?.to ? format(date?.to, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
+  });
+
+  const roomAndGuestString = JSON.stringify({
+    room: roomAndGuest?.room ? roomAndGuest?.room : null,
+    guest: roomAndGuest?.guest ? roomAndGuest?.guest : null,
+  });
+
+  const sendValueToRoomDetails = {
+    dateString,
+    roomAndGuestString
+  };
+  console.log(sendValueToRoomDetails)
+
   return (
     <section>
       <UserNavbar
@@ -103,16 +120,21 @@ export default function Home() {
             <div className="flex w-full flex-col items-center justify-around gap-2 border-4 border-double border-indigo-600 py-4 md:flex-row md:gap-8 md:px-16 lg:gap-10">
             <DateRangeRoomGuest
               handleDateRangeRoomGuest={{
-                buttonName: "Search",
                 calendarDesign: "h-10 sm:h-14 w-56 sm:w-full",
-                buttonDesign: "btn-primary btn-primary:hover btn-primary:active btn-primary:disabled cursor-pointer mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1",
                 date: date,
                 setDate: setDate ,
                 roomAndGuest: roomAndGuest,
                 setRoomAndGuest: setRoomAndGuest,
-                pathname: "/room_detail"
               }}
             />
+            <Link
+              href={{
+                pathname: "/room_detail",
+                query: { ...sendValueToRoomDetails },
+              }}
+            >
+              <PrimaryBtn btnName="Search" primaryButton="mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1"/>
+            </Link>
             </div>
           </div>{" "}
         </div>
