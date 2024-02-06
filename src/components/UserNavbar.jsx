@@ -22,14 +22,15 @@ const UserNavbar = ({ aboutid, serviceid, roomsid, isHomepage }) => {
   const router = useRouter();
   const { data: session } = useSession();
   return (
-    <section className="flex h-[100px] w-screen items-center justify-between bg-white">
+    <section className="flex py-8 w-full items-center justify-center bg-white border-4 border-double border-indigo-600">
+      <div className="border-double w-11/12 lg:w-5/6 border-4 border-indigo-600 flex justify-between">
       <div className="web-menu flex items-center">
-        <div className="logo m-4 ml-24 flex h-[25px] w-[140px] items-center">
+        <div className="logo flex">
           <Link href={"/"} className="hover:opacity-90">
             <Image src={Logo}></Image>
           </Link>
         </div>
-        <div className="menu ml-5 hidden gap-5 md:flex">
+        <div className="menu ml-5 max-md:hidden gap-5 md:flex">
           <a
             href={aboutid || "about"}
             className="cursor-pointer hover:opacity-75"
@@ -60,14 +61,14 @@ const UserNavbar = ({ aboutid, serviceid, roomsid, isHomepage }) => {
         </div>
       </div>
 
-      <div className="user-menu mx-48">
-        <div className="none-user flex items-center justify-items-end gap-5 justify-self-end ">
+      <div className="user-menu">
+        <div className="none-user flex items-center justify-items-end justify-self-end ">
           {session ? (
-            <div className="dropdown relative flex w-[7rem] items-center gap-10">
-              <div className="h-15 w-15 cursor-pointer ">
+            <div className="dropdown relative flex items-center">
+              <div className="cursor-pointer mr-7">
                 <Image
                   src={Frame}
-                  className=" h-5 w-5 cursor-pointer opacity-50 hover:animate-bounce"
+                  className="cursor-pointer opacity-50 hover:animate-bounce"
                 />
               </div>
 
@@ -77,19 +78,20 @@ const UserNavbar = ({ aboutid, serviceid, roomsid, isHomepage }) => {
               />
             </div>
           ) : (
-            <div className="flex items-center gap-5">
+            <div className="flex items-center">
               <button
-                className="visitlink visitlink:hover visitlink:disabled"
+                className="visitlink visitlink:hover visitlink:disabled px-7"
                 onClick={() => signIn()}
               >
                 Login
               </button>
-              <Link href={"/booking"}>
-                <PrimaryBtn btnName="BookNow" />
+              <Link href={"/booking"} className="border-4 border-double border-indigo-600">
+                <PrimaryBtn btnName="BookNow" primaryButton=""/>
               </Link>
             </div>
           )}
         </div>
+      </div>
       </div>
     </section>
   );

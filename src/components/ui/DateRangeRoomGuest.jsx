@@ -31,7 +31,7 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
   //   to: date.to?.toISOString(),
   // });
   
-  const { date,setDate,roomAndGuest,setRoomAndGuest,buttonName,buttonDesign,calendarDesign,pathname,handleClickSearch } = handleDateRangeRoomGuest;
+  const { date,setDate,roomAndGuest,setRoomAndGuest,calendarDesign } = handleDateRangeRoomGuest;
 
   const dateString = JSON.stringify({
     from: date?.from ? format(date?.from, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
@@ -116,7 +116,7 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
             <div className="flex w-full justify-between p-2">
               <div className="flex flex-col justify-center"><span className="mb-1">Room</span></div>
               <div className="border-4 border-double border-indigo-600 w-32 flex justify-end">
-                <button disabled={roomAndGuest.room <= 1 ? true : false} className="cursor-pointer" onClick={() => setRoomAndGuest((prev) => ({ ...prev, room: prev.room - 1 }))}><div class="textCircle"><span className="mb-[2.75px] text-lg">-</span></div></button>
+                <button disabled={roomAndGuest.room <= 1 ? true : false} className="cursor-pointer" onClick={() => setRoomAndGuest((prev) => ({ ...prev, room: prev.room - 1 }))}><div className={roomAndGuest.room <= 1 ? "textCircle bg-zinc-100" : "textCircle"}><span className="mb-[2.75px] text-lg">-</span></div></button>
                 <div className="border-4 border-double border-indigo-600 inline w-10 text-center">{roomAndGuest.room}</div>
                 <button onClick={() => setRoomAndGuest((prev) => ({ ...prev, room: prev.room + 1 }))}><div class="textCircle"><span className="mb-[2.75px] text-lg">+</span></div></button>
               </div>
@@ -124,7 +124,7 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
             <div className="flex w-full justify-between p-2">
             <div className="flex flex-col justify-center"><span className="mb-1">Guest</span></div>
               <div className="border-4 border-double border-indigo-600 w-32 flex justify-end">
-                <button disabled={roomAndGuest.guest <= 1 ? true : false} className="cursor-pointer" onClick={() => setRoomAndGuest((prev) => ({ ...prev, guest: prev.guest - 1 }))}><div class="textCircle"><span className="mb-[2.75px] text-lg">-</span></div></button>
+                <button disabled={roomAndGuest.guest <= 1 ? true : false} className="cursor-pointer" onClick={() => setRoomAndGuest((prev) => ({ ...prev, guest: prev.guest - 1 }))}><div className={roomAndGuest.guest <= 1 ? "textCircle bg-zinc-100" : "textCircle"}><span className="mb-[2.75px] text-lg">-</span></div></button>
                 <div className="border-4 border-double border-indigo-600 inline w-10 text-center">{roomAndGuest.guest}</div>
                 <button onClick={() => setRoomAndGuest((prev) => ({ ...prev, guest: prev.guest + 1 }))}><div class="textCircle"><span className="mb-[2.75px] text-lg">+</span></div></button>
               </div>
