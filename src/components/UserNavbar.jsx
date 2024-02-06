@@ -22,7 +22,7 @@ const UserNavbar = ({ aboutid, serviceid, roomsid, isHomepage }) => {
   const router = useRouter();
   const { data: session } = useSession();
   return (
-    <section className="flex h-[100px] w-screen items-center justify-between bg-white">
+    <section className="flex h-[100px] w-full items-center justify-between bg-white">
       <div className="web-menu flex items-center">
         <div className="logo m-4 ml-24 flex h-[25px] w-[140px] items-center">
           <Link href={"/"} className="hover:opacity-90">

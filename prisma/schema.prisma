@@ -19,11 +19,11 @@ model user {
   image String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  user_profile user_profile?
-  customer_booking customer_booking[]
+  userProfile userProfile?
+  customerBooking customerBooking[]
 }
 
-model user_profile{
+model userProfile{
   id Int @id @default(autoincrement())
   user user  @relation(fields: [user_id],references: [id])
   user_id Int @unique
@@ -40,7 +40,7 @@ model creditcard{
   cardOwner String
   expiryDate String
   cvc_cvv String
-  user_profile user_profile?
+  user_profile userProfile?
 }
 
 //new on 5/feb
@@ -58,16 +58,16 @@ model room{
   roomMainImage String
   pricePerNight Int
   promotionPrice Int
-  customer_booking customer_booking[]
-  room_amminity room_amminity[]
-  room_gallery room_gallery[]
+  customerBooking customerBooking[]
+  roomAmminity roomAmminity[]
+  roomGallery roomGallery[]
 }
-model room_amminity{
+model roomAmminity{
 id Int @id @default(autoincrement())
 room room @relation(fields: [room_id],references: [id])
 room_id Int
 }
-model room_gallery{
+model roomGallery{
 id Int @id @default(autoincrement())
 room room @relation(fields: [room_id],references: [id])
 room_id Int
@@ -75,7 +75,7 @@ image String
 }
 
 
-model customer_booking{
+model customerBooking{
   id  Int @id @default(autoincrement())
   user user @relation(fields: [user_id],references: [id])
   user_id Int
@@ -96,12 +96,12 @@ model customer_booking{
   checkOutDate    DateTime
   created_at DateTime @default(now())
   last_updated_at DateTime @updatedAt
-  booking_request booking_request[]
+  bookingRequest bookingRequest[]
 }
 
-model booking_request{
+model bookingRequest{
   id  Int @id @default(autoincrement())
-  customer_booking customer_booking @relation(fields: [booking_id],references: [id])
+  customerBooking customerBooking @relation(fields: [booking_id],references: [id])
   booking_id Int
   name String
   price Int

@@ -43,7 +43,8 @@ const handler = NextAuth({
             email: credentials.username,
           },
         });
-
+        console.log(username);
+        console.log(email);
         if (!email && !username) {
           return null;
         }

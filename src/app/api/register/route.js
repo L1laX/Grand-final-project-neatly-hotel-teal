@@ -63,6 +63,7 @@ export async function POST(req) {
         { status: 400 },
       );
     }
+
     //hashing password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -84,16 +85,21 @@ export async function POST(req) {
         cvc_cvv: cvc_cvv,
       },
     });
-    const newUserProfile = await prisma.userprofile.create({
-      data: {
-        fullName: fullName,
-        id_number: id_number,
-        dateOfBirth: dateOfBirth,
-        country: country,
-        user_id: newUser.id,
-        creditCard_id: newCreditCard.id,
-      },
-    });
+    try {
+      const newUserProfile = await prisma.userProfile.create({
+        data: {
+          fullName: fullName,
+          id_number: id_number,
+          dateOfBirth: new Date(dateOfBirth).toISOString(),
+          country: country,
+          user_id: newUser.id,
+          creditCard_id: newCreditCard.id,
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+
     // send without password
     const {
       password: userpassword,

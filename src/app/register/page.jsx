@@ -118,12 +118,14 @@ const Register = () => {
     const uploadAvatar = avatar[avatarindex];
     console.log(uploadAvatar);
     try {
+      //upload to storage
       const { data, error } = await supabase.storage
         .from("avatars")
         .upload(`avatars/${username}`, uploadAvatar);
       if (error) {
         return console.error(error);
       }
+      //get public url
       const url = supabase.storage.from("avatars").getPublicUrl(data.path);
       return url;
     } catch (error) {
@@ -158,7 +160,7 @@ const Register = () => {
     const errors = {
       fullName: values.fullName.length <= 1,
       username: values.username.length <= 1,
-      password: values.password.length <= 12,
+      password: values.password.length < 6,
       dateOfBirth: validateDateofBirth(values.dateOfBirth),
       email:
         values.email.length === 0 &&
@@ -176,9 +178,9 @@ const Register = () => {
     if (
       Object.keys(errors).filter((error) => errors[error] === true).length === 0
     ) {
-      const {
-        data: { publicUrl },
-      } = await uploadAvatar(e);
+      const data = await uploadAvatar(e);
+      console.log(data);
+      const publicUrl = data.data.publicUrl;
       const sendingData = { ...values, image: publicUrl };
       try {
         const result = await axios.post("/api/register", sendingData);
