@@ -1,126 +1,139 @@
-import supabase from "../../../../utils/supabase.js";
-import { NextApiRequest, NextApiResponse } from "next";
+import { prisma } from "@/lib/prisma.js";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const { data, error } = await supabase.from("hotelInfo").select("*");
+    const hotelDetails = await prisma.hotel_info.findMany({
+      select: {
+        id: true,
+        hotelName: true,
+        image: true,
+        hotelDescription: true,
+      },
+    });
 
-    console.log(data);
-    if (error) {
-      console.error("Error fetching Hotel Information:", error);
-      return NextResponse.error("Error fetching Hotel Information");
-    }
-    return NextResponse.json({ data });
+    return NextResponse.json({
+      success: true,
+      data: hotelDetails,
+    });
   } catch (error) {
-    console.error("Error fetching Hotel Information:", error);
-    return NextResponse.error("Error fetching Hotel Information");
+    console.error("Error fetching hotel details:", error);
+    return NextResponse.error("Error fetching hotel details");
   }
 }
 
-export async function PUT() {
+export async function POST(request) {
   try {
-    const { data, error } = await supabase.from("hotelInfo").select("*");
+    const data = await request.json();
 
-    console.log(data);
-    if (error) {
-      console.error("Error fetching Hotel Information:", error);
-      return NextResponse.error("Error fetching Hotel Information");
+    const { hotelName, hotelDescription, image } = data;
+
+    if (!hotelName || !hotelDescription) {
+      return NextResponse.error("hotelName and hotelDescription are required", {
+        status: 400,
+      });
     }
 
-    return NextResponse.json({ data });
+    const createdHotel = await prisma.hotel_info.create({
+      data: {
+        hotelName,
+        hotelDescription,
+        image,
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: createdHotel,
+    });
   } catch (error) {
-    console.error("Error fetching Hotel Information:", error);
-    return NextResponse.error("Error fetching Hotel Information");
-  }
-}
-// export async function POST(request) {
-//   try {
-//     const requestData = await request.json();
-//     const { data, error } = await supabase
-//       .from("hotelInfo")
-//       .insert([requestData]);
+    console.error("Error submitting hotel information:", error);
 
-//     if (error) {
-//       console.error("Error adding hotel information:", error);
-//       return {
-//         status: 500,
-//         body: "Error adding hotel information",
-//       };
-//     }
-
-//     if (data && data.length > 0) {
-//       console.log("Hotel information added successfully:", data[0]);
-//       return {
-//         status: 200,
-//         body: JSON.stringify(data[0]),
-//       };
-//     }
-
-//     console.error("Data is null after inserting hotel information");
-//     return {
-//       status: 500,
-//       body: "Error adding hotel information",
-//     };
-//   } catch (error) {
-//     console.error("Error adding hotel information:", error);
-//     return {
-//       status: 500,
-//       body: "Error adding hotel information",
-//     };
-//   }
-// }
-
-import { supabase } from "../../../utils/supabase.js";
-
-export default async function handler(req, res) {
-  if (req.method === "POST") {
-    const { hotelName, hotelDescription } = req.body;
-
-    try {
-      // Post data to Supabase
-      const { data, error } = await supabase.from("hotelInfo").insert([
-        {
-          hotelName,
-          hotelDescription,
-        },
-      ]);
-
-      if (error) {
-        console.error("Error submitting hotel information:", error);
-        res.status(500).json({ error: "Error submitting hotel information" });
-      } else {
-        console.log("Hotel information submitted successfully");
-        res
-          .status(200)
-          .json({ message: "Hotel information submitted successfully" });
-      }
-    } catch (error) {
-      console.error("Error submitting hotel information:", error);
-      res.status(500).json({ error: "Error submitting hotel information" });
+    if (
+      error.code === "P2002" &&
+      error.meta?.target?.includes("unique constraint failed")
+    ) {
+      return NextResponse.error(
+        "Duplicate entry. Hotel with the same name already exists.",
+      );
     }
-  } else {
-    res.status(405).json({ error: "Method not allowed" });
+
+    return NextResponse.error(
+      `Error submitting hotel information: ${error.message}`,
+      { status: 500 },
+    );
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
+export async function PUT(request) {
+  try {
+    const { id, hotelName, hotelDescription, image } = await request.json();
+
+    // Validate if required fields are present
+    if (!id || !hotelName || !hotelDescription) {
+      return NextResponse.error(
+        "id, hotelName, and hotelDescription are required",
+        {
+          status: 400,
+        },
+      );
+    }
+
+    // Update the hotel information in the database
+    const updatedHotel = await prisma.hotel_info.update({
+      where: { id },
+      data: {
+        hotelName,
+        hotelDescription,
+        image,
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: updatedHotel,
+    });
+  } catch (error) {
+    console.error("Error updating hotel information:", error);
+    return NextResponse.error(
+      `Error updating hotel information: ${error.message}`,
+      { status: 500 },
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+// DELETE method to delete hotel information
 export async function DELETE(request) {
   try {
     const { id } = await request.json();
-    const { data, error } = await supabase
-      .from("hotelInfo")
-      .delete()
-      .eq("id", id);
 
-    console.log(data);
-    if (error) {
-      console.error("Error deleting Hotel Information:", error);
-      return NextResponse.error("Error deleting Hotel Information");
+    // Validate if required fields are present
+    if (!id) {
+      return NextResponse.error("id is required", {
+        status: 400,
+      });
     }
 
-    return NextResponse.json({ data });
+    // Delete the hotel information from the database
+    const deletedHotel = await prisma.hotel_info.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: deletedHotel,
+    });
   } catch (error) {
-    console.error("Error deleting Hotel Information:", error);
-    return NextResponse.error("Error deleting Hotel Information");
+    console.error("Error deleting hotel information:", error);
+    return NextResponse.error(
+      `Error deleting hotel information: ${error.message}`,
+      { status: 500 },
+    );
+  } finally {
+    await prisma.$disconnect();
   }
 }

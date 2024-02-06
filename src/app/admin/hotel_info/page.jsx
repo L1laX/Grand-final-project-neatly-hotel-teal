@@ -1,20 +1,19 @@
 "use client";
 
-import { supabaseneung } from "@/lib/neungSUPABASE.js";
-
 import React, { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/page";
 
 import Paper from "@mui/material/Paper";
 import { useRouter } from "next/navigation";
 import CloseIcon from "@mui/icons-material/Close";
+import { NextResponse } from "next/server";
 
 const HotelInfo = () => {
   const [image, setImage] = useState(null);
   const [hotelName, setHotelName] = useState("");
   const [hotelDescription, setHotelDescription] = useState("");
   const [hotelLogoPreview, setHotelLogoPreview] = useState(null);
-  const [, setApiData] = useState(null);
+  const [hotelDetails, setHotelDetails] = useState([]);
 
   const router = useRouter();
 
@@ -24,12 +23,19 @@ const HotelInfo = () => {
 
   const fetchHotelInfo = async () => {
     try {
-      const { data, error } = await supabase.from("hotelInfo").select("*");
+      const response = await fetch("/api/admin/hotel_info");
+      const data = await response.json();
 
-      if (error) {
-        console.error("Error fetching Hotel Information:", error);
+      if (response.ok) {
+        // Assuming that the API returns an array of hotel details
+        const firstHotel = data.data[0]; // Use the first hotel for demonstration
+        setHotelDetails(firstHotel);
+
+        setHotelName(firstHotel?.hotelName || "");
+        setHotelDescription(firstHotel?.hotelDescription || "");
+        setHotelLogoPreview(firstHotel?.image || null);
       } else {
-        setApiData(data);
+        console.error("Error fetching Hotel Information:", data);
       }
     } catch (error) {
       console.error("Error fetching Hotel Information:", error);
@@ -53,37 +59,6 @@ const HotelInfo = () => {
       input.selectionStart = input.selectionEnd = start + 1;
     }
   };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("hotelName", hotelName);
-    formData.append("hotelDescription", hotelDescription);
-
-    if (image) {
-      formData.set("image", image, image.name);
-    }
-
-    try {
-      const { data, error } = await supabase.from("hotelInfo").insert([
-        {
-          hotelName: formData.get("hotelName"),
-          hotelDescription: formData.get("hotelDescription"),
-          image: formData.get("image"),
-        },
-      ]);
-
-      if (error) {
-        console.error("Error submitting hotel information:", error);
-      } else {
-        console.log("Hotel information submitted successfully");
-      }
-
-      router.push("/api/admin/hotel_info");
-    } catch (error) {
-      console.error("Error submitting hotel information:", error);
-    }
-  };
 
   const handleHotelNameChange = (e) => {
     setHotelName(e.target.value);
@@ -105,6 +80,46 @@ const HotelInfo = () => {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("hotelName", hotelName);
+    formData.append("hotelDescription", hotelDescription);
+
+    if (image) {
+      const imageString = URL.createObjectURL(image);
+      formData.set("image", imageString);
+    }
+
+    try {
+      const response = await fetch("/api/admin/hotel_info", {
+        method: "PUT", // Using PUT for updating data
+        body: JSON.stringify({
+          id: hotelDetails.id, // Assuming there's an "id" property in hotelDetails
+          hotelName: formData.get("hotelName"),
+          hotelDescription: formData.get("hotelDescription"),
+          image: formData.get("image"),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Hotel information updated successfully");
+        fetchHotelInfo(); // Refresh the data after submission
+      } else {
+        console.error("Error updating hotel information:", data);
+      }
+
+      router.push("/api/admin/hotel_info");
+    } catch (error) {
+      console.error("Error updating hotel information:", error);
+    }
+  };
   return (
     <div className="flex flex-row bg-gray-100">
       <Sidebar setActive={3} />
@@ -130,7 +145,7 @@ const HotelInfo = () => {
                 <label className="max-md:max-w-full">Hotel name *</label>
                 <input
                   type="text"
-                  placeholder="Neatly Hotel"
+                  placeholder={hotelDetails.hotelName || "Neatly Hotel"}
                   value={hotelName}
                   onChange={handleHotelNameChange}
                   className="mt-1 justify-center rounded border border-solid border-[color:var(--gray-400,#D6D9E4)] bg-white p-3 text-black max-md:max-w-full"
@@ -139,7 +154,9 @@ const HotelInfo = () => {
                   Hotel description *
                 </label>
                 <textarea
-                  placeholder="Hotel description"
+                  placeholder={
+                    hotelDetails.hotelDescription || "Hotel description"
+                  }
                   value={hotelDescription}
                   onChange={handleHotelDescriptionChange}
                   onKeyDown={handleKeyDown}
