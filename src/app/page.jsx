@@ -57,7 +57,7 @@ export default function Home() {
 
   const [roomAndGuest,setRoomAndGuest] = useState({
     room:1,
-    guest:1
+    guest:2
   })
 
   const settingsSlide = {

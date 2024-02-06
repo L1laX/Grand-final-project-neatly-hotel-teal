@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -43,8 +40,23 @@ model creditcard{
   user_profile userProfile?
 }
 
-//new on 5/feb
-
+model room {
+  name            String
+  size            String
+  bedType         String
+  status          String
+  checkInDate     DateTime?
+  checkOutDate    DateTime?
+  guests          Int
+  description     String
+  roomMainImage   String
+  pricePerNight   Int
+  promotionPrice  Int
+  id              Int               @id @default(autoincrement())
+  customerBooking customerBooking[]
+  roomAmminity    roomAmminity[]
+  roomGallery     roomGallery[]
+}
 model room{
   id Int @id @default(autoincrement())
   name String
@@ -72,8 +84,15 @@ id Int @id @default(autoincrement())
 room room @relation(fields: [room_id],references: [id])
 room_id Int
 image String
+
 }
 
+model hotelInfo {
+  id               Int    @id @default(autoincrement())
+  hotelName        String
+  image            String
+  hotelDescription String
+}
 
 model customerBooking{
   id  Int @id @default(autoincrement())
@@ -107,16 +126,10 @@ model bookingRequest{
   price Int
 }
 
-
 model hotelInfo{
   id Int @id @default(autoincrement())
   hotelName String
   image String
   hotelDescription String
-}
 
-model promotion{
-  id  Int @id @default(autoincrement())
-  promotionCode String
-  discount Int
 }

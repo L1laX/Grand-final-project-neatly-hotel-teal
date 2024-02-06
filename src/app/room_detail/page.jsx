@@ -32,7 +32,7 @@ export default function RoomDetail({ searchParams }) {
     ? JSON.parse(searchParams.roomAndGuestString)
     : {
         room: 1,
-        guest: 1,
+        guest: 2,
       };
   console.log(searchParams.roomAndGuestString)
   const [rooms, setRooms] = useState([]);
