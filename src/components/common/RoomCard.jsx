@@ -5,6 +5,7 @@ import Image from "next/legacy/image";
 import CloseIcon from "@/asset/icons/close-outline.svg";
 import BG from "@/asset/background/login-page/bg.png";
 import { useState } from "react";
+import Link from "next/link";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,10 +35,11 @@ export const RoomCard = ({
   roomdisc,
   roombedtype,
   roomsize,
+  handleBooking,
 }) => {
-  const handleBooking = () => {
-    alert("rediect to Booking Page: /booking/id");
-  };
+  // const handleBooking = () => {
+  //   alert("rediect to Booking Page: /booking/id");
+  // };
 
   return (
     <div>
@@ -78,14 +80,9 @@ export const RoomCard = ({
           <section className="room-detail flex flex-col lg:justify-between">
             <div className="lg:flex">
               <div className="lg:w-1/2">
-                <h4
-                  className=" cursor-pointer"
-                  onClick={() => {
-                    roomlink;
-                  }}
-                >
-                  {roomname}
-                </h4>
+                <Link href={{ pathname: `/room_detail/${roomitem}` }}>
+                  <h4 className=" cursor-pointer">{roomname}</h4>
+                </Link>
                 <p className="font-sans text-base font-normal text-[#646D89]">
                   {roomguest} Guests | {roombedtype} | {roomsize}
                 </p>
