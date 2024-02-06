@@ -1,6 +1,13 @@
+"use client";
 import React from "react";
-
+import UploadPic from "@/asset/input/photo.svg";
+import UploadPicSmall from "@/asset/input/uploadSmallPhoto.svg";
+import Image from "next/legacy/image";
+import { useState, useEffect } from "react";
+import { data } from "autoprefixer";
 const TypeRoomAdminForm = () => {
+  const [amenity, setAmenity] = useState(["A", "B", "C", "D", "E"]);
+
   return (
     <sction className="TyperoomForm  m-48 p-20">
       <form className="mx-20 flex flex-col  bg-slate-500 p-11">
@@ -87,12 +94,60 @@ const TypeRoomAdminForm = () => {
             ></textarea>
           </div>
         </div>
+        <div className="my-10 w-full border-b-2 border-gray-300"></div>
         <div className="room-image">
           <h4>Room Image</h4>
+
           <div className="main-image">
-            <label htmlFor="mainImage">
-              <input type="file" accept="image/*" />
+            <p className="pb-2 pt-9">Main Image*</p>
+            <label>
+              <Image
+                src={UploadPic}
+                alt="background upload"
+                className="cursor-pointer shadow-lg transition-transform hover:scale-105"
+              />
+              <input
+                name="mainImage"
+                type="file"
+                hidden
+                accept="image/*"
+                multiple
+              />
             </label>
+          </div>
+
+          <div className="image-gallery">
+            <p className="pb-2 pt-9">Image Gallery(At least 4 pictures)*</p>
+            <label className="">
+              <Image
+                src={UploadPicSmall}
+                alt="background upload"
+                className="cursor-pointer shadow-lg transition-transform hover:scale-105"
+                width={120}
+                height={120}
+              />
+              <input
+                name="mainImage"
+                type="file"
+                hidden
+                accept="image/*"
+                multiple
+              />
+            </label>
+          </div>
+        </div>
+        <div className="my-10 w-full border-b-2 border-gray-300"></div>
+        <div className="room-amenity">
+          <h4>Room Amenities</h4>
+          <div className="drage-amenity-section">
+            {amenity.length &&
+              amenity.map((item, i) => {
+                return (
+                  <div className="item" key={i}>
+                    {item}
+                  </div>
+                );
+              })}
           </div>
         </div>
       </form>

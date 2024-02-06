@@ -412,7 +412,6 @@ const Register = () => {
                         id="avatar"
                         name="avatar"
                         type="file"
-                        placeholder="Enter last name here"
                         multiple
                         accept="image/*"
                         hidden

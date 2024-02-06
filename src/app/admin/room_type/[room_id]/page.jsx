@@ -27,9 +27,9 @@ const page = ({ params: { room_id } }) => {
             notSearch={true}
             backarrow={true}
           />
-          <div className="from h-full w-full ">
+          <section className="form h-full w-full ">
             <TypeRoomAdminForm />
-          </div>
+          </section>
         </div>
       </div>
     </div>
