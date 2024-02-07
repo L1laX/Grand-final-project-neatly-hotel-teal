@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/page.jsx";
 import NavBarAdmin from "@/components/navbar/NavbarAdmin.jsx";
@@ -10,18 +11,17 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import { set } from "date-fns";
 
 const columns = [
   {
-    id: "roomNo",
+    id: "id",
     label: "Room no.",
     minWidth: 100,
     align: "right",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "roomType",
+    id: "name",
     label: "Room type",
     minWidth: 100,
     align: "right",
@@ -54,9 +54,10 @@ function RoomManagement() {
     // Fetch data from API and update rows state
     const fetchData = async () => {
       try {
-        const response = await fetch("API_ENDPOINT");
+        const response = await fetch("/api/admin/room_management");
         const data = await response.json();
-        setRows(data);
+        setRows(data.data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -67,7 +68,6 @@ function RoomManagement() {
 
   const handleChangePage = (_event, newPage) => {
     setPage(newPage);
-    setLoading(true);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -78,6 +78,14 @@ function RoomManagement() {
   const handleSearchInputChange = (event) => {
     setSearchInput(event.target.value);
   };
+
+  const filteredRows = rows.filter((row) =>
+    Object.values(row).some(
+      (value) =>
+        typeof value === "string" &&
+        value.toLowerCase().includes(searchInput.toLowerCase()),
+    ),
+  );
 
   return (
     <div className="flex flex-row bg-gray-100">
@@ -112,33 +120,39 @@ function RoomManagement() {
                         Loading...
                       </TableCell>
                     </TableRow>
+                  ) : filteredRows.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={columns.length} align="center">
+                        No matching records found.
+                      </TableCell>
+                    </TableRow>
                   ) : (
-                    rows
+                    filteredRows
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage,
                       )
-                      .map((row) => {
-                        return (
-                          <TableRow
-                            hover
-                            role="checkbox"
-                            tabIndex={-1}
-                            key={row.code}
-                          >
-                            {columns.map((column) => {
-                              const value = row[column.id];
-                              return (
-                                <TableCell key={column.id} align={column.align}>
-                                  {column.format && typeof value === "number"
-                                    ? column.format(value)
-                                    : value}
-                                </TableCell>
-                              );
-                            })}
-                          </TableRow>
-                        );
-                      })
+                      .map((row) => (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={row.id}
+                        >
+                          {columns.map((column) => (
+                            <TableCell
+                              key={column.id}
+                              align={column.align}
+                              className="break-all"
+                            >
+                              {column.format &&
+                              typeof row[column.id] === "number"
+                                ? column.format(row[column.id])
+                                : row[column.id]}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))
                   )}
                 </TableBody>
               </Table>
@@ -146,7 +160,7 @@ function RoomManagement() {
             <TablePagination
               rowsPerPageOptions={[10, 25, 100]}
               component="div"
-              count={rows.length}
+              count={filteredRows.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
