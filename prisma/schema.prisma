@@ -11,7 +11,7 @@ datasource db {
 }
 
 model user {
-  id    Int     @id @default(autoincrement())
+  id    Int  @id @default(autoincrement())
   email String  @unique
   username  String @unique
   password String
@@ -31,16 +31,6 @@ model userProfile{
   id_number String
   dateOfBirth DateTime
   country String
-  creditcard creditcard @relation(fields: [creditCard_id],references: [id])
-  creditCard_id Int @unique
-}
-model creditcard{
-  id Int @id @default(autoincrement())
-  cardNumber String
-  cardOwner String
-  expiryDate String
-  cvc_cvv String
-  user_profile userProfile?
 }
 
 //new on 5/feb
@@ -57,7 +47,7 @@ model room{
   description String
   roomMainImage String
   pricePerNight Int
-  promotionPrice Int
+  promotionPrice Int?
   customerBooking customerBooking[]
   roomAmminity roomAmminity[]
   roomGallery roomGallery[]
@@ -66,6 +56,7 @@ model roomAmminity{
 id Int @id @default(autoincrement())
 room room @relation(fields: [room_id],references: [id])
 room_id Int
+name String
 }
 model roomGallery{
 id Int @id @default(autoincrement())
@@ -83,17 +74,18 @@ model customerBooking{
   customerEmail String
   customer_id_number String
   customerCountry String
-  customerDateOfBirth DateTime 
+  customerDateOfBirth DateTime
   paymentType String
   paymentStatus String
-  discount Int
-  guestCount Int
-  totalPrice Int
+  promotionCode String?
+  discount Int?
+  guestCount Int?
+  totalPrice Int?
   additionalRequest String?
   room room @relation(fields: [room_id],references: [id])
   room_id Int
-  checkInDate     DateTime
-  checkOutDate    DateTime
+  checkInDate DateTime?
+  checkOutDate DateTime?
   created_at DateTime @default(now())
   last_updated_at DateTime @updatedAt
   bookingRequest bookingRequest[]
@@ -108,7 +100,7 @@ model bookingRequest{
 }
 
 
-model hotelInfo{
+model hotel_info{
   id Int @id @default(autoincrement())
   hotelName String
   image String

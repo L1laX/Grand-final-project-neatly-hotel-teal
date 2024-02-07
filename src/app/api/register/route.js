@@ -81,14 +81,6 @@ export async function POST(req) {
               id_number: id_number,
               dateOfBirth: new Date(dateOfBirth).toISOString(),
               country: country,
-              creditcard: {
-                create: {
-                  cardNumber: cardNumber,
-                  cardOwner: cardOwner,
-                  expiryDate: expiryDate,
-                  cvc_cvv: cvc_cvv,
-                },
-              },
             },
           },
         },

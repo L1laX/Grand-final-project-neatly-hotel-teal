@@ -203,12 +203,12 @@ const Register = () => {
     }
   };
   return (
-    <div className="flex h-[1500px] w-auto items-center justify-center   md:h-[1777px] md:w-auto">
-      <div className=" relative hidden  h-[1777px]    w-auto items-center sm:hidden md:block ">
+    <div className="flex  w-auto items-center justify-center md:w-auto">
+      <div className="relative h-[1777px]  w-auto items-center bg-black sm:hidden  md:block">
         <Image src={bg1} alt="background image" />
       </div>
       <form
-        className="  absolute h-[1300px] items-center  justify-center rounded  bg-slate-50  p-10 shadow md:h-[1626px]  md:w-[1092px]  "
+        className="absolute top-60 flex flex-col  justify-center  rounded  bg-slate-50 p-10  shadow md:w-[1092px] "
         onSubmit={handleSubmit}
       >
         <div className=" md:flex-col">
@@ -373,10 +373,10 @@ const Register = () => {
             </div>
           </div>
           <div className="border-b-2 border-gray-300  shadow-md md:w-[930px] md:border-b-2 md:border-gray-300  md:shadow-md"></div>
-          <div className="picture-section my-5">
+          <div className="picture-section my-5 mt-10">
             <div className="header">
               <h4>Profile Picture</h4>
-              <div className="upload-section relative mt-5 flex h-52 gap-10">
+              <div className="upload-section relative mt-8 flex h-52 gap-10">
                 {Object.keys(avatar).length ? (
                   Object.keys(avatar).map((id) => {
                     const file = avatar[id];
@@ -427,127 +427,6 @@ const Register = () => {
                 )}
               </div>
             </div>
-          </div>
-
-          <div className="border-b-2 border-gray-300 shadow-md  md:w-[930px] md:border-b-2 md:border-gray-300 md:shadow-md "></div>
-
-          <div>
-            <div className="md:mb-[50px] md:flex-col">
-              <h4 className="credit-card-header">Credit Card</h4>
-            </div>
-            <br></br>
-            <div className=" gap-5 md:flex md:w-[932px]  md:items-center md:justify-center  md:justify-items-center ">
-              <div className="left-section md:justify-center">
-                <div className=" cardnumber-section relative">
-                  <lable
-                    htmlFor="text-input"
-                    className="text-sm font-medium text-gray-600"
-                  >
-                    Card Number
-                  </lable>
-                  <input
-                    // onChange={getCard}
-                    type="text"
-                    name="cardNumber"
-                    value={cardNumber}
-                    onChange={getValue}
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[446px]"
-                    placeholder="XXXX XXXX XXXX XXXX"
-                  />
-                  {errors.cardNumber && (
-                    <div className=" absolute bottom-5 text-red-600">
-                      formate Invalid
-                    </div>
-                  )}
-                </div>
-                <div className="expiry-date-section relative">
-                  <lable
-                    htmlFor="text-input"
-                    className="text-sm font-medium text-gray-600"
-                  >
-                    Expiry Date
-                  </lable>
-                  <input
-                    // onChange={getExpriry}
-                    type="text"
-                    id="text-input"
-                    name="expiryDate"
-                    value={expiryDate}
-                    onChange={getValue}
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px]"
-                    placeholder="MM YY"
-                  />
-                  {errors.expiryDate && (
-                    <div className=" absolute bottom-5 text-red-600">
-                      formate Invalid
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="right-section">
-                <div className="card-owner relative">
-                  <lable
-                    htmlFor="text-input"
-                    className="text-sm font-medium text-gray-600"
-                  >
-                    Card Owner
-                  </lable>
-                  <input
-                    // onChange={getCardOwner}
-                    type="text"
-                    id="text-input"
-                    onChange={getValue}
-                    name="cardOwner"
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[446px]"
-                    placeholder="Enter text..."
-                  />
-                  {errors.cardOwner && (
-                    <div className=" absolute bottom-5 text-red-600">
-                      formate Invalid
-                    </div>
-                  )}
-                </div>
-                <div className="cvc_cvv-context relative">
-                  <lable
-                    htmlFor="text-input"
-                    className="text-sm font-medium text-gray-600"
-                  >
-                    CVC/CVV
-                  </lable>
-                  <input
-                    // onChange={getCvcCvv}
-                    type="text"
-                    id="text-input"
-                    onChange={getValue}
-                    inputMode="numeric"
-                    name="cvc_cvv"
-                    pattern="[0-9]{3}"
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px]"
-                    placeholder="XXX"
-                    maxLength={3}
-                    minLength={3}
-                  />
-                  {errors.cvc_cvv && (
-                    <div className=" absolute bottom-5 text-red-600">
-                      formate Invalid
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <br></br>
-            <div className=" flex-col md:flex-col ">
-              <PrimaryBtn btnName="Register" />
-            </div>
-            <br></br>
-            <span className=" mr-3">Already have an account?</span>
-            <Link
-              href="/login"
-              className="visitlink visitlink:hover visitlink:disabled"
-            >
-              Login
-            </Link>
           </div>
         </div>
       </form>
