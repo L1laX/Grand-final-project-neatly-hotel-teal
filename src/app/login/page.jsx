@@ -46,7 +46,7 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="flex w-1/2 flex-col">
           <div className="input-content flex flex-col gap-3 ">
             <div className="input-content username-password-section relative flex  flex-col gap-3">
-              <label htmlFor="username">Username or Email</label>
+              <label htmlFor="username">username or email</label>
               <input
                 className="rounded-md border p-1 focus:outline-1 focus:outline-orange-400 focus:ring-1 focus:ring-inset focus:ring-orange-400"
                 type="text"
@@ -56,7 +56,7 @@ const Login = () => {
                 onChange={(e) => setUsername(e.target.value)}
                 required
               />
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">password</label>
               <input
                 className="mb-8 rounded-md border p-1 focus:outline-1 focus:outline-orange-400 focus:ring-1 focus:ring-inset focus:ring-orange-400"
                 type="password"

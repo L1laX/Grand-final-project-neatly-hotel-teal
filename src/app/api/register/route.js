@@ -11,10 +11,6 @@ export async function POST(req) {
     id_number,
     dateOfBirth,
     country,
-    cardNumber,
-    cardOwner,
-    expiryDate,
-    cvc_cvv,
     role,
     image,
   } = body;
@@ -57,17 +53,12 @@ export async function POST(req) {
         { status: 400 },
       );
     }
-    if ((!cardNumber, !cardOwner, !expiryDate, !cvc_cvv)) {
-      return NextResponse.json(
-        { user: null, messaga: "Please fill CreditCard required fields" },
-        { status: 400 },
-      );
-    }
 
     //hashing password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     try {
+      console.log(1);
       const newUser = await prisma.user.create({
         data: {
           email: email,

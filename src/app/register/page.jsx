@@ -27,10 +27,6 @@ const Register = () => {
     image: "",
     id_number: "",
     country: "",
-    cardNumber: "",
-    expiryDate: "",
-    cardOwner: "",
-    cvc_cvv: "",
     role: "user",
   });
   const [errors, setErrors] = useState({
@@ -41,17 +37,12 @@ const Register = () => {
     email: false,
     id_number: false,
     country: false,
-    cardNumber: false,
-    expiryDate: false,
-    cardOwner: false,
-    cvc_cvv: false,
     image: false,
   });
 
   const getValue = (e) => {
     e.preventDefault();
     const value = e.target.value;
-    let displayValue = e.target.value;
     if (e.target.name === "id_number") {
       if (value.length > 13) {
         return;
@@ -60,38 +51,7 @@ const Register = () => {
       setValues({ ...values, [e.target.name]: newValue });
       return setIdNumber(newValue);
     }
-    if (e.target.name === "cardNumber") {
-      // Limit the input to 19 characters
-      if (value.length > 19) {
-        return;
-      }
-      // Remove all non-digit characters
-      const newValue = value.replace(/\D/g, "");
-      // Set the value to database
-      setValues({ ...values, [e.target.name]: newValue });
-      // Add a space after every 4 digits
-      displayValue = newValue.replace(/(\S{4})/g, "$1 ").trim();
-      // Set the value to display
-      return setCardNumber(displayValue);
-    }
-    if (e.target.name === "expiryDate") {
-      // Limit the input to 19 characters
-      if (value.length === 3 && +value > 130) {
-        return setErrors({ ...errors, expiryDate: true });
-      }
-      if (value.length > 5) {
-        return;
-      }
-      // Remove all non-digit characters
-      const newValue = value.replace(/\D/g, "");
-      // Set the value to database
-      setValues({ ...values, [e.target.name]: newValue });
-      // Add a space after every 4 digits
-      displayValue = newValue.replace(/(\S{2})/g, "$1 ").trim();
-      // Set the value to display
-      setExpiryDate(displayValue);
-    }
-    setValues({ ...values, [e.target.name]: e.target.value });
+    setValues({ ...values, [e.target.name]: value });
   };
 
   const handleAvatar = (e) => {
@@ -168,17 +128,15 @@ const Register = () => {
         !values.email.toLowerCase().match(validEmailRegex),
       id_number: values.id_number.length !== 13,
       country: values.country.length < 1,
-      cardNumber: values.cardNumber.length !== 16,
-      expiryDate: values.expiryDate.length <= 4,
-      cardOwner: values.cardOwner.length === 0,
-      cvc_cvv: +values.cvc_cvv.length < 3,
       image: Object.keys(avatar).length === 0,
     };
     // next validate
+    console.log(1);
     setErrors({ ...errors });
     if (
       Object.keys(errors).filter((error) => errors[error] === true).length === 0
     ) {
+      console.log(2);
       const checkUser = await axios.post("/api/register/checkUser", {
         username: values.username,
         email: values.email,
@@ -189,6 +147,7 @@ const Register = () => {
       if (checkUser.data.message === "Email already exists") {
         return alert("Email already exists");
       }
+      console.log(3);
       const data = await uploadAvatar(e);
       const publicUrl = data.data.publicUrl;
       const sendingData = { ...values, image: publicUrl };
@@ -224,7 +183,7 @@ const Register = () => {
 
             <div className="fullName-section relative ml-2 flex w-fit flex-col gap-2 md:justify-center">
               <label htmlFor="text-input" className="ml-1  text-gray-600">
-                Full name
+                full name
               </label>
               <input
                 onChange={getValue}
@@ -248,7 +207,7 @@ const Register = () => {
                     htmlFor="text-input"
                     className="text-sm font-medium text-gray-600"
                   >
-                    UserName
+                    username
                   </label>
                   <input
                     // onChange={getUserName}
@@ -292,7 +251,7 @@ const Register = () => {
                     htmlFor="text-input"
                     className="text-sm font-medium text-gray-600"
                   >
-                    Date of Birth
+                    date of birth
                   </lable>
                   <input
                     // onChange={getDate}
@@ -313,7 +272,7 @@ const Register = () => {
               <div className="right-section flex  flex-col ">
                 <div className="email-section relative">
                   <lable htmlFor="text-input" className="text-sm text-gray-600">
-                    Email
+                    email
                   </lable>
                   <input
                     // onChange={getEmail}
@@ -335,7 +294,7 @@ const Register = () => {
                     htmlFor="text-input"
                     className="text-sm font-medium text-gray-600"
                   >
-                    ID Number
+                    id number
                   </lable>
                   <input
                     value={id_number}
@@ -357,13 +316,13 @@ const Register = () => {
                     htmlFor="text-input"
                     className="text-sm font-medium text-gray-600"
                   >
-                    Country
+                    country
                   </lable>
                   <Country
                     setCountry={getValue}
                     className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[446px]"
                   />
-                  {errors.id_number && (
+                  {errors.country && (
                     <div className=" absolute bottom-5 text-red-600">
                       Please select your country
                     </div>
@@ -428,6 +387,19 @@ const Register = () => {
               </div>
             </div>
           </div>
+        </div>
+        <div className="buttin-section">
+          <div className=" flex-col md:flex-col ">
+            <PrimaryBtn btnName="Register" primaryButton="w-[446px]" />
+          </div>
+          <br></br>
+          <span className=" mr-3">Already have an account?</span>
+          <Link
+            href="/login"
+            className="visitlink visitlink:hover visitlink:disabled"
+          >
+            Login
+          </Link>
         </div>
       </form>
     </div>
