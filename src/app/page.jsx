@@ -93,6 +93,18 @@ export default function Home() {
   };
   console.log(sendValueToRoomDetails)
 
+  const handleClickSearch = ()=>{
+    if(!date?.from && !date?.to){
+      alert("please choose checkin date and checkout date")
+    }else if(!date?.from){
+      alert("please choose checkin date")
+    }else if(!date?.to){
+      alert("please choose checkout date")
+    }else if(format(date?.from, "yyyy-MM-dd") === format(date?.to, "yyyy-MM-dd")){
+      alert("At least 2 days 1 night")
+    }
+  }
+
   return (
     <section>
       <UserNavbar
@@ -118,23 +130,46 @@ export default function Home() {
           </div>
           <div className="h-82 flex w-full flex-row rounded-lg border-4 border-double border-indigo-600 bg-white shadow md:h-44 lg:h-48 xl:h-56">
             <div className="flex w-full flex-col items-center justify-around gap-2 border-4 border-double border-indigo-600 py-4 md:flex-row md:gap-8 md:px-16 lg:gap-10">
-            <DateRangeRoomGuest
-              handleDateRangeRoomGuest={{
-                calendarDesign: "h-10 sm:h-14 w-56 sm:w-full",
-                date: date,
-                setDate: setDate ,
-                roomAndGuest: roomAndGuest,
-                setRoomAndGuest: setRoomAndGuest,
-              }}
-            />
+              <DateRangeRoomGuest
+                handleDateRangeRoomGuest={{
+                  calendarDesign: "h-10 sm:h-14 w-56 sm:w-full",
+                  date: date,
+                  setDate: setDate,
+                  roomAndGuest: roomAndGuest,
+                  setRoomAndGuest: setRoomAndGuest,
+                }}
+              />
+              {/* {!date?.from || !date?.to ? (
             <Link
-              href={{
-                pathname: "/room_detail",
-                query: { ...sendValueToRoomDetails },
-              }}
+              href={{ pathname: false }}
             >
-              <PrimaryBtn btnName="Search" primaryButton="mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1"/>
+              <PrimaryBtn btnName="Search" handleClick={handleClickSearch} primaryButton="mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1" />
             </Link>
+            ) : (
+              <Link
+                href={{ pathname: "/room_detail", query: { ...sendValueToRoomDetails } }}
+              >
+                <PrimaryBtn btnName="Search" primaryButton="mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1" />
+              </Link>
+            )} */}
+              <Link
+                href={{
+                  pathname:
+                    !date?.from || !date?.to || format(date?.from, "yyyy-MM-dd") === format(date?.to, "yyyy-MM-dd")
+                      ? false
+                      : "/room_detail",
+                  query:
+                    !date?.from || !date?.to || format(date?.from, "yyyy-MM-dd") === format(date?.to, "yyyy-MM-dd")
+                      ? false
+                      : { ...sendValueToRoomDetails },
+                }}
+              >
+                <PrimaryBtn
+                  btnName="Search"
+                  primaryButton="mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1"
+                  handleClick={handleClickSearch}
+                />
+              </Link>
             </div>
           </div>{" "}
         </div>
