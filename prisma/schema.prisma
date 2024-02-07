@@ -107,4 +107,3 @@ model promotion {
   discount      Int
   id            Int    @id @default(autoincrement())
 }
-

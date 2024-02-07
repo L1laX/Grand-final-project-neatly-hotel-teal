@@ -110,16 +110,18 @@ const HotelInfo = () => {
 
       if (response.ok) {
         console.log("Hotel information updated successfully");
-        fetchHotelInfo(); // Refresh the data after submission
+        fetchHotelInfo();
+        router.push("/admin/hotel_info"); // Refresh the data after submission
       } else {
         console.error("Error updating hotel information:", data);
       }
 
-      router.push("/api/admin/hotel_info");
+      router.push("/admin/hotel_info");
     } catch (error) {
       console.error("Error updating hotel information:", error);
     }
   };
+
   return (
     <div className="flex flex-row bg-gray-100">
       <Sidebar setActive={3} />
