@@ -142,10 +142,10 @@ const RoomType = () => {
                 </TableHead>
                 {rows
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
+                  .map((row, index) => {
                     const room_id = row["room_id"];
                     return (
-                      <TableBody key={row.code}>
+                      <TableBody key={index}>
                         <TableRow
                           hover
                           role="checkbox"

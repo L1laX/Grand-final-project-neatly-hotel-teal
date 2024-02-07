@@ -67,56 +67,37 @@ export async function POST(req) {
     //hashing password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
-    const newUser = await prisma.user.create({
-      data: {
-        email: email,
-        username: username,
-        role: role,
-        password: hashedPassword,
-        image: image,
-      },
-    });
-    const newCreditCard = await prisma.creditcard.create({
-      data: {
-        cardNumber: cardNumber,
-        cardOwner: cardOwner,
-        expiryDate: expiryDate,
-        cvc_cvv: cvc_cvv,
-      },
-    });
     try {
-      const newUserProfile = await prisma.userProfile.create({
+      const newUser = await prisma.user.create({
         data: {
-          fullName: fullName,
-          id_number: id_number,
-          dateOfBirth: new Date(dateOfBirth).toISOString(),
-          country: country,
-          user_id: newUser.id,
-          creditCard_id: newCreditCard.id,
+          email: email,
+          username: username,
+          role: role,
+          password: hashedPassword,
+          image: image,
+          userProfile: {
+            create: {
+              fullName: fullName,
+              id_number: id_number,
+              dateOfBirth: new Date(dateOfBirth).toISOString(),
+              country: country,
+            },
+          },
         },
       });
+      // send without password
+      const { password: userpassword, ...rest } = newUser;
+
+      return NextResponse.json(
+        {
+          user: rest,
+          messaga: "Success",
+        },
+        { status: 201 },
+      );
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
-
-    // send without password
-    const {
-      password: userpassword,
-      userProfile,
-      Cradit_Card,
-      ...rest
-    } = newUser;
-
-    return NextResponse.json(
-      {
-        user: rest,
-        profile: userProfile,
-        card: Cradit_Card,
-        messaga: "Success",
-      },
-      { status: 201 },
-    );
   } catch (error) {
     return NextResponse.json({
       messaga: "Error " + error.message,
