@@ -93,8 +93,20 @@ export default function Home() {
   };
   console.log(sendValueToRoomDetails)
 
+  const handleClickSearch = ()=>{
+    if(!date?.from && !date?.to){
+      alert("please choose checkin date and checkout date")
+    }else if(!date?.from){
+      alert("please choose checkin date")
+    }else if(!date?.to){
+      alert("please choose checkout date")
+    }else if(format(date?.from, "yyyy-MM-dd") === format(date?.to, "yyyy-MM-dd")){
+      alert("At least 2 days 1 night")
+    }
+  }
+
   return (
-    <section>
+    <>
       <UserNavbar
         aboutid={"#about"}
         serviceid={"#service"}
@@ -118,23 +130,46 @@ export default function Home() {
           </div>
           <div className="h-82 flex w-full flex-row rounded-lg border-4 border-double border-indigo-600 bg-white shadow md:h-44 lg:h-48 xl:h-56">
             <div className="flex w-full flex-col items-center justify-around gap-2 border-4 border-double border-indigo-600 py-4 md:flex-row md:gap-8 md:px-16 lg:gap-10">
-            <DateRangeRoomGuest
-              handleDateRangeRoomGuest={{
-                calendarDesign: "h-10 sm:h-14 w-56 sm:w-full",
-                date: date,
-                setDate: setDate ,
-                roomAndGuest: roomAndGuest,
-                setRoomAndGuest: setRoomAndGuest,
-              }}
-            />
+              <DateRangeRoomGuest
+                handleDateRangeRoomGuest={{
+                  calendarDesign: "h-10 sm:h-14 w-56 sm:w-full",
+                  date: date,
+                  setDate: setDate,
+                  roomAndGuest: roomAndGuest,
+                  setRoomAndGuest: setRoomAndGuest,
+                }}
+              />
+              {/* {!date?.from || !date?.to ? (
             <Link
-              href={{
-                pathname: "/room_detail",
-                query: { ...sendValueToRoomDetails },
-              }}
+              href={{ pathname: false }}
             >
-              <PrimaryBtn btnName="Search" primaryButton="mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1"/>
+              <PrimaryBtn btnName="Search" handleClick={handleClickSearch} primaryButton="mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1" />
             </Link>
+            ) : (
+              <Link
+                href={{ pathname: "/room_detail", query: { ...sendValueToRoomDetails } }}
+              >
+                <PrimaryBtn btnName="Search" primaryButton="mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1" />
+              </Link>
+            )} */}
+              <Link
+                href={{
+                  pathname:
+                    !date?.from || !date?.to || format(date?.from, "yyyy-MM-dd") === format(date?.to, "yyyy-MM-dd")
+                      ? false
+                      : "/room_detail",
+                  query:
+                    !date?.from || !date?.to || format(date?.from, "yyyy-MM-dd") === format(date?.to, "yyyy-MM-dd")
+                      ? false
+                      : { ...sendValueToRoomDetails },
+                }}
+              >
+                <PrimaryBtn
+                  btnName="Search"
+                  primaryButton="mt-6 max-w-44 min-w-40 h-10 sm:h-14 flex flex-1"
+                  handleClick={handleClickSearch}
+                />
+              </Link>
             </div>
           </div>{" "}
         </div>
@@ -204,7 +239,7 @@ export default function Home() {
           <h2 className="my-16 border-4 border-double border-indigo-600 text-[2.175rem] text-white sm:my-20 sm:text-[3.5rem] md:my-24 xl:my-28 xl:text-7xl">
             Service & Facilities
           </h2>
-          <div className="mb-16 flex w-full justify-evenly border-4 border-double border-indigo-600 sm:mb-20 md:mb-24 xl:mb-28">
+          <div className="mb-16 flex w-11/12 justify-evenly border-4 border-double border-indigo-600 sm:mb-20 md:mb-24 xl:mb-28">
             <div className="flex flex-col items-center">
               <Spa className="h-10 w-10 invert md:h-12 md:w-12 lg:h-14 lg:w-14 xl:h-16 xl:w-16" />
               <p className="text-white max-lg:hidden lg:text-xs xl:text-sm">
@@ -396,6 +431,6 @@ export default function Home() {
       </section>
 
       <UserFooter />
-    </section>
+    </>
   );
 }
