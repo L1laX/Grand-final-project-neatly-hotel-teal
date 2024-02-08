@@ -6,8 +6,8 @@ import Link from "next/link";
 const NavBar = ({ navName, button, buttonName, notSearch, backarrow }) => {
   return (
     <nav
-      className="border- #E4E6ED w-full bg-white
-p-4"
+      className="border- #E4E6ED  w-full
+bg-white p-4"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center justify-center gap-4 text-xl font-bold text-black">
