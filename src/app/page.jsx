@@ -106,7 +106,7 @@ export default function Home() {
   }
 
   return (
-    <section>
+    <>
       <UserNavbar
         aboutid={"#about"}
         serviceid={"#service"}
@@ -239,7 +239,7 @@ export default function Home() {
           <h2 className="my-16 border-4 border-double border-indigo-600 text-[2.175rem] text-white sm:my-20 sm:text-[3.5rem] md:my-24 xl:my-28 xl:text-7xl">
             Service & Facilities
           </h2>
-          <div className="mb-16 flex w-full justify-evenly border-4 border-double border-indigo-600 sm:mb-20 md:mb-24 xl:mb-28">
+          <div className="mb-16 flex w-11/12 justify-evenly border-4 border-double border-indigo-600 sm:mb-20 md:mb-24 xl:mb-28">
             <div className="flex flex-col items-center">
               <Spa className="h-10 w-10 invert md:h-12 md:w-12 lg:h-14 lg:w-14 xl:h-16 xl:w-16" />
               <p className="text-white max-lg:hidden lg:text-xs xl:text-sm">
@@ -431,6 +431,6 @@ export default function Home() {
       </section>
 
       <UserFooter />
-    </section>
+    </>
   );
 }

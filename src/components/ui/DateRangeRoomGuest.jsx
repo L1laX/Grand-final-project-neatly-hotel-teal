@@ -106,7 +106,7 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
           Room & Guests
         </p>
         <Select>
-          <SelectTrigger className="h-10 w-full min-w-48 text-[#9AA1B9] sm:h-14 hover:bg-[#F1F5F9] transition-all duration-200 ease-in-out">
+          <SelectTrigger className="h-10 w-full min-w-48 text-[#9AA1B9] sm:h-14 hover:bg-[#F1F5F9] transition-all duration-200 ease-in-out outline-none">
             <span className="text-black">
               {roomAndGuest.room > 1 ? `${roomAndGuest.room} rooms, ` : `${roomAndGuest.room} room, `}
               {roomAndGuest.guest > 1 ? `${roomAndGuest.guest} guests` : `${roomAndGuest.guest} guest`}

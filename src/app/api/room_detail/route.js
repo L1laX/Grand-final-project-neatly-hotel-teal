@@ -19,22 +19,41 @@ export async function GET(req, res) {
   checkin.setUTCHours(23, 59, 59, 999); // คือนับถึงวินาทีสุดท้ายของวัน
 
 
-  const data = await prisma.room.findMany({
-    orderBy: [{ id: "asc" }],
-    where: {
-      OR: [
-        {
-          // status: "Vacant",
-          checkInDate: { gt: new Date(checkin), gte: new Date(checkout) },
-        },
-        {
-          // status: "Vacant",
-          checkOutDate: { lte: new Date(checkin), lt: new Date(checkout) },
-        },
-      ],
-      NOT: [{ checkInDate: null }, { checkOutDate: null }],
-    },
-  });
+  // const data = await prisma.room.findMany({
+  //   orderBy: [{ id: "asc" }],
+  //   where: {
+  //     OR: [
+  //       {
+  //         // status: "Vacant",
+  //         checkInDate: { gt: new Date(checkin), gte: new Date(checkout) },
+  //       },
+  //       {
+  //         // status: "Vacant",
+  //         checkOutDate: { lte: new Date(checkin), lt: new Date(checkout) },
+  //       },
+  //     ],
+  //     NOT: [{ checkInDate: null }, { checkOutDate: null }],
+  //   },
+  // });
+
+  // const data = await prisma.customerBooking.findMany({
+  //   orderBy: [{ id: "asc" }],
+  //   where: {
+  //     OR: [
+  //       {
+  //         // status: "Vacant",
+  //         checkInDate: { gt: new Date(checkin), gte: new Date(checkout) },
+  //       },
+  //       {
+  //         // status: "Vacant",
+  //         checkOutDate: { lte: new Date(checkin), lt: new Date(checkout) },
+  //       },
+  //     ],
+  //     NOT: [{ checkInDate: null }, { checkOutDate: null }],
+  //   },
+  // });
+
+    const data = await prisma.customerBooking.findMany();
 
 //   const data = await prisma.$queryRaw`
 //   SELECT * FROM room
