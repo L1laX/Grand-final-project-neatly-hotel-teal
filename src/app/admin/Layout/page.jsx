@@ -1,4 +1,4 @@
-import Sidebar from "../Sidebar/page.jsx";
+import Sidebar from "../../../components/navbar/SidebarAdmin.jsx";
 
 import React from "react";
 

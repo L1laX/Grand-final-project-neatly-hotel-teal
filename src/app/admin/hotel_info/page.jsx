@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Sidebar from "../Sidebar/page";
+import Sidebar from "../../../components/navbar/SidebarAdmin";
 
 import Paper from "@mui/material/Paper";
 import { useRouter } from "next/navigation";

@@ -9,11 +9,14 @@ import SecondaryBtn from "./common/SecondaryBtn";
 import { orange } from "@mui/material/colors";
 import Checkbox from "@mui/material/Checkbox";
 
-const TypeRoomAdminForm = ({ values, setValues, handleSubmit }) => {
-  const [isPromotion, setIsPromotion] = useState(
-    values.promotionPrice ? true : false,
-  );
-
+const TypeRoomAdminForm = ({
+  values,
+  setValues,
+  handleSubmit,
+  errors,
+  isPromotion,
+  setIsPromotion,
+}) => {
   const dragItem = useRef();
   const dragOverItem = useRef();
   const getValue = (e) => {
@@ -61,7 +64,7 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit }) => {
   const dragEnter = (e) => {
     dragOverItem.current = e.currentTarget.getAttribute("drag_id");
   };
-  
+
   const drop = (type) => {
     if (type === "image") {
       const newGallery = [...values.galleryImage];
@@ -96,7 +99,6 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit }) => {
       setValues({ ...values, amenity: newAmenity });
     }
   };
-
   return (
     <sction className="TyperoomForm  m-48 p-20">
       <form
@@ -105,7 +107,7 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit }) => {
       >
         <div className="basic-info flex flex-col gap-5">
           <h4>Basic Information</h4>
-          <div className="Roomtype flex w-full flex-col">
+          <div className="Roomtype relative flex w-full flex-col">
             <label htmlFor="name">Room Type *</label>
             <input
               type="text"
@@ -114,19 +116,31 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit }) => {
               onChange={getValue}
               value={values.name}
             />
+            {errors?.name && (
+              <div className=" absolute left-44 top-0 text-red-600">
+                Please enter room type
+              </div>
+            )}
           </div>
+
           <div className="room-bedType flex gap-8">
-            <div className="size flex w-1/2 flex-col">
+            <div className="size relative flex w-1/2 flex-col">
               <label htmlFor="size">Room size[sqm] *</label>
               <input
-                type="text"
+                type="number"
                 name="size"
-                className="mt-1 w-full rounded-md border border-gray-300 p-1"
+                className="mt-1 w-full rounded-md border border-gray-300 p-1 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 onChange={getValue}
                 value={values.size}
+                min={1}
               />
+              {errors?.size && (
+                <div className=" absolute left-44 top-0 text-red-600">
+                  Please enter size
+                </div>
+              )}
             </div>
-            <div className="bedType flex w-1/2 flex-col">
+            <div className="bedType relative flex w-1/2 flex-col">
               <label htmlFor="bedType">Bed Type *</label>
               <select
                 name="bedType"
@@ -143,12 +157,17 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit }) => {
                 <option value="dubleBed(kingSize)">duble bed(king size)</option>
                 <option value="twinBed">twin bed</option>
               </select>
+              {errors?.bedType && (
+                <div className=" absolute left-44 top-0 text-red-600">
+                  Please select bed type
+                </div>
+              )}
             </div>
           </div>
-          <div className="guest flex w-[300px] flex-col">
+          <div className="guest relative flex w-[300px] flex-col">
             <label htmlFor="guest">Guest(s) *</label>
             <select
-              className="mt-1 w-full rounded-md border border-gray-300 p-1"
+              className=" mt-1 w-full rounded-md border border-gray-300 p-1"
               name="guest"
               defaultValue=""
               onChange={getValue}
@@ -163,19 +182,30 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit }) => {
               <option value="5">5 guests</option>
               <option value="6">6 guests</option>
             </select>
+            {errors?.guest && (
+              <div className=" absolute left-44 top-0 w-64 text-red-600">
+                Please select guest count
+              </div>
+            )}
           </div>
           <div className="pricePerNight-promotion flex justify-between gap-8">
-            <div className="pricePerNight flex w-1/3  flex-col ">
+            <div className="pricePerNight relative flex  w-1/3 flex-col">
               <label htmlFor="pricePerNight">Price per Night(THB) *</label>
               <input
                 type="number"
                 name="pricePerNight"
-                className="mt-1 w-full rounded-md border border-gray-300 p-1"
+                min={1}
+                className="mt-1 w-full rounded-md border border-gray-300 p-1 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 onChange={getValue}
                 value={values.pricePerNight}
               />
+              {errors?.pricePerNight && (
+                <div className=" absolute left-44 top-0 w-64 text-red-600">
+                  Please enter price per night
+                </div>
+              )}
             </div>
-            <div className="promotionPrice mt-5 flex w-1/2 items-center justify-center">
+            <div className="promotionPrice relative mt-5 flex w-1/2 items-center justify-center">
               <Checkbox
                 sx={{
                   color: orange[200],
@@ -194,22 +224,27 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit }) => {
                   }
                 }}
               />
-
               <label htmlFor="promotionPrice" className=" mt-1 w-[450px]">
                 Promotion Price (THB)
               </label>
               <input
-                type="text"
+                type="number"
                 name="promotionPrice"
-                className="mt-1 w-full rounded-md border border-gray-300 p-1"
+                min={1}
+                className="mt-1 w-full rounded-md border border-gray-300 p-1 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 value={!isPromotion ? "" : values.promotionPrice}
                 onChange={getValue}
                 disabled={isPromotion ? null : "disabled"}
               />
+              {errors.promotionPrice && (
+                <div className=" absolute -top-5 right-0 w-64 text-red-600">
+                  Please enter promotion price
+                </div>
+              )}
             </div>
           </div>
-          <div className="discription flex flex-col gap-3">
-            <label htmlFor="roomDescription">Room Description *</label>
+          <div className="discription relative flex flex-col gap-3">
+            <label htmlFor="description">Room Description *</label>
             <textarea
               name="description"
               className="mt-1 w-full rounded-md border border-gray-300 p-1"
@@ -218,12 +253,17 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit }) => {
               rows="3"
               value={values.description}
             ></textarea>
+            {errors?.description && (
+              <div className=" absolute left-44 top-0 w-64 text-red-600">
+                Please enter price per night
+              </div>
+            )}
           </div>
         </div>
         <div className="my-10 w-full border-b-2 border-gray-300"></div>
         <div className="room-image">
           <h4>Room Image</h4>
-          <div className="main-image rounded-full">
+          <div className="main-image relative rounded-full">
             <p className="pb-2 pt-9">Main Image*</p>
             {values.mainImage ? (
               <div className="image-preview-container relative w-fit">
@@ -263,9 +303,23 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit }) => {
                 />
               </label>
             )}
+            {errors?.mainImage && (
+              <div className=" absolute left-32 top-9 w-64 text-red-600">
+                Please upload main image
+              </div>
+            )}
           </div>
-          <p className="pb-2 pt-9">Image Gallery(At least 4 pictures)*</p>
-          <div className="image-gallery preview flex flex-wrap gap-6 ">
+          <div className="image-gallery-header relative">
+            <p className="pb-2 pt-9">
+              Image Gallery(At least 4 pictures) *
+              {errors?.galleryImage && (
+                <span className="w-64 pl-5 text-red-600">
+                  Image gallery must be at least 4 pictures
+                </span>
+              )}
+            </p>
+          </div>
+          <div className="image-gallery preview flex flex-wrap gap-6">
             {!Object.keys(values.galleryImage).length ? (
               <label className="cursor-grab active:cursor-grabbing">
                 <Image
@@ -376,8 +430,13 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit }) => {
           </div>
         </div>
         <div className="my-10 w-full border-b-2"></div>
-        <div className="room-amenity">
-          <h4>Room Amenities</h4>
+        <div className="room-amenity relative">
+          <h4>Room Amenities </h4>
+          {errors?.amenity && (
+            <span className=" absolute left-60 top-3 w-64 text-red-600">
+              <p> Please enter at least one amenity</p>
+            </span>
+          )}
           <div className="amenity-list cursor-grab active:cursor-grabbing">
             {values.amenity.length &&
               values.amenity.map((item, i) => {

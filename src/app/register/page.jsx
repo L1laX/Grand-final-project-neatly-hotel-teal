@@ -115,6 +115,8 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     //validate Email
+    const email = values.email.split(".");
+    const lastedEmail = email[email.length - 1];
     const validEmailRegex =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     //1st validation
@@ -124,14 +126,16 @@ const Register = () => {
       password: values.password.length < 6,
       dateOfBirth: validateDateofBirth(values.dateOfBirth),
       email:
-        values.email.length === 0 &&
-        !values.email.toLowerCase().match(validEmailRegex),
+        values.email.length === 0 ||
+        !values.email.toLowerCase().match(validEmailRegex) ||
+        !lastedEmail === "com" ||
+        !lastedEmail === "co" ||
+        !lastedEmail === "org",
       id_number: values.id_number.length !== 13,
       country: values.country.length < 1,
       image: Object.keys(avatar).length === 0,
     };
     // next validate
-    console.log(1);
     setErrors({ ...errors });
     if (
       Object.keys(errors).filter((error) => errors[error] === true).length === 0

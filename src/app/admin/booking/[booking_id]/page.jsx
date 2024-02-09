@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Sidebar from "../../Sidebar/page.jsx";
+import Sidebar from "../../../../components/navbar/SidebarAdmin.jsx";
 import Link from "next/link";
+import NavBar from "@/components/navbar/NavbarAdmin";
 
 function BookingDetail({ params: { booking_id } }) {
   const [booking, setBooking] = useState(null);
@@ -62,23 +63,14 @@ function BookingDetail({ params: { booking_id } }) {
       <div className="flex flex-row bg-gray-100">
         <Sidebar />
         <div className="flex w-full flex-col">
-          <header className="flex gap-4 border-b border-solid border-b-[color:var(--gray-300,#E4E6ED)] bg-white px-16 py-6 text-xl leading-8 tracking-tight text-slate-800 max-md:flex-wrap max-md:px-5">
-            <Link href="/admin/booking">
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/fb61ef0fe7c8a6768029413a6db1e5e923c08b629cf04d79c844069a55152c1d?apiKey=0be454901f214db788ae581e588490bf&"
-                className="my-auto aspect-square w-6"
-                alt="Profile Image"
-              />
-            </Link>
-            <div className="font-semibold stacked-fractions">
-              {customerName}
-            </div>
-            <div className="grow stacked-fractions max-md:max-w-full">
-              {room.name}
-            </div>
-          </header>
-
+          <NavBar
+            customerName={customerName}
+            navName={room.name}
+            buttonName={"Update"}
+            notSearch={true}
+            backarrow={true}
+            linkTo={`/admin/booking`}
+          />
           <div
             aria-label="Booking Details"
             className="flex flex-col justify-center bg-slate-50 px-16 py-11 leading-[150%] text-slate-400 max-md:px-5"

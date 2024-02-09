@@ -24,7 +24,7 @@ model userProfile {
   id          Int      @id @default(autoincrement())
   user_id     Int      @unique
   fullName    String
-  id_number   String
+  id_number   String   @unique
   dateOfBirth DateTime
   country     String
   user        user     @relation(fields: [user_id], references: [id])

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Sidebar from "../Sidebar/page";
+import Sidebar from "../../../components/navbar/SidebarAdmin";
 import NavBar from "@/components/navbar/NavbarAdmin";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -118,6 +118,9 @@ const RoomType = () => {
         <NavBar
           navName={"Room & Property"}
           button={true}
+          handleSubmit={() => {
+            router.push("/admin/room_type/create");
+          }}
           buttonName={"+Create Room"}
         />
         <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
