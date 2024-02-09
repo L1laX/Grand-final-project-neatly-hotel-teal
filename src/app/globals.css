@@ -33,6 +33,38 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+
+    --green-neatly-100: #f1f5f3;
+    --green-neatly-200: #e6ebe9;
+    --green-neatly-300: #d5dfda;
+    --green-neatly-400: #abc0b4;
+    --green-neatly-500: #81a08f;
+    --green-neatly-600: #5d7b6a;
+    --green-neatly-700: #465c50;
+    --green-neatly-800: #2f3e35;
+    --green-neatly-900: #171f1b;
+
+    --orange-neatly-100: #faede8;
+    --orange-neatly-200: #f9dace;
+    --orange-neatly-300: #f3b59c;
+    --orange-neatly-400: #ed906b;
+    --orange-neatly-500: #e76b39;
+    --orange-neatly-600: #c14817;
+    --orange-neatly-700: #803010;
+    --orange-neatly-800: #631f04;
+    --orange-neatly-900: #401808;
+
+    --gray-neatly-100: #f6f7fc;
+    --gray-neatly-200: #f1f2f6;
+    --gray-neatly-300: #e4e6ed;
+    --gray-neatly-400: #d6d9e4;
+    --gray-neatly-500: #c8ccd8;
+    --gray-neatly-600: #9aa1b9;
+    --gray-neatly-700: #646d89;
+    --gray-neatly-800: #424c68;
+    --gray-neatly-900: #2a2e3f;
+
+    --primary-neatly: #f7f7fb;
   }
 
   .dark {
@@ -87,13 +119,13 @@ html {
   h5 {
     @apply font-sans text-xl font-semibold leading-[150%] tracking-[-0.4px] text-[#323640];
   }
-  body1 {
+  .body1 {
     @apply font-sans text-base font-normal text-[#323640];
   }
-  body2 {
+  .body2 {
     @apply font-sans text-sm font-medium text-[#323640];
   }
-  body3 {
+  .body3 {
     @apply font-sans text-xs font-medium text-[#323640];
   }
   @layer components {
@@ -289,9 +321,9 @@ html {
   }
 }
 .textCircle {
-  width: 1.5rem; 
-  height: 1.5rem; 
-  padding: 0.5rem; 
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0.5rem;
   /* background-color: #fff;  */
   border: 1px solid #666;
   border-radius: 50%;
@@ -299,4 +331,3 @@ html {
   align-items: center;
   justify-content: center;
 }
-

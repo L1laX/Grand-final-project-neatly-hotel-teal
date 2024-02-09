@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require("tailwindcss/colors");
 module.exports = {
   darkMode: ["class"],
   content: [
@@ -14,6 +15,56 @@ module.exports = {
       padding: "2rem",
       screens: {
         "2xl": "1400px",
+      },
+      extend: {
+        colors: {
+          brown: {
+            50: "#fdf8f6",
+            100: "#f2e8e5",
+            200: "#eaddd7",
+            300: "#e0cec7",
+            400: "#d2bab0",
+            500: "#bfa094",
+            600: "#a18072",
+            700: "#977669",
+            800: "#846358",
+            900: "#43302b",
+          },
+          green: {
+            100: "#f1f5f3",
+            200: "#e6ebe9",
+            300: "#d5dfda",
+            400: "#abc0b4",
+            500: "#81a08f",
+            600: "#5d7b6a",
+            700: "#465c50",
+            800: "#2f3e35",
+            900: "#171f1b",
+          },
+          orange: {
+            100: "#faede8",
+            200: "#f9dace",
+            300: "#f3b59c",
+            400: "#ed906b",
+            500: "#e76b39",
+            600: "#c14817",
+            700: "#803010",
+            800: "#631f04",
+            900: "#401808",
+          },
+          gray: {
+            100: "#f6f7fc",
+            200: "#f1f2f6",
+            300: "#e4e6ed",
+            400: "#d6d9e4",
+            500: "#c8ccd8",
+            600: "#9aa1b9",
+            700: "#646d89",
+            800: "#424c68",
+            900: "#2a2e3f",
+          },
+          primarybg: "#F7F7FB",
+        },
       },
     },
     extend: {

@@ -34,11 +34,11 @@ export default function RoomDetail({ searchParams }) {
         room: 1,
         guest: 2,
       };
-  console.log(searchParams.roomAndGuestString)
+  console.log(searchParams.roomAndGuestString);
   const [rooms, setRooms] = useState([]);
   // const [date, setDate] = useState(JSON.parse(searchParams.dateString));
   const [date, setDate] = useState(initialDate);
-  const [roomAndGuest,setRoomAndGuest] = useState(initialRoomAndGuest)
+  const [roomAndGuest, setRoomAndGuest] = useState(initialRoomAndGuest);
   // const [room, setRoom] = useState(parseInt(searchParams.room, 10));
   // const [guest, setGuest] = useState(parseInt(searchParams.guest, 10));
 
@@ -106,10 +106,15 @@ export default function RoomDetail({ searchParams }) {
             handleClick={handleClickSearch}
           />
         </div>
-      </div>{" "}
+      </div>
       <div className="divide-y-2 divide-gray-300 lg:m-20">
         {rooms.map((item, index) => (
-          <RoomCard key={index} roomitem={item.name} />
+          <RoomCard
+            key={index}
+            roomitem={item.id}
+            roomname={item.name}
+            handleBooking={item.id}
+          />
         ))}
       </div>
     </main>
