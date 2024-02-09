@@ -3,7 +3,14 @@ import PrimaryBtn from "../common/PrimaryBtn";
 import BackArrow from "/src/asset/icons/BackArrow.svg";
 import Image from "next/legacy/image";
 import Link from "next/link";
-const NavBar = ({ navName, button, buttonName, notSearch, backarrow }) => {
+const NavBar = ({
+  navName,
+  button,
+  buttonName,
+  notSearch,
+  backarrow,
+  handleSubmit,
+}) => {
   return (
     <nav
       className="border- #E4E6ED w-full bg-white
@@ -44,7 +51,7 @@ p-4"
             {/*Create Room*/}
             <span className="button mr-12">
               {button && (
-                <PrimaryBtn btnName={buttonName} handleClick={() => {}} />
+                <PrimaryBtn btnName={buttonName} handleClick={handleSubmit} />
               )}
             </span>
           </div>

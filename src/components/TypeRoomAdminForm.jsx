@@ -8,27 +8,16 @@ import DragIcon from "@/asset/input/dragicon.svg";
 import SecondaryBtn from "./common/SecondaryBtn";
 import { orange } from "@mui/material/colors";
 import Checkbox from "@mui/material/Checkbox";
-import { CookingPot } from "lucide-react";
-const TypeRoomAdminForm = ({ values, setValues }) => {
-  const [amenity, setAmenity] = useState([""]);
-  const [isPromotion, setIsPromotion] = useState(false);
-  const [mainImage, setMainImage] = useState(values.mainImage);
-  const [gallery, setGallery] = useState([
-    ...values.galleryImage.map((link, i) => {
-      const id = Date.now();
-      return { [id]: link };
-    }),
-  ]);
+
+const TypeRoomAdminForm = ({ values, setValues, handleSubmit }) => {
+  const [isPromotion, setIsPromotion] = useState(
+    values.promotionPrice ? true : false,
+  );
+
   const dragItem = useRef();
   const dragOverItem = useRef();
   const getValue = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
-  };
-  const dragStart = (e) => {
-    dragItem.current = e.target.getAttribute("drag_id");
-  };
-  const dragEnter = (e) => {
-    dragOverItem.current = e.currentTarget.getAttribute("drag_id");
   };
   const handleMainImage = (e) => {
     e.preventDefault();
@@ -39,61 +28,81 @@ const TypeRoomAdminForm = ({ values, setValues }) => {
     }
 
     if (name === "mainImage") {
-      setMainImage(file);
+      setValues({ ...values, mainImage: file });
     }
 
     if (name === "imageGallery") {
       const id = Date.now();
       const value = e.target.files[0];
-      setGallery({ ...gallery, [id]: value });
+      setValues({
+        ...values,
+        galleryImage: [...values.galleryImage, { [id]: value }],
+      });
     }
   };
+
   const handleDeleteImage = (e, id, name, i) => {
     e.preventDefault();
     if (name === "mainImage") {
-      return setMainImage("");
+      return setValues({ ...values, mainImage: "" });
     }
     if (name === "imageGallery") {
-      console.log("here");
-      if (typeof gallery[i] === "object") {
-        const newImage = [...gallery];
-        delete newImage[id];
-        return setGallery({ ...newImage });
-      } else {
-        gallery.splice(i, 1);
-        return setGallery(gallery);
+      if (values.galleryImage.length === 1) {
+        return setValues({ ...values, galleryImage: [] });
       }
+      const newImage = [...values.galleryImage];
+      newImage.splice(i, 1);
+      return setValues({ ...values, galleryImage: [...newImage] });
     }
   };
-  const test = [" asd", " asd", { id: "image" }, { id: "image" }];
-  console.log(Array.isArray(test));
-  const drop = () => {
-    const newAmenity = [...amenity];
+  const dragStart = (e) => {
+    dragItem.current = e.target.getAttribute("drag_id");
+  };
+  const dragEnter = (e) => {
+    dragOverItem.current = e.currentTarget.getAttribute("drag_id");
+  };
+  
+  const drop = (type) => {
+    if (type === "image") {
+      const newGallery = [...values.galleryImage];
+      const dragItemContent = newGallery[dragItem.current];
+      newGallery.splice(dragItem.current, 1);
+      newGallery.splice(dragOverItem.current, 0, dragItemContent);
+      dragItem.current = null;
+      dragOverItem.current = null;
+      return setValues({ ...values, galleryImage: newGallery });
+    }
+    const newAmenity = [...values.amenity];
     const dragItemContent = newAmenity[dragItem.current];
     newAmenity.splice(dragItem.current, 1);
     newAmenity.splice(dragOverItem.current, 0, dragItemContent);
     dragItem.current = null;
     dragOverItem.current = null;
-    setAmenity(newAmenity);
+    setValues({ ...values, amenity: newAmenity });
   };
 
   const addAmenity = (e) => {
     e.preventDefault();
-    const newAmenity = [...amenity];
+    const newAmenity = [...values.amenity];
+    console.log(newAmenity);
     newAmenity.push("");
-    setAmenity(newAmenity);
+    setValues({ ...values, amenity: newAmenity });
   };
   const deleteAmenity = (e, i) => {
-    if (amenity.length !== 1) {
+    if (values.amenity.length !== 1) {
       e.preventDefault();
-      const newAmenity = [...amenity];
+      const newAmenity = [...values.amenity];
       newAmenity.splice(i, 1);
-      setAmenity(newAmenity);
+      setValues({ ...values, amenity: newAmenity });
     }
   };
+
   return (
     <sction className="TyperoomForm  m-48 p-20">
-      <form className="mx-20 flex flex-col  bg-white p-11">
+      <form
+        className="mx-20 flex flex-col  bg-white p-11"
+        onSubmit={handleSubmit}
+      >
         <div className="basic-info flex flex-col gap-5">
           <h4>Basic Information</h4>
           <div className="Roomtype flex w-full flex-col">
@@ -175,6 +184,7 @@ const TypeRoomAdminForm = ({ values, setValues }) => {
                   },
                 }}
                 className="mr-1 mt-1"
+                checked={isPromotion ? true : false}
                 onClick={() => {
                   setIsPromotion(!isPromotion);
                   if (isPromotion) {
@@ -215,13 +225,13 @@ const TypeRoomAdminForm = ({ values, setValues }) => {
           <h4>Room Image</h4>
           <div className="main-image rounded-full">
             <p className="pb-2 pt-9">Main Image*</p>
-            {mainImage ? (
+            {values.mainImage ? (
               <div className="image-preview-container relative w-fit">
                 <img
                   className="image-preview border border-amber-500 shadow-lg transition-transform hover:scale-110"
                   src={
-                    typeof mainImage === "object"
-                      ? URL.createObjectURL(mainImage)
+                    typeof values.mainImage === "object"
+                      ? URL.createObjectURL(values.mainImage)
                       : values.mainImage
                   }
                   alt={"main image"}
@@ -255,9 +265,9 @@ const TypeRoomAdminForm = ({ values, setValues }) => {
             )}
           </div>
           <p className="pb-2 pt-9">Image Gallery(At least 4 pictures)*</p>
-          <div className="image-gallery preview flex flex-wrap gap-6">
-            {!Object.keys(gallery).length ? (
-              <label className="">
+          <div className="image-gallery preview flex flex-wrap gap-6 ">
+            {!Object.keys(values.galleryImage).length ? (
+              <label className="cursor-grab active:cursor-grabbing">
                 <Image
                   src={UploadPicSmall}
                   alt="background upload"
@@ -274,77 +284,29 @@ const TypeRoomAdminForm = ({ values, setValues }) => {
                   onChange={handleMainImage}
                 />
               </label>
-            ) : Object.keys(gallery).length < 10 ? (
-              Object.keys(gallery).map((item, i) => {
-                console.log(i === Object.keys(gallery).length - 1);
-                if (i === Object.keys(gallery).length - 1) {
-                  Object.keys(gallery[item]).map((id, i) => {
-                    console.log(gallery[item][id]);
-                    const file = gallery[item][id];
-                    return (
-                      <>
-                        <div
-                          key={id}
-                          className="image-preview-container relative w-fit"
-                        >
-                          <img
-                            className="image-preview border border-amber-500 shadow-lg transition-transform hover:scale-110"
-                            src={
-                              typeof file === "object"
-                                ? URL.createObjectURL(file)
-                                : file
-                            }
-                            alt={file.name}
-                            width={100}
-                          />
-                          <button
-                            className="image-remove-button absolute -right-2 -top-3 flex h-6 w-6 items-center justify-center rounded-full bg-orange-600 p-3 px-3 text-sm text-white transition-colors hover:bg-orange-500"
-                            onClick={(event) =>
-                              handleDeleteImage(event, id, "imageGallery", i)
-                            }
-                          >
-                            x
-                          </button>
-                        </div>
-                        <label className="">
-                          <Image
-                            src={UploadPicSmall}
-                            alt="background upload"
-                            className="cursor-pointer shadow-lg hover:opacity-95"
-                            width={120}
-                            height={120}
-                          />
-                          <input
-                            name="imageGallery"
-                            type="file"
-                            hidden
-                            accept="image/*"
-                            multiple
-                            onChange={handleMainImage}
-                          />
-                        </label>
-                      </>
-                    );
-                  });
-                }
-                return Object.keys(gallery[item]).map((id, i) => {
-                  const file = gallery[item][id];
-                  console.log("hello");
+            ) : Object.keys(values.galleryImage).length < 10 ? (
+              Object.keys(values.galleryImage).map((id, i) => {
+                const file = values.galleryImage[id];
+                if (i === Object.keys(values.galleryImage).length - 1) {
                   return (
-                    <>
+                    <div key={id} className="flex gap-5">
                       <div
-                        key={id}
-                        className="image-preview-container relative w-fit"
+                        className="image-preview-container relative w-fit cursor-grab active:cursor-grabbing"
+                        onDragStart={dragStart}
+                        onDragEnter={dragEnter}
+                        onDragEnd={() => drop("image")}
+                        drag_id={i}
                       >
                         <img
                           className="image-preview border border-amber-500 shadow-lg transition-transform hover:scale-110"
                           src={
                             typeof file === "object"
-                              ? URL.createObjectURL(file)
+                              ? URL.createObjectURL(file[Object.keys(file)[0]])
                               : file
                           }
-                          alt={file.name}
+                          alt={"gallery image"}
                           width={100}
+                          drag_id={i}
                         />
                         <button
                           className="image-remove-button absolute -right-2 -top-3 flex h-6 w-6 items-center justify-center rounded-full bg-orange-600 p-3 px-3 text-sm text-white transition-colors hover:bg-orange-500"
@@ -372,9 +334,41 @@ const TypeRoomAdminForm = ({ values, setValues }) => {
                           onChange={handleMainImage}
                         />
                       </label>
-                    </>
+                    </div>
                   );
-                });
+                }
+                return (
+                  <div key={id}>
+                    <div
+                      key={id}
+                      className="image-preview-container relative w-fit cursor-grab active:cursor-grabbing"
+                      onDragStart={dragStart}
+                      onDragEnter={dragEnter}
+                      onDragEnd={() => drop("image")}
+                      drag_id={i}
+                    >
+                      <img
+                        className="image-preview border border-amber-500 shadow-lg transition-transform hover:scale-110"
+                        src={
+                          typeof file === "object"
+                            ? URL.createObjectURL(file[Object.keys(file)[0]])
+                            : file
+                        }
+                        drag_id={i}
+                        alt={"gallery image"}
+                        width={100}
+                      />
+                      <button
+                        className="image-remove-button absolute -right-2 -top-3 flex h-6 w-6 items-center justify-center rounded-full bg-orange-600 p-3 px-3 text-sm text-white transition-colors hover:bg-orange-500"
+                        onClick={(event) =>
+                          handleDeleteImage(event, id, "imageGallery", i)
+                        }
+                      >
+                        x
+                      </button>
+                    </div>
+                  </div>
+                );
               })
             ) : (
               ""
@@ -384,9 +378,9 @@ const TypeRoomAdminForm = ({ values, setValues }) => {
         <div className="my-10 w-full border-b-2"></div>
         <div className="room-amenity">
           <h4>Room Amenities</h4>
-          <div className="amenity-list" draggable>
-            {amenity.length &&
-              amenity.map((item, i) => {
+          <div className="amenity-list cursor-grab active:cursor-grabbing">
+            {values.amenity.length &&
+              values.amenity.map((item, i) => {
                 return (
                   <div
                     className="item flex w-full cursor-grab p-4 active:cursor-grabbing"
@@ -416,9 +410,9 @@ const TypeRoomAdminForm = ({ values, setValues }) => {
                         className="mt-1 w-full rounded-lg border p-2"
                         onChange={(e) => {
                           const value = e.target.value;
-                          const newAmenity = [...amenity];
+                          const newAmenity = [...values.amenity];
                           newAmenity.splice(i, 1, value);
-                          setAmenity(newAmenity);
+                          setValues({ ...values, amenity: newAmenity });
                         }}
                       />
                     </div>
