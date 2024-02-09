@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Sidebar from "../Sidebar/page.jsx";
 import NavBarAdmin from "@/components/navbar/NavbarAdminBooking.jsx";
 import Paper from "@mui/material/Paper";
@@ -13,6 +14,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
 function CustomerBooking() {
+  const router = useRouter();
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -25,7 +27,6 @@ function CustomerBooking() {
         const data = await response.json();
 
         setRows(data.data);
-
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data from API:", error.message);
@@ -42,6 +43,10 @@ function CustomerBooking() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const handleRowClick = (id) => {
+    router.push(`/admin/booking/${id}`);
   };
 
   const columns = [
@@ -99,6 +104,8 @@ function CustomerBooking() {
                           hover
                           role="checkbox"
                           tabIndex={-1}
+                          onClick={() => handleRowClick(row.id)}
+                          style={{ cursor: "pointer" }}
                         >
                           {columns.map((column) => (
                             <TableCell key={column.id} align={column.align}>

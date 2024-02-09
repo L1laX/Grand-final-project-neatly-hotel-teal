@@ -1,25 +1,38 @@
 import { prisma } from "@/lib/prisma.js";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+// export async function GET(request, { params: { customer_booking_id } }) {
+//   console.log(customer_booking_id);
+//   const customerId = +customer_booking_id;
+
+//   try {
+//     const customerBookings = await prisma.customerBooking.findUnique({
+//       where: {
+//         id: customerId,
+//       },
+//     });
+
+//     return NextResponse.json({
+//       success: true,
+//       data: customerBookings,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching customer bookings:", error);
+//     return NextResponse.error("Error fetching customer bookings");
+//   }
+// }
+
+export async function GET(request, { params: { customer_booking_id } }) {
+  console.log(customer_booking_id);
+  const customerId = +customer_booking_id;
+
   try {
-    const customerBookings = await prisma.customerBooking.findMany({
+    const customerBookings = await prisma.customerBooking.findUnique({
+      where: {
+        id: customerId,
+      },
       include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-            created_at: true,
-            updated_at: true,
-          },
-        },
-        room: {
-          select: {
-            name: true,
-            bedType: true,
-          },
-        },
-        bookingRequest: true,
+        room: true,
       },
     });
 
