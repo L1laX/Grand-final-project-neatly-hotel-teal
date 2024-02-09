@@ -1,100 +1,30 @@
-// Get all rooms
-router.get("/rooms", async (req, res) => {
-  try {
-    const { data, error } = await supabase.from("rooms").select("*");
-    if (error) {
-      throw error;
-    }
-    res.status(200).json({
-      data,
-    });
-  } catch (error) {
-    console.error("Error retrieving rooms:", error.message);
-    res.status(500).json({
-      error: "Error retrieving rooms",
-    });
-  }
-});
+import { prisma } from "@/lib/prisma.js";
+import { NextResponse } from "next/server";
 
-// Get a specific room by ID
-router.get("/rooms/:id", async (req, res) => {
+export async function GET() {
   try {
-    const { data, error } = await supabase
-      .from("rooms")
-      .select("*")
-      .eq("id", req.params.id)
-      .single();
-    if (error) {
-      throw error;
-    }
-    res.status(200).json({
-      data,
+    const roomManagement = await prisma.room.findMany({
+      select: {
+        id: true,
+        name: true,
+        size: true,
+        bedType: true,
+        status: true,
+        checkInDate: true,
+        checkOutDate: true,
+        guests: true,
+        description: true,
+        pricePerNight: true,
+        promotionPrice: true,
+      },
     });
-  } catch (error) {
-    console.error("Error retrieving room:", error.message);
-    res.status(500).json({
-      error: "Error retrieving room",
-    });
-  }
-});
 
-// Update a room
-router.put("/rooms/:id", async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from("rooms")
-      .update(req.body)
-      .eq("id", req.params.id);
-    if (error) {
-      throw error;
-    }
-    res.status(200).json({
-      message: "Room updated successfully",
+    return NextResponse.json({
+      success: true,
+      data: roomManagement,
     });
   } catch (error) {
-    console.error("Error updating room:", error.message);
-    res.status(500).json({
-      error: "Error updating room",
-    });
+    console.error("Error fetching customer bookings:", error);
+    return NextResponse.error("Error fetching customer bookings");
   }
-});
-
-// Create a new room
-router.post("/rooms", async (req, res) => {
-  try {
-    const { data, error } = await supabase.from("rooms").insert(req.body);
-    if (error) {
-      throw error;
-    }
-    res.status(201).json({
-      message: "Room created successfully",
-      data,
-    });
-  } catch (error) {
-    console.error("Error creating room:", error.message);
-    res.status(500).json({
-      error: "Error creating room",
-    });
-  }
-});
-
-// Delete a room
-router.delete("/rooms/:id", async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from("rooms")
-      .delete()
-      .eq("id", req.params.id);
-    if (error) {
-      throw error;
-    }
-    res.status(200).json({
-      message: "Room deleted successfully",
-    });
-  } catch (error) {
-    console.error("Error deleting room:", error.message);
-    res.status(500).json({
-      error: "Error deleting room",
-    });
-  }
-});
+}

@@ -1,23 +1,61 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Sidebar from "../../Sidebar/page.jsx";
 import Link from "next/link";
 
-function BookingDetail() {
-  const customerName = "Kate Cho";
-  const numberOfGuests = 2;
-  const roomType = "Superior Garden View Room";
-  const amount = "1 room";
-  const bedType = "Single bed";
-  const checkInDate = "Th, 19 Oct 2022";
-  const checkOutDate = "Fri, 20 Oct 2022";
-  const stayDuration = "1 night";
-  const bookingDate = "Tue, 16 Oct 2022";
-  const paymentMethod = "Credit Card - *888";
-  const roomPrice = "2,500.00";
-  const airportTransferPrice = "200.00";
-  const promotionCodeDiscount = "-400.00";
-  const totalAmount = "THB 2,300.00";
-  const additionalRequest = "Can I have some chocolate?";
+function BookingDetail({ params: { booking_id } }) {
+  const [booking, setBooking] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `/api/admin/customer_booking/${booking_id}`,
+        );
+        const data = await response.json();
+
+        setBooking(data.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data from API:", error.message);
+        setError("Failed to fetch data. Please try again.");
+      }
+    };
+
+    fetchData();
+  }, [booking_id]);
+
+  console.log(booking);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  // Destructure the properties from booking only if booking exists
+  const {
+    customerName,
+    guestCount,
+    room_id,
+    checkInDate,
+    checkOutDate,
+    paymentType,
+    totalPrice,
+    promotionCode,
+    additionalRequest,
+    created_at,
+    room,
+  } = booking;
+
+  const stayDuration = Math.floor(
+    (new Date(checkOutDate) - new Date(checkInDate)) / (1000 * 60 * 60 * 24),
+  );
 
   return (
     <>
@@ -33,9 +71,11 @@ function BookingDetail() {
                 alt="Profile Image"
               />
             </Link>
-            <div className="font-semibold stacked-fractions">Kate Cho</div>
+            <div className="font-semibold stacked-fractions">
+              {customerName}
+            </div>
             <div className="grow stacked-fractions max-md:max-w-full">
-              Premier Sea View
+              {room.name}
             </div>
           </header>
 
@@ -57,7 +97,7 @@ function BookingDetail() {
                 Guest(s){" "}
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
-                {numberOfGuests}
+                {guestCount}
               </div>
 
               <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
@@ -65,7 +105,7 @@ function BookingDetail() {
                 Room type{" "}
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
-                {roomType}
+                {room.name}
               </div>
 
               <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
@@ -73,7 +113,7 @@ function BookingDetail() {
                 Amount{" "}
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
-                {amount}
+                {totalPrice}
               </div>
 
               <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
@@ -81,7 +121,7 @@ function BookingDetail() {
                 Bed type{" "}
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
-                {bedType}
+                {room.bedType}
               </div>
 
               <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
@@ -105,7 +145,7 @@ function BookingDetail() {
                 Stay (total){" "}
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
-                {stayDuration}
+                {stayDuration} days
               </div>
 
               <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
@@ -113,7 +153,7 @@ function BookingDetail() {
                 Booking date{" "}
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
-                {bookingDate}
+                {created_at}
               </div>
 
               <form
@@ -122,27 +162,27 @@ function BookingDetail() {
               >
                 <div className="flex justify-between gap-4 px-20 pb-4 text-base tracking-tight text-slate-400 max-md:max-w-full max-md:flex-wrap max-md:px-5">
                   <span>Payment success via</span>
-                  <span className="font-semibold">{paymentMethod}</span>
+                  <span className="font-semibold">{paymentType}</span>
                 </div>
 
                 <div className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap">
-                  <span>Superior Garden View Room</span>
+                  <span>{room.name}</span>
                   <span className="grow text-right font-semibold max-md:max-w-full">
-                    {roomPrice}
+                    {totalPrice}
                   </span>
                 </div>
 
                 <div className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap">
-                  <span>Airport tranfer</span>
+                  <span>Airport transfer</span>
                   <span className="grow text-right font-semibold max-md:max-w-full">
-                    {airportTransferPrice}
+                    200THB
                   </span>
                 </div>
 
                 <div className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap">
                   <span>Promotion Code</span>
                   <span className="grow text-right font-semibold max-md:max-w-full">
-                    {promotionCodeDiscount}
+                    {promotionCode || "N/A"}
                   </span>
                 </div>
 
@@ -152,7 +192,7 @@ function BookingDetail() {
                     Total{" "}
                   </div>
                   <span className="flex-auto text-right text-xl font-semibold stacked-fractions tracking-tight">
-                    {totalAmount}
+                    {totalPrice}
                   </span>
                 </div>
               </form>
@@ -163,7 +203,7 @@ function BookingDetail() {
                   Additional Request{" "}
                 </div>
                 <div className="mt-2 max-md:max-w-full">
-                  {additionalRequest}
+                  {additionalRequest || "N/A"}
                 </div>
               </div>
             </div>
