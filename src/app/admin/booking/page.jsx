@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "../Sidebar/page.jsx";
@@ -63,7 +62,10 @@ function CustomerBooking() {
     <div className="flex flex-row bg-gray-100">
       <Sidebar setActive={1} />
       <div className="flex w-full flex-col">
-        <NavBarAdmin navName={"Customer Booking"} />
+        <NavBarAdmin
+          navName={"Customer Booking"}
+          setFilteredResults={setRows}
+        />
         <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
           <Paper
             sx={{ width: "100%", height: "100%", overflow: "hidden" }}
@@ -105,7 +107,7 @@ function CustomerBooking() {
                           role="checkbox"
                           tabIndex={-1}
                           onClick={() => handleRowClick(row.id)}
-                          style={{ cursor: "pointer" }}
+                          className="cursor-pointer text-center transition duration-200 ease-in-out hover:bg-gray-100"
                         >
                           {columns.map((column) => (
                             <TableCell key={column.id} align={column.align}>

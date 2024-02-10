@@ -136,7 +136,7 @@ function BookingDetail({ params: { booking_id } }) {
                 Amount{" "}
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
-                {room.pricePerNight}
+                {room.pricePerNight * stayDuration}
               </div>
 
               <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
@@ -191,7 +191,7 @@ function BookingDetail({ params: { booking_id } }) {
                 <div className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap">
                   <span>{room.name}</span>
                   <span className="grow text-right font-semibold max-md:max-w-full">
-                    {totalPrice}
+                    {room.pricePerNight * stayDuration}
                   </span>
                 </div>
 
@@ -215,7 +215,8 @@ function BookingDetail({ params: { booking_id } }) {
                     Total{" "}
                   </div>
                   <span className="flex-auto text-right text-xl font-semibold stacked-fractions tracking-tight">
-                    {room.pricePerNight + 200 + promotionCode || "N/A"}
+                    {room.pricePerNight * stayDuration + 200 + promotionCode ||
+                      "N/A"}
                   </span>
                 </div>
               </form>

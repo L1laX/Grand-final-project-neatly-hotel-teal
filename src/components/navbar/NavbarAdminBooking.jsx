@@ -1,14 +1,47 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import PrimaryBtn from "../common/PrimaryBtn";
 import BackArrow from "/src/asset/icons/BackArrow.svg";
 import Image from "next/legacy/image";
 import Link from "next/link";
-const NavBar = ({ navName, button, buttonName, notSearch, backarrow }) => {
+
+const NavBarAdmin = ({
+  navName,
+  button,
+  buttonName,
+  notSearch,
+  backarrow,
+  setFilteredResults,
+}) => {
+  const [input, setInput] = useState("");
+
+  const fetchData = (value) => {
+    fetch(`/api/admin/customer_booking?keywords=${value}`)
+      .then((response) => response.json())
+      .then((json) => {
+        const result = json.data.filter(({ customerName }) =>
+          customerName.toLowerCase().includes(value.toLowerCase()),
+        );
+        setFilteredResults(result);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const handleSearch = (value) => {
+    setInput(value);
+    if (value.trim() !== "") {
+      fetchData(value);
+    } else {
+      setFilteredResults([]);
+      fetchData("");
+    }
+  };
+
   return (
-    <nav
-      className="border- #E4E6ED  w-full
-bg-white p-4"
-    >
+    <nav className="border- #E4E6ED  w-full bg-white p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center justify-center gap-4 text-xl font-bold text-black">
           {backarrow && (
@@ -19,18 +52,19 @@ bg-white p-4"
                 width={15}
                 height={15}
                 alt="back arrow"
-              ></Image>
+              />
             </Link>
           )}
           {navName}
         </div>
         <div className="flex items-center">
-          {/* Search Input */}
           <div className="mr-4">
             {!notSearch && (
               <input
                 type="text"
                 placeholder="Search..."
+                value={input}
+                onChange={(e) => handleSearch(e.target.value)}
                 className={`
                 rounded-md border
                 border-gray-300 px-4
@@ -38,10 +72,10 @@ bg-white p-4"
                 focus:outline-none
                 focus:ring-2
                 focus:ring-blue-400
-                ${button ? "mr-5" : ""}`}
+                ${button ? "mr-5" : ""}
+              `}
               />
             )}
-            {/*Create Room*/}
             <span className="button mr-12">
               {button && (
                 <PrimaryBtn btnName={buttonName} handleClick={() => {}} />
@@ -54,4 +88,4 @@ bg-white p-4"
   );
 };
 
-export default NavBar;
+export default NavBarAdmin;
