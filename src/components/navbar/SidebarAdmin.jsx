@@ -88,7 +88,7 @@ const Sidebar = ({ setActive }) => {
           </div>
         </div>
       </div>
-      <div className="sidebar width w-[17rem]"></div>
+      <div className="sidebar-width w-[17rem]"></div>
     </>
   );
 };

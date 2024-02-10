@@ -8,7 +8,7 @@ import PrimaryBtn from "./common/PrimaryBtn";
 import AvatarDropdown from "./common/AvatarDropdown";
 import { useSession, signIn } from "next-auth/react";
 const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   return (
     <section className="flex w-full items-center justify-center border-4 border-double border-indigo-600 bg-white py-8">
@@ -38,6 +38,7 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
             >
               Service & Facilities
             </a>
+
             <a
               href={roomsid || "rooms"}
               className="cursor-pointer hover:opacity-75"
@@ -69,7 +70,7 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
               </div>
             ) : session?.user?.role === "admin" ? (
               <PrimaryBtn
-                btnName="To Admin Page"
+                btnName="To Admin Panel"
                 handleClick={() => {
                   router.push("/admin");
                 }}
