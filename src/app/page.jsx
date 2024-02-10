@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
-import SecondaryBtn from "@/components/common/SecondaryBtn";
 import UserFooter from "@/components/UserFooter";
 import Image from "next/legacy/image";
 import Hero from "/src/asset/homepage/hero.jpg";
@@ -33,20 +32,12 @@ import "slick-carousel/slick/slick-theme.css";
 import "./react-slick.css";
 import UserNavbar from "@/components/UserNavbar";
 import { DateRangeRoomGuest } from "@/components/ui/DateRangeRoomGuest";
-// import Link from "next/link";
 import { addDays, format } from "date-fns";
 import Link from "next/link";
-// import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+
 export default function Home() {
-  // const searchParams = useSearchParams();
-  // const toSection = searchParams.get("section");
-  // let isClick = searchParams.get("isClick");
-
-  // console.log(toSection);
-  // if (isClick && toSection) {
-  //   router.push(`/#${toSection}`);
-  // }
-
   const [date, setDate] = useState({
     from: new Date(),
     to: addDays(new Date(), 2),
@@ -55,10 +46,10 @@ export default function Home() {
   // const [room, setRoom] = useState(1);
   // const [guest, setGuest] = useState(1);
 
-  const [roomAndGuest,setRoomAndGuest] = useState({
-    room:1,
-    guest:2
-  })
+  const [roomAndGuest, setRoomAndGuest] = useState({
+    room: 1,
+    guest: 2,
+  });
 
   const settingsSlide = {
     className: "center",
@@ -78,7 +69,9 @@ export default function Home() {
   };
 
   const dateString = JSON.stringify({
-    from: date?.from ? format(date?.from, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
+    from: date?.from
+      ? format(date?.from, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
+      : null,
     to: date?.to ? format(date?.to, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
   });
 
@@ -89,21 +82,23 @@ export default function Home() {
 
   const sendValueToRoomDetails = {
     dateString,
-    roomAndGuestString
+    roomAndGuestString,
   };
-  console.log(sendValueToRoomDetails)
+  console.log(sendValueToRoomDetails);
 
-  const handleClickSearch = ()=>{
-    if(!date?.from && !date?.to){
-      alert("please choose checkin date and checkout date")
-    }else if(!date?.from){
-      alert("please choose checkin date")
-    }else if(!date?.to){
-      alert("please choose checkout date")
-    }else if(format(date?.from, "yyyy-MM-dd") === format(date?.to, "yyyy-MM-dd")){
-      alert("At least 2 days 1 night")
+  const handleClickSearch = () => {
+    if (!date?.from && !date?.to) {
+      alert("please choose checkin date and checkout date");
+    } else if (!date?.from) {
+      alert("please choose checkin date");
+    } else if (!date?.to) {
+      alert("please choose checkout date");
+    } else if (
+      format(date?.from, "yyyy-MM-dd") === format(date?.to, "yyyy-MM-dd")
+    ) {
+      alert("At least 2 days 1 night");
     }
-  }
+  };
 
   return (
     <>
@@ -120,6 +115,7 @@ export default function Home() {
           layout="fill"
           objectFit="cover"
         />
+
         <div className="to-94% from-1% absolute inset-0 bg-gradient-to-b from-neutral-900 to-transparent"></div>
         <div className="z-10 flex h-full w-11/12 flex-col items-center justify-evenly border-4 border-double border-indigo-600 lg:w-5/6">
           <div>
@@ -155,11 +151,17 @@ export default function Home() {
               <Link
                 href={{
                   pathname:
-                    !date?.from || !date?.to || format(date?.from, "yyyy-MM-dd") === format(date?.to, "yyyy-MM-dd")
+                    !date?.from ||
+                    !date?.to ||
+                    format(date?.from, "yyyy-MM-dd") ===
+                      format(date?.to, "yyyy-MM-dd")
                       ? false
                       : "/room_detail",
                   query:
-                    !date?.from || !date?.to || format(date?.from, "yyyy-MM-dd") === format(date?.to, "yyyy-MM-dd")
+                    !date?.from ||
+                    !date?.to ||
+                    format(date?.from, "yyyy-MM-dd") ===
+                      format(date?.to, "yyyy-MM-dd")
                       ? false
                       : { ...sendValueToRoomDetails },
                 }}

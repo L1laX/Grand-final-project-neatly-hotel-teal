@@ -1,9 +1,9 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
-// paths that require authentication or authorization
 
 export async function middleware(request) {
   const res = NextResponse.next();
+  //get token from request
   const token = await getToken({
     req: request,
     secret: process.env.SECRET,

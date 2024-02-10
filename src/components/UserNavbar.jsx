@@ -21,7 +21,7 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
           </div>
           <div className="menu ml-5 gap-5 max-md:hidden md:flex">
             <a
-              href={aboutid || "about"}
+              href={aboutid || "/#about"}
               className="cursor-pointer hover:opacity-75"
               // onClick={() => {
               //   toSection(aboutid);
@@ -30,7 +30,7 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
               About Neatly
             </a>
             <a
-              href={serviceid || "/"}
+              href={serviceid || "/#service"}
               className="cursor-pointer hover:opacity-75"
               // onClick={() => {
               //   toSection(serviceid);
@@ -40,7 +40,7 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
             </a>
 
             <a
-              href={roomsid || "rooms"}
+              href={roomsid || "/#rooms"}
               className="cursor-pointer hover:opacity-75"
               // onClick={() => {
               //   toSection(roomsid);
