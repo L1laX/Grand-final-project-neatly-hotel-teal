@@ -7,16 +7,12 @@ import PrimaryBtn from "@/components/common/PrimaryBtn";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { supabase } from "@/lib/supabase";
-import { prisma } from "@/lib/prisma";
-import { check } from "prettier";
 //import Validation from "./registervalidation.js";
 const Register = () => {
   const router = useRouter();
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiryDate, setExpiryDate] = useState("");
   const [id_number, setIdNumber] = useState("");
   const [avatar, setAvatar] = useState("");
   const [values, setValues] = useState({
@@ -144,9 +140,8 @@ const Register = () => {
     // next validate
     setErrors({ ...errors });
     if (
-      Object.keys(errors).filter((error) => errors[error] === true).length === 0
+      Object.keys(errors).filter((key) => errors[key] === true).length === 0
     ) {
-      console.log(2);
       const checkUser = await axios.post("/api/register/checkUser", {
         username: values.username,
         email: values.email,

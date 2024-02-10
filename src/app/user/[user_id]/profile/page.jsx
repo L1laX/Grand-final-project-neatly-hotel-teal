@@ -7,8 +7,11 @@ import DatePicker from "@/components/ui/DatePicker";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import Country from "@/components/common/Country";
+import { useSession } from "next-auth/react";
 
 export default function UserProfile() {
+  const { data: session } = useSession();
+
   const [avatar, setAvatar] = useState("");
   const [userProfiles, setUserProfiles] = useState({
     fullName: "",

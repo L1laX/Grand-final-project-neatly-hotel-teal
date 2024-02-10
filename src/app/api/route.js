@@ -1,5 +1,4 @@
-import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-export async function GET() {
+export function GET(request) {
   return NextResponse.json({ message: "Hello" });
 }
