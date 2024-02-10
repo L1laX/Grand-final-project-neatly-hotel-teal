@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 export async function POST(request) {
   const data = await request.json();
-  const { email, username } = data;
+  const { email, username, id_number } = data;
   const isUserDuplicate = await prisma.user.findUnique({
     where: {
       username: username,
@@ -14,7 +14,15 @@ export async function POST(request) {
       email: email,
     },
   });
+  const isId_NumberDuplicate = await prisma.userProfile.findUnique({
+    where: {
+      id_number: id_number,
+    },
+  });
 
+  if (isId_NumberDuplicate) {
+    return NextResponse.json({ message: "Id Number already exists" });
+  }
   if (isUserDuplicate) {
     return NextResponse.json({ message: "Username already exists" });
   }

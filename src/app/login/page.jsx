@@ -35,7 +35,7 @@ const Login = () => {
       console.error(e);
     }
   };
-  console.log(session);
+
   return (
     <div className="main-content relative flex">
       <div className="image absolute -z-10 md:static md:block md:w-[100rem]">

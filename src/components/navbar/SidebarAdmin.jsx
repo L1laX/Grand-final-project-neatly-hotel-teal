@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Logo from "@/asset/logo/logo-light.svg";
 import { CheckboxIcon } from "@radix-ui/react-icons";
+import { signOut } from "next-auth/react";
 
 const Sidebar = ({ setActive }) => {
   const sidebarItem = [
@@ -77,13 +78,11 @@ const Sidebar = ({ setActive }) => {
                 fill="currentColor"
                 aria-hidden="true"
               />
-              <div className="pr-[45px]">
-                <Link
-                  href="/admin/login"
-                  className="flex items-center gap-4 rounded-md px-4 text-gray-200 duration-500 hover:text-white"
-                >
-                  Logout
-                </Link>
+              <div
+                className="cursor-pointer pr-[45px]"
+                onClick={() => signOut({ callbackUrl: "/" })}
+              >
+                Logout
               </div>
             </div>
           </div>

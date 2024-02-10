@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { supabase } from "@/lib/supabase";
 import { prisma } from "@/lib/prisma";
+import { check } from "prettier";
 //import Validation from "./registervalidation.js";
 const Register = () => {
   const router = useRouter();
@@ -65,6 +66,10 @@ const Register = () => {
     }
   };
 
+  const getCountry = (value) => {
+    setValues({ ...values, country: value });
+  };
+
   const handleDeleteAvatar = (e, avatar_id) => {
     e.preventDefault();
     const newAvatar = { ...avatar };
@@ -112,6 +117,7 @@ const Register = () => {
 
     return errors.dateOfBirth;
   };
+  console.log(values);
   const handleSubmit = async (e) => {
     e.preventDefault();
     //validate Email
@@ -144,6 +150,7 @@ const Register = () => {
       const checkUser = await axios.post("/api/register/checkUser", {
         username: values.username,
         email: values.email,
+        id_number: values.id_number,
       });
       if (checkUser.data.message === "Username already exists") {
         return alert("Username already exists");
@@ -151,17 +158,29 @@ const Register = () => {
       if (checkUser.data.message === "Email already exists") {
         return alert("Email already exists");
       }
-      console.log(3);
+
       const data = await uploadAvatar(e);
       const publicUrl = data.data.publicUrl;
-      const sendingData = { ...values, image: publicUrl };
-      try {
-        const result = await axios.post("/api/register", sendingData);
-        if (result.status === 201) {
-          router.push("/login");
+      if (values.username.includes("admin")) {
+        const sendingData = { ...values, image: publicUrl, role: "admin" };
+        try {
+          const result = await axios.post("/api/register", sendingData);
+          if (result.status === 201) {
+            router.push("/login");
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch (e) {
-        console.error(e);
+      } else {
+        const sendingData = { ...values, image: publicUrl };
+        try {
+          const result = await axios.post("/api/register", sendingData);
+          if (result.status === 201) {
+            router.push("/login");
+          }
+        } catch (e) {
+          console.error(e);
+        }
       }
     }
   };
@@ -323,7 +342,7 @@ const Register = () => {
                     country
                   </lable>
                   <Country
-                    setCountry={getValue}
+                    setCountry={getCountry}
                     className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[446px]"
                   />
                   {errors.country && (
