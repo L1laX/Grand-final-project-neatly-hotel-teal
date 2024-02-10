@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/page.jsx";
-import NavBarAdmin from "@/components/navbar/NavbarAdmin.jsx";
+import NavBarAdmin from "@/components/navbar/NavbarRoomManagement.jsx";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -233,10 +233,6 @@ function RoomManagement() {
     setPage(0);
   };
 
-  const handleSearchInputChange = (event) => {
-    setSearchInput(event.target.value);
-  };
-
   const filteredRows = rows.filter((row) =>
     Object.values(row).some(
       (value) =>
@@ -250,7 +246,10 @@ function RoomManagement() {
       <div className="flex flex-row bg-gray-100">
         <Sidebar setActive={2} />
         <div className="flex w-full flex-col ">
-          <NavBarAdmin navName={"Room Management"} />
+          <NavBarAdmin
+            navName={"Room Management"}
+            setFilteredResults={setRows}
+          />
           <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
             <Paper
               sx={{ width: "100%", height: "100%", overflow: "hidden" }}

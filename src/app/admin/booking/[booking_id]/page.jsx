@@ -191,7 +191,7 @@ function BookingDetail({ params: { booking_id } }) {
                 <div className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap">
                   <span>{room.name}</span>
                   <span className="grow text-right font-semibold max-md:max-w-full">
-                    {room.pricePerNight * stayDuration}
+                    {room.pricePerNight}
                   </span>
                 </div>
 
