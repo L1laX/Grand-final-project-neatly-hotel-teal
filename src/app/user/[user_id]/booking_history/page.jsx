@@ -17,12 +17,18 @@ const testPage = () => {
                 <h3>Superior Garden View</h3>
                 <p>Booking date: Tue, 16 Oct 2022</p>
               </div>
-              <div className="flex w-full justify-between border-4 border-double border-indigo-600">
+              <div className="flex w-full border-4 border-double border-indigo-600">
                 <div className="flex flex-col">
-                  <p>asd</p>
-                  <p>asd</p>
+                  <p>checkin</p>
+                  <p>Th, 19 Oct 2022   |  After 2:00 PM</p>
                 </div>
-                <div className="flex flex-col"></div>
+                <div className="flex flex-col">
+                  <p>checkout</p>
+                  <p>Fri, 20 Oct 2022   |  Before 12:00 PM</p>
+                </div>
+              </div>
+              <div>
+                accordian
               </div>
             </div>
           </div>

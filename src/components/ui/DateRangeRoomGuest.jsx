@@ -94,8 +94,13 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
                 selected={date}
                 onSelect={setDate}
                 numberOfMonths={2}
-                disabled={ [(date) => date < new Date()] }
+                disabled={[
+                  (date) => date < new Date(new Date().setHours(0, 0, 0, 0)),
+                  new Date(date?.from),
+                ]}
+                //disabled={ [(date) => date < new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(0, 0, 0, 0))] }
                 //disabled={ [(date) => date < new Date() ,new Date(2024, 2, 20), new Date(2024, 2, 22)] }
+                //disabled={(date) => date > new Date() || date < new Date("1900-01-01") }
               />
             </PopoverContent>
           </Popover>
@@ -106,27 +111,105 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
           Room & Guests
         </p>
         <Select>
-          <SelectTrigger className="h-10 w-full min-w-48 text-[#9AA1B9] sm:h-14 hover:bg-[#F1F5F9] transition-all duration-200 ease-in-out outline-none">
+          <SelectTrigger className="h-10 w-full min-w-48 text-[#9AA1B9] outline-none transition-all duration-200 ease-in-out hover:bg-[#F1F5F9] sm:h-14">
             <span className="text-black">
-              {roomAndGuest.room > 1 ? `${roomAndGuest.room} rooms, ` : `${roomAndGuest.room} room, `}
-              {roomAndGuest.guest > 1 ? `${roomAndGuest.guest} guests` : `${roomAndGuest.guest} guest`}
+              {roomAndGuest.room > 1
+                ? `${roomAndGuest.room} rooms, `
+                : `${roomAndGuest.room} room, `}
+              {roomAndGuest.guest > 1
+                ? `${roomAndGuest.guest} guests`
+                : `${roomAndGuest.guest} guest`}
             </span>
           </SelectTrigger>
           <SelectContent className="mt-0.5">
             <div className="flex w-full justify-between p-2">
-              <div className="flex flex-col justify-center"><span className="mb-1">Room</span></div>
-              <div className="border-4 border-double border-indigo-600 w-32 flex justify-end">
-                <button disabled={roomAndGuest.room <= 1 ? true : false} className="cursor-pointer" onClick={() => setRoomAndGuest((prev) => ({ ...prev, room: prev.room - 1 }))}><div className={roomAndGuest.room <= 1 ? "textCircle bg-zinc-100" : "textCircle"}><span className="mb-[2.75px] text-lg">-</span></div></button>
-                <div className="border-4 border-double border-indigo-600 inline w-10 text-center">{roomAndGuest.room}</div>
-                <button onClick={() => setRoomAndGuest((prev) => ({ ...prev, room: prev.room + 1 }))}><div class="textCircle"><span className="mb-[2.75px] text-lg">+</span></div></button>
+              <div className="flex flex-col justify-center">
+                <span className="mb-1">Room</span>
+              </div>
+              <div className="flex w-32 justify-end border-4 border-double border-indigo-600">
+                <button
+                  disabled={roomAndGuest.room <= 1 ? true : false}
+                  className={
+                    roomAndGuest.room <= 1 ? "cursor-default" : "cursor-pointer"
+                  }
+                  onClick={() =>
+                    setRoomAndGuest((prev) => ({
+                      ...prev,
+                      room: prev.room - 1,
+                    }))
+                  }
+                >
+                  <div
+                    className={
+                      roomAndGuest.room <= 1
+                        ? "textCircle bg-zinc-100"
+                        : "textCircle"
+                    }
+                  >
+                    <span className="mb-[2.75px] text-lg">-</span>
+                  </div>
+                </button>
+                <div className="inline w-10 border-4 border-double border-indigo-600 text-center">
+                  {roomAndGuest.room}
+                </div>
+                <button
+                  onClick={() =>
+                    setRoomAndGuest((prev) => ({
+                      ...prev,
+                      room: prev.room + 1,
+                    }))
+                  }
+                >
+                  <div class="textCircle">
+                    <span className="mb-[2.75px] text-lg">+</span>
+                  </div>
+                </button>
               </div>
             </div>
             <div className="flex w-full justify-between p-2">
-            <div className="flex flex-col justify-center"><span className="mb-1">Guest</span></div>
-              <div className="border-4 border-double border-indigo-600 w-32 flex justify-end">
-                <button disabled={roomAndGuest.guest <= 1 ? true : false} className="cursor-pointer" onClick={() => setRoomAndGuest((prev) => ({ ...prev, guest: prev.guest - 1 }))}><div className={roomAndGuest.guest <= 1 ? "textCircle bg-zinc-100" : "textCircle"}><span className="mb-[2.75px] text-lg">-</span></div></button>
-                <div className="border-4 border-double border-indigo-600 inline w-10 text-center">{roomAndGuest.guest}</div>
-                <button onClick={() => setRoomAndGuest((prev) => ({ ...prev, guest: prev.guest + 1 }))}><div class="textCircle"><span className="mb-[2.75px] text-lg">+</span></div></button>
+              <div className="flex flex-col justify-center">
+                <span className="mb-1">Guest</span>
+              </div>
+              <div className="flex w-32 justify-end border-4 border-double border-indigo-600">
+                <button
+                  disabled={roomAndGuest.guest <= 1 ? true : false}
+                  className={
+                    roomAndGuest.guest <= 1
+                      ? "cursor-default"
+                      : "cursor-pointer"
+                  }
+                  onClick={() =>
+                    setRoomAndGuest((prev) => ({
+                      ...prev,
+                      guest: prev.guest - 1,
+                    }))
+                  }
+                >
+                  <div
+                    className={
+                      roomAndGuest.guest <= 1
+                        ? "textCircle bg-zinc-100"
+                        : "textCircle"
+                    }
+                  >
+                    <span className="mb-[2.75px] text-lg">-</span>
+                  </div>
+                </button>
+                <div className="inline w-10 border-4 border-double border-indigo-600 text-center">
+                  {roomAndGuest.guest}
+                </div>
+                <button
+                  onClick={() =>
+                    setRoomAndGuest((prev) => ({
+                      ...prev,
+                      guest: prev.guest + 1,
+                    }))
+                  }
+                >
+                  <div class="textCircle">
+                    <span className="mb-[2.75px] text-lg">+</span>
+                  </div>
+                </button>
               </div>
             </div>
           </SelectContent>
