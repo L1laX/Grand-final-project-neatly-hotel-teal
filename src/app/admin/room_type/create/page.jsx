@@ -132,6 +132,8 @@ const crateRoomType = () => {
           handleSubmit={handleSubmit}
           buttonName={"+Create Room"}
           notSearch={true}
+          backarrow={true}
+          linkTo={`/admin/room_type/`}
         />
         <section className="form h-full w-full ">
           <TypeRoomAdminForm

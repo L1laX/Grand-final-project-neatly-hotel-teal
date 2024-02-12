@@ -1,8 +1,8 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../../components/navbar/SidebarAdmin.jsx";
-import NavBarAdmin from "@/components/navbar/NavbarAdmin.jsx";
+import { useRouter } from "next/navigation";
+import Sidebar from "../Sidebar/page.jsx";
+import NavBarAdmin from "@/components/navbar/NavbarAdminBooking.jsx";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,54 +12,23 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
-const columns = [
-  {
-    id: "id",
-    label: "Room no.",
-    minWidth: 100,
-    align: "center",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "name",
-    label: "Room type",
-    minWidth: 100,
-    align: "center",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "bedType",
-    label: "Bed type",
-    minWidth: 100,
-    align: "center",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "status",
-    label: "Status",
-    minWidth: 100,
-    align: "center",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-];
-
-function RoomManagement() {
-  const [loading, setLoading] = useState(true);
+function CustomerBooking() {
+  const router = useRouter();
+  const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [searchInput, setSearchInput] = useState("");
-  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch data from API and update rows state
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/admin/room_management");
+        const response = await fetch("/api/admin/customer_booking");
         const data = await response.json();
+
         setRows(data.data);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching data from API:", error.message);
       }
     };
 
@@ -75,25 +44,39 @@ function RoomManagement() {
     setPage(0);
   };
 
-  const filteredRows = rows.filter((row) =>
-    Object.values(row).some(
-      (value) =>
-        typeof value === "string" &&
-        value.toLowerCase().includes(searchInput.toLowerCase()),
-    ),
-  );
+  const handleRowClick = (id) => {
+    router.push(`/admin/booking/${id}`);
+  };
+
+  const columns = [
+    {
+      id: "customerName",
+      label: "Customer name",
+      minWidth: 100,
+      align: "center",
+    },
+    { id: "guestCount", label: "Guest(s)", minWidth: 100, align: "center" },
+    { id: "room.name", label: "Room type", minWidth: 100, align: "center" },
+    { id: "totalPrice", label: "Amount", minWidth: 100, align: "center" },
+    { id: "room.bedType", label: "Bed type", minWidth: 100, align: "center" },
+    { id: "checkInDate", label: "Check-in", minWidth: 100, align: "center" },
+    { id: "checkOutDate", label: "Check-out", minWidth: 100, align: "center" },
+  ];
 
   return (
     <div className="flex flex-row bg-gray-100">
-      <Sidebar setActive={2} />
-      <div className="flex w-full flex-col ">
-        <NavBarAdmin navName={"Room Management"} setFilteredResults={setRows} />
+      <Sidebar setActive={1} />
+      <div className="flex w-full flex-col">
+        <NavBarAdmin
+          navName={"Customer Booking"}
+          setFilteredResults={setRows}
+        />
         <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
           <Paper
             sx={{ width: "100%", height: "100%", overflow: "hidden" }}
-            className=" h-full w-full overflow-hidden rounded-lg border-2 border-gray-200 bg-white shadow-lg"
+            className="ml-10"
           >
-            <TableContainer sx={{ maxH: "100vh" }}>
+            <TableContainer sx={{ maxHeight: "100vh" }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
@@ -102,7 +85,7 @@ function RoomManagement() {
                         key={column.id}
                         align={column.align}
                         style={{ minWidth: column.minWidth }}
-                        className="bg-gray-200 text-center font-bold"
+                        className="bg-gray-200 font-bold"
                       >
                         {column.label}
                       </TableCell>
@@ -116,37 +99,29 @@ function RoomManagement() {
                         Loading...
                       </TableCell>
                     </TableRow>
-                  ) : filteredRows.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={columns.length} align="center">
-                        No matching records found.
-                      </TableCell>
-                    </TableRow>
                   ) : (
-                    filteredRows
+                    rows
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage,
                       )
                       .map((row) => (
                         <TableRow
+                          key={row.id}
                           hover
                           role="checkbox"
                           tabIndex={-1}
-                          key={row.id}
-                          className="cursor-pointer"
+                          onClick={() => handleRowClick(row.id)}
+                          className="cursor-pointer text-center transition duration-200 ease-in-out hover:bg-gray-100"
                         >
                           {columns.map((column) => (
-                            <TableCell
-                              key={column.id}
-                              align={column.align}
-                              className="break-all text-center"
-                            >
-                              {column.render
-                                ? column.render(row[column.id], row)
-                                : column.format &&
-                                    typeof row[column.id] === "number"
-                                  ? column.format(row[column.id])
+                            <TableCell key={column.id} align="center">
+                              {column.id === "checkInDate" ||
+                              column.id === "checkOutDate"
+                                ? new Date(row[column.id]).toLocaleString()
+                                : column.id === "room.name" ||
+                                    column.id === "room.bedType"
+                                  ? row.room[column.id.split(".")[1]]
                                   : row[column.id]}
                             </TableCell>
                           ))}
@@ -159,7 +134,7 @@ function RoomManagement() {
             <TablePagination
               rowsPerPageOptions={[10, 25, 100]}
               component="div"
-              count={filteredRows.length}
+              count={rows.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
@@ -172,4 +147,4 @@ function RoomManagement() {
   );
 }
 
-export default RoomManagement;
+export default CustomerBooking;

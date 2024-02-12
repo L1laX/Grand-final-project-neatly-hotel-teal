@@ -58,6 +58,29 @@ function BookingDetail({ params: { booking_id } }) {
     (new Date(checkOutDate) - new Date(checkInDate)) / (1000 * 60 * 60 * 24),
   );
 
+  const checkInDateObj = new Date(checkInDate);
+  const checkOutDateObj = new Date(checkOutDate);
+  const bookingDateObj = new Date(created_at);
+
+  const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+
+  const formattedCheckInDate = checkInDateObj.toLocaleDateString(
+    "en-US",
+    options,
+  );
+  const formattedCheckOutDate = checkOutDateObj.toLocaleDateString(
+    "en-US",
+    options,
+  );
+
+  const formattedBookingDate = bookingDateObj.toLocaleDateString(
+    "en-US",
+    options,
+  );
+
+  console.log("checkInDate:", formattedCheckInDate);
+  console.log("checkOutDate:", formattedCheckOutDate);
+
   return (
     <>
       <div className="flex flex-row bg-gray-100">
@@ -105,7 +128,7 @@ function BookingDetail({ params: { booking_id } }) {
                 Amount{" "}
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
-                {totalPrice}
+                {room.pricePerNight * stayDuration}
               </div>
 
               <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
@@ -121,7 +144,7 @@ function BookingDetail({ params: { booking_id } }) {
                 Check-in{" "}
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
-                {checkInDate}
+                {formattedCheckInDate}
               </div>
 
               <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
@@ -129,7 +152,7 @@ function BookingDetail({ params: { booking_id } }) {
                 Check-out{" "}
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
-                {checkOutDate}
+                {formattedCheckOutDate}
               </div>
 
               <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
@@ -145,7 +168,7 @@ function BookingDetail({ params: { booking_id } }) {
                 Booking date{" "}
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
-                {created_at}
+                {formattedBookingDate}
               </div>
 
               <form
@@ -160,7 +183,7 @@ function BookingDetail({ params: { booking_id } }) {
                 <div className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap">
                   <span>{room.name}</span>
                   <span className="grow text-right font-semibold max-md:max-w-full">
-                    {totalPrice}
+                    {room.pricePerNight}
                   </span>
                 </div>
 
@@ -184,7 +207,8 @@ function BookingDetail({ params: { booking_id } }) {
                     Total{" "}
                   </div>
                   <span className="flex-auto text-right text-xl font-semibold stacked-fractions tracking-tight">
-                    {totalPrice}
+                    {room.pricePerNight * stayDuration + 200 + promotionCode ||
+                      "N/A"}
                   </span>
                 </div>
               </form>

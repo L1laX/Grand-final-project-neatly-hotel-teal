@@ -145,8 +145,8 @@ const page = ({ params: { room_id } }) => {
             buttonName={"Update"}
             notSearch={true}
             backarrow={true}
-            handleSubmit={handleSubmit}
             linkTo={`/admin/room_type/`}
+            handleSubmit={handleSubmit}
           />
           <section className="form h-full w-full ">
             <TypeRoomAdminForm

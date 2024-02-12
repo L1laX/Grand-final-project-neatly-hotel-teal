@@ -110,7 +110,7 @@ const RoomType = () => {
         <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
           <Paper
             sx={{ width: "100%", height: "100%", overflow: "hidden" }}
-            className=" ml-10  "
+            className="ml-10 "
           >
             <TableContainer sx={{ maxH: "10vh" }}>
               <Table stickyHeader aria-label="sticky table" key={rows}>
@@ -137,7 +137,7 @@ const RoomType = () => {
                           hover
                           role="checkbox"
                           tabIndex={-1}
-                          className=" cursor-pointer"
+                          className="cursor-pointer text-center transition duration-200 ease-in-out hover:bg-gray-100"
                           onClick={() => router.push(`/admin/room_type/${id}`)}
                         >
                           {columns.map((column) => {
