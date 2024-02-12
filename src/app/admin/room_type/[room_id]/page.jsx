@@ -5,26 +5,15 @@ import NavBar from "@/components/navbar/NavbarAdmin";
 import TypeRoomAdminForm from "@/components/TypeRoomAdminForm";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
-const data = {
-  room_id: 1,
-  mainImage: "https://placehold.co/400",
-  name: "Deluxe",
-  status: "Vacant",
-  pricePerNight: "3000",
-  promotionPrice: "2500",
-  galleryImage: ["https://placehold.co/400", "https://placehold.co/400"],
-  guest: "2",
-  bedType: "dubleBed",
-  size: "32",
-  description: "lorem ipsum dolor sit ametsssssssssssssssssssssss",
-  amenity: ["wifi", "tv", "kitchen"],
-};
 const page = ({ params: { room_id } }) => {
-  const [values, setValues] = useState({ ...data });
+  const router = useRouter();
+  const [values, setValues] = useState({});
 
   const [errors, setErrors] = useState({
-    mainImage: false,
+    roomMainImage: false,
     name: false,
     pricePerNight: false,
     promotionPrice: false,
@@ -33,28 +22,24 @@ const page = ({ params: { room_id } }) => {
     bedType: false,
     size: false,
     description: false,
-    amenity: false,
+    roomAmenity: false,
     status: false,
     promotionPrice: false,
   });
-  const [isPromotion, setIsPromotion] = useState(
-    values.promotionPrice ? true : false,
-  );
-
   const checkpicture = async (data) => {
     const uploadImage = [];
     const fileName = values.name.toLowerCase().split(" ").join("_");
     if (Array.isArray(data)) {
       const newImage = [...data];
-      console.log(newImage);
       for (let i = 0; i < newImage.length; i++) {
         if (typeof newImage[i] === "object") {
           try {
             const { data, error } = await supabase.storage
               .from("roomGallery")
-              .upload(
+              .update(
                 `roomGallery/${fileName}/${i}`,
                 newImage[i][Object.keys(newImage[i])[0]],
+                { upsert: true },
               );
             if (error) {
               return console.error(error);
@@ -73,12 +58,10 @@ const page = ({ params: { room_id } }) => {
       return uploadImage;
     } else {
       if (typeof data === "object") {
-        console.log("uploading main image");
-        console.log(data);
         try {
           const image = await supabase.storage
             .from("mainImage")
-            .upload(`mainImage/${fileName}/mainImage`, data);
+            .update(`mainImage/${fileName}/mainImage`, data, { upsert: true });
           if (image?.error) {
             return console.error(image.error);
           }
@@ -87,7 +70,6 @@ const page = ({ params: { room_id } }) => {
             .getPublicUrl(image.data.path);
 
           uploadImage.push(url.data.publicUrl);
-          console.log("succsess");
         } catch (error) {
           console.error(error);
         }
@@ -97,32 +79,61 @@ const page = ({ params: { room_id } }) => {
       return uploadImage;
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {
-      mainImage: !values.mainImage,
+      roomMainImage: !values.roomMainImage,
       name: !values.name,
       pricePerNight: !values.pricePerNight,
       galleryImage: values.galleryImage.length < 4,
-      guest: !values.guest,
+      guests: !values.guests,
       bedType: !values.bedType,
       size: !values.size,
       description: !values.description,
-      amenity: values.amenity.length < 1 || !values.amenity[0],
+      roomAmenity: values.roomAmenity.length < 1 || !values.roomAmenity[0],
       promotionPrice: !values.promotionPrice && isPromotion,
     };
     setErrors({ ...newErrors });
     if (Object.values(newErrors).includes(true)) return alert("Form Error");
     alert("Form Submitted");
-    const uploadGalleryImage = await checkpicture(values.galleryImage);
-    const uploadMainImage = await checkpicture(values.mainImage);
-    // const sendData = {
-    //     ...values,
-    //     galleryImage: uploadGalleryImage,
-    //     mainImage: uploadMainImage,
-    //   };
+    const sendData = {
+      ...values,
+      galleryImage: await checkpicture(values.galleryImage),
+      mainImage: await checkpicture(values.mainImage),
+    };
+    const result = await axios.put(`/api/admin/room_prop/${room_id}`, sendData);
+    if (result.status === 200) {
+      alert("Data Updated");
+      router.push("/admin/room_type");
+    }
   };
+
+  const deleteRoom = async (id) => {
+    try {
+      alert("Are you sure you want to delete this room?");
+      const result = await axios.delete(`/api/admin/room_prop/${id}`);
+      if (result.status === 200) {
+        alert("Room Deleted");
+        router.push("/admin/room_type");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getData = async () => {
+    try {
+      const result = await axios.get(`/api/admin/room_prop/${room_id}`);
+      const data = result.data;
+      setValues(data.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <div>
       <div className="flex flex-row bg-gray-100">
@@ -143,14 +154,12 @@ const page = ({ params: { room_id } }) => {
               setValues={setValues}
               handleSubmit={handleSubmit}
               errors={errors}
-              isPromotion={isPromotion}
-              setIsPromotion={setIsPromotion}
             />
           </section>
           <button
             className="mr-28 w-fit self-end "
             onClick={() => {
-              alert("Delete Room");
+              deleteRoom(room_id);
             }}
           >
             Delete Room

@@ -69,7 +69,6 @@ const Register = () => {
   const handleDeleteAvatar = (e, avatar_id) => {
     e.preventDefault();
     const newAvatar = { ...avatar };
-    console.log(avatar_id);
     delete newAvatar[avatar_id];
     setAvatar({ ...newAvatar });
   };
@@ -78,7 +77,6 @@ const Register = () => {
     const avatarindex = Object.keys(avatar);
     const username = values.username;
     const uploadAvatar = avatar[avatarindex];
-    console.log(uploadAvatar);
     try {
       //upload to storage
       const { data, error } = await supabase.storage
@@ -87,6 +85,7 @@ const Register = () => {
       if (error) {
         return console.error(error);
       }
+      console.log(data);
       //get public url
       const url = supabase.storage.from("avatars").getPublicUrl(data.path);
       return url;
@@ -113,7 +112,6 @@ const Register = () => {
 
     return errors.dateOfBirth;
   };
-  console.log(values);
   const handleSubmit = async (e) => {
     e.preventDefault();
     //validate Email

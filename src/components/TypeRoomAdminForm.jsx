@@ -9,19 +9,13 @@ import SecondaryBtn from "./common/SecondaryBtn";
 import { orange } from "@mui/material/colors";
 import Checkbox from "@mui/material/Checkbox";
 
-const TypeRoomAdminForm = ({
-  values,
-  setValues,
-  handleSubmit,
-  errors,
-  isPromotion,
-  setIsPromotion,
-}) => {
+const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
   const dragItem = useRef();
   const dragOverItem = useRef();
   const getValue = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
+  const [isPromotion, setIsPromotion] = useState();
   const handleMainImage = (e) => {
     e.preventDefault();
     const file = e.target.files[0];
@@ -30,8 +24,8 @@ const TypeRoomAdminForm = ({
       return alert("File size should be less than 10MB");
     }
 
-    if (name === "mainImage") {
-      setValues({ ...values, mainImage: file });
+    if (name === "roomMainImage") {
+      setValues({ ...values, roomMainImage: file });
     }
 
     if (name === "imageGallery") {
@@ -46,8 +40,8 @@ const TypeRoomAdminForm = ({
 
   const handleDeleteImage = (e, id, name, i) => {
     e.preventDefault();
-    if (name === "mainImage") {
-      return setValues({ ...values, mainImage: "" });
+    if (name === "roomMainImage") {
+      return setValues({ ...values, roomMainImage: "" });
     }
     if (name === "imageGallery") {
       if (values.galleryImage.length === 1) {
@@ -75,28 +69,28 @@ const TypeRoomAdminForm = ({
       dragOverItem.current = null;
       return setValues({ ...values, galleryImage: newGallery });
     }
-    const newAmenity = [...values.amenity];
+    const newAmenity = [...values.roomAmenity];
     const dragItemContent = newAmenity[dragItem.current];
     newAmenity.splice(dragItem.current, 1);
     newAmenity.splice(dragOverItem.current, 0, dragItemContent);
     dragItem.current = null;
     dragOverItem.current = null;
-    setValues({ ...values, amenity: newAmenity });
+    setValues({ ...values, roomAmenity: newAmenity });
   };
 
   const addAmenity = (e) => {
     e.preventDefault();
-    const newAmenity = [...values.amenity];
+    const newAmenity = [...values.roomAmenity];
     console.log(newAmenity);
     newAmenity.push("");
-    setValues({ ...values, amenity: newAmenity });
+    setValues({ ...values, roomAmenity: newAmenity });
   };
   const deleteAmenity = (e, i) => {
-    if (values.amenity.length !== 1) {
+    if (values.roomAmenity.length !== 1) {
       e.preventDefault();
-      const newAmenity = [...values.amenity];
+      const newAmenity = [...values.roomAmenity];
       newAmenity.splice(i, 1);
-      setValues({ ...values, amenity: newAmenity });
+      setValues({ ...values, roomAmenity: newAmenity });
     }
   };
   return (
@@ -153,8 +147,10 @@ const TypeRoomAdminForm = ({
                   bed type
                 </option>
                 <option value="singleBed"> single bed</option>
-                <option value="dubleBed"> duble bed</option>
-                <option value="dubleBed(kingSize)">duble bed(king size)</option>
+                <option value="doubleBed"> double bed</option>
+                <option value="doubleBed(kingSize)">
+                  double bed(king size)
+                </option>
                 <option value="twinBed">twin bed</option>
               </select>
               {errors?.bedType && (
@@ -164,14 +160,14 @@ const TypeRoomAdminForm = ({
               )}
             </div>
           </div>
-          <div className="guest relative flex w-[300px] flex-col">
-            <label htmlFor="guest">Guest(s) *</label>
+          <div className="guests relative flex w-[300px] flex-col">
+            <label htmlFor="guests">Guest(s) *</label>
             <select
               className=" mt-1 w-full rounded-md border border-gray-300 p-1"
-              name="guest"
+              name="guests"
               defaultValue=""
               onChange={getValue}
-              value={values.guest}
+              value={values.guests}
             >
               <option value="" disabled>
                 guests count
@@ -182,7 +178,7 @@ const TypeRoomAdminForm = ({
               <option value="5">5 guests</option>
               <option value="6">6 guests</option>
             </select>
-            {errors?.guest && (
+            {errors?.guests && (
               <div className=" absolute left-44 top-0 w-64 text-red-600">
                 Please select guest count
               </div>
@@ -214,13 +210,15 @@ const TypeRoomAdminForm = ({
                   },
                 }}
                 className="mr-1 mt-1"
-                checked={isPromotion ? true : false}
+                checked={values.promotionPrice ? true : false}
                 onClick={() => {
-                  setIsPromotion(!isPromotion);
-                  if (isPromotion) {
+                  if (values.promotionPrice) {
                     const newValues = { ...values };
                     delete newValues.promotionPrice;
-                    setValues(newValues);
+                    setValues({ ...newValues });
+                  }
+                  if (!values.promotionPrice) {
+                    setValues({ ...values, promotionPrice: " " });
                   }
                 }}
               />
@@ -232,9 +230,9 @@ const TypeRoomAdminForm = ({
                 name="promotionPrice"
                 min={1}
                 className="mt-1 w-full rounded-md border border-gray-300 p-1 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                value={!isPromotion ? "" : values.promotionPrice}
+                value={values.promotionPrice ? values.promotionPrice : " "}
                 onChange={getValue}
-                disabled={isPromotion ? null : "disabled"}
+                disabled={values.promotionPrice ? null : "disabled"}
               />
               {errors.promotionPrice && (
                 <div className=" absolute -top-5 right-0 w-64 text-red-600">
@@ -265,14 +263,15 @@ const TypeRoomAdminForm = ({
           <h4>Room Image</h4>
           <div className="main-image relative rounded-full">
             <p className="pb-2 pt-9">Main Image*</p>
-            {values.mainImage ? (
+
+            {values.roomMainImage ? (
               <div className="image-preview-container relative w-fit">
                 <img
                   className="image-preview border border-amber-500 shadow-lg transition-transform hover:scale-110"
                   src={
-                    typeof values.mainImage === "object"
-                      ? URL.createObjectURL(values.mainImage)
-                      : values.mainImage
+                    typeof values.roomMainImage === "object"
+                      ? URL.createObjectURL(values.roomMainImage)
+                      : values.roomMainImage
                   }
                   alt={"main image"}
                   width={100}
@@ -280,7 +279,7 @@ const TypeRoomAdminForm = ({
                 <button
                   className="image-remove-button absolute -right-2 -top-3 flex h-6 w-6 items-center justify-center rounded-full bg-orange-600 p-3 px-3 text-sm text-white transition-colors hover:bg-orange-500"
                   onClick={(event) =>
-                    handleDeleteImage(event, "", "mainImage", "")
+                    handleDeleteImage(event, "", "roomMainImage", "")
                   }
                 >
                   x
@@ -294,7 +293,7 @@ const TypeRoomAdminForm = ({
                   className="t cursor-pointer shadow-lg hover:opacity-95"
                 />
                 <input
-                  name="mainImage"
+                  name="roomMainImage"
                   type="file"
                   hidden
                   accept="image/*"
@@ -320,7 +319,7 @@ const TypeRoomAdminForm = ({
             </p>
           </div>
           <div className="image-gallery preview flex flex-wrap gap-6">
-            {!Object.keys(values.galleryImage).length ? (
+            {values.galleryImage && !Object.keys(values.galleryImage).length ? (
               <label className="cursor-grab active:cursor-grabbing">
                 <Image
                   src={UploadPicSmall}
@@ -338,7 +337,8 @@ const TypeRoomAdminForm = ({
                   onChange={handleMainImage}
                 />
               </label>
-            ) : Object.keys(values.galleryImage).length < 10 ? (
+            ) : values.galleryImage &&
+              Object.keys(values.galleryImage).length < 10 ? (
               Object.keys(values.galleryImage).map((id, i) => {
                 const file = values.galleryImage[id];
                 if (i === Object.keys(values.galleryImage).length - 1) {
@@ -425,21 +425,38 @@ const TypeRoomAdminForm = ({
                 );
               })
             ) : (
-              ""
+              <label className="cursor-grab active:cursor-grabbing">
+                <Image
+                  src={UploadPicSmall}
+                  alt="background upload"
+                  className="cursor-pointer shadow-lg hover:opacity-95"
+                  width={120}
+                  height={120}
+                />
+                <input
+                  name="imageGallery"
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  multiple
+                  onChange={handleMainImage}
+                />
+              </label>
             )}
           </div>
         </div>
         <div className="my-10 w-full border-b-2"></div>
         <div className="room-amenity relative">
           <h4>Room Amenities </h4>
-          {errors?.amenity && (
+          {errors?.roomAmenity && (
             <span className=" absolute left-60 top-3 w-64 text-red-600">
               <p> Please enter at least one amenity</p>
             </span>
           )}
           <div className="amenity-list cursor-grab active:cursor-grabbing">
-            {values.amenity.length &&
-              values.amenity.map((item, i) => {
+            {values.roomAmenity &&
+              values.roomAmenity.length &&
+              values.roomAmenity.map((item, i) => {
                 return (
                   <div
                     className="item flex w-full cursor-grab p-4 active:cursor-grabbing"
@@ -469,9 +486,9 @@ const TypeRoomAdminForm = ({
                         className="mt-1 w-full rounded-lg border p-2"
                         onChange={(e) => {
                           const value = e.target.value;
-                          const newAmenity = [...values.amenity];
+                          const newAmenity = [...values.roomAmenity];
                           newAmenity.splice(i, 1, value);
-                          setValues({ ...values, amenity: newAmenity });
+                          setValues({ ...values, roomAmenity: newAmenity });
                         }}
                       />
                     </div>

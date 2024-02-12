@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import Sidebar from "../../../components/navbar/SidebarAdmin";
 import NavBar from "@/components/navbar/NavbarAdmin";
 import Paper from "@mui/material/Paper";
@@ -12,24 +12,26 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import Image from "next/image";
 
 const columns = [
   {
-    id: "image",
+    id: "roomMainImage",
     label: "Image",
     minWidth: 100,
     align: "center",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "roomtype",
+    id: "name",
     label: "Room type",
     minWidth: 100,
     align: "center",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "price",
+    id: "pricePerNight",
     label: "Price",
     minWidth: 100,
     align: "center",
@@ -43,7 +45,7 @@ const columns = [
     format: (value) => value.toFixed(2),
   },
   {
-    id: "guest",
+    id: "guests",
     label: "Guest(s)",
     minWidth: 100,
     align: "center",
@@ -57,47 +59,13 @@ const columns = [
     format: (value) => value.toFixed(2),
   },
   {
-    id: "roomSize",
+    id: "size",
     label: "Room Size",
     minWidth: 100,
     align: "center",
     format: (value) => value.toFixed(2),
   },
 ];
-
-const data = [
-  {
-    room_id: 1,
-    image: "https://placehold.co/400",
-    roomtype: "Deluxe",
-    price: "3000",
-    promotionPrice: "2500",
-    guest: "2",
-    bedType: "Double Bed",
-    roomSize: "32 sqm",
-  },
-  {
-    room_id: 2,
-    image: "https://placehold.co/400",
-    roomtype: "Deluxe",
-    price: "3000",
-    promotionPrice: "2500",
-    guest: "2",
-    bedType: "Double Bed",
-    roomSize: "32 sqm",
-  },
-  {
-    room_id: 3,
-    image: "https://placehold.co/400",
-    roomtype: "Deluxe",
-    price: "3000",
-    promotionPrice: "2500",
-    guest: "2",
-    bedType: "Double Bed",
-    roomSize: "32 sqm",
-  },
-];
-const rows = [...data];
 
 const RoomType = () => {
   const router = useRouter();
@@ -106,11 +74,24 @@ const RoomType = () => {
   const handleChangePage = (_event, newPage) => {
     setPage(newPage);
   };
-
+  const [rows, setRows] = useState([]);
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+  const getdata = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/api/admin/room_prop");
+      const data = res.data;
+      setRows(data.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    getdata();
+  }, []);
+
   return (
     <div className="flex flex-row bg-gray-100">
       <Sidebar setActive={4} />
@@ -146,7 +127,7 @@ const RoomType = () => {
                 {rows
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const room_id = row["room_id"];
+                    const id = row["id"];
                     return (
                       <TableBody key={index}>
                         <TableRow
@@ -154,9 +135,7 @@ const RoomType = () => {
                           role="checkbox"
                           tabIndex={-1}
                           className=" cursor-pointer"
-                          onClick={() =>
-                            router.push(`/admin/room_type/${room_id}`)
-                          }
+                          onClick={() => router.push(`/admin/room_type/${id}`)}
                         >
                           {columns.map((column) => {
                             const value = row[column.id];
@@ -166,16 +145,34 @@ const RoomType = () => {
                                 key={column.id}
                                 align={column.align}
                               >
-                                {column.format && typeof value === "number" ? (
+                                {column.format &&
+                                typeof value === "number" &&
+                                (column.id === "price" ||
+                                  column.id === "promotionPrice") ? (
                                   column.format(value)
-                                ) : column.id === "image" ? (
+                                ) : column.id === "roomMainImage" ? (
                                   <div className="image flex w-full justify-center">
                                     <img
                                       src={value}
-                                      width={100}
-                                      alt="room image"
+                                      alt="room"
+                                      width={75}
+                                      height={75}
                                     />
                                   </div>
+                                ) : column.id === "size" ? (
+                                  value + " sqm"
+                                ) : column.id === "promotionPrice" && !value ? (
+                                  <h5>-</h5>
+                                ) : column.id === "bedType" ? (
+                                  value === "singleBed" ? (
+                                    "Single Bed"
+                                  ) : value === "doubleBed" ? (
+                                    "Double Bed"
+                                  ) : value === "doubleBed(kingSize)" ? (
+                                    "Double bed(king size)"
+                                  ) : (
+                                    "Twin Bed"
+                                  )
                                 ) : (
                                   value
                                 )}
