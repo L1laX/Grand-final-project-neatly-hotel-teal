@@ -7,24 +7,26 @@ import DatePicker from "@/components/ui/DatePicker";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import Country from "@/components/common/Country";
+import { useSearchParams } from "next/navigation";
 
 export default function UserProfile() {
   const [avatar, setAvatar] = useState("");
-  const [userProfiles, setUserProfiles] = useState({
+  const [userProfiles, setUserProfiles] = useState([]);
+  const [formData, setFormData] = useState({
     fullName: "",
-    email: "",
-    dateOfBirth: "",
     id_number: "",
+    dateOfBirth: "",
     country: "",
-    image: "",
   });
+  // const searchParams = useSearchParams();
+  // const user_id = searchParams.get("user_id");
 
   // fetching data
-  const getProfileId = async () => {
+  const getUserProfile = async () => {
     try {
       const response = await axios.get(`/api/user/edit_profile/`);
-      console.log(response.data);
-      setUserProfiles(response.data);
+      console.log(response.data.user);
+      setUserProfiles(response.data.user);
       console.log(userProfiles);
     } catch (error) {
       console.log("Fetching data failed...", error);
@@ -57,7 +59,7 @@ export default function UserProfile() {
   };
 
   useEffect(() => {
-    getProfileId();
+    getUserProfile();
   }, []);
 
   const handleAvatar = (e) => {
@@ -105,6 +107,7 @@ export default function UserProfile() {
     <form className=" mx-8 my-10 md:mx-64 md:my-20 ">
       <div className="form-container mb-14 flex flex-col divide-y-2">
         {/* Submit Update */}
+
         <div className="user-profile-head flex items-center justify-between">
           <h2>Profile</h2>
           <PrimaryBtn btnName="Update Profile" handleClick={handleSubmit} />
@@ -121,14 +124,13 @@ export default function UserProfile() {
                   type="text"
                   name="fullName"
                   onChange={handleChange}
-                  value={userProfiles.fullName}
+                  value=""
                   placeholder={userProfiles.fullName}
                 />
-                <p className=" text-red-500">
-                  {userProfiles.fullName}Fullname cannot be empty
-                </p>
+                <p className=" text-red-500">Fullname cannot be empty</p>
               </label>
             </div>
+
             <div className="form-container-section-2 grid gap-4 md:grid-cols-2">
               <div className=" email-container">
                 <label htmlFor="email">
@@ -138,8 +140,8 @@ export default function UserProfile() {
                     type="email"
                     name="email"
                     onChange={handleChange}
-                    value={userProfiles.email}
-                    placeholder={userProfiles.email}
+                    value=""
+                    placeholder=""
                   />
                   <p className=" text-red-500">cannot be empty</p>
                 </label>
@@ -152,18 +154,15 @@ export default function UserProfile() {
                     type="text"
                     name="id_number"
                     onChange={handleChange}
-                    value={userProfiles.id_number}
-                    placeholder={userProfiles.email}
+                    value=""
+                    placeholder=""
                   />
                 </label>
               </div>
               <div className="dateOfBirth-container grid grid-cols-2 gap-4">
                 <label htmlFor="dateOfBirth">
                   Date of Birth
-                  <DatePicker
-                    selected={userProfiles.dateOfBirth}
-                    onSelect={handleChange}
-                  />
+                  <DatePicker selected="" onSelect={handleChange} />
                 </label>
               </div>
               <div className="country-container">

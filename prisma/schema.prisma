@@ -15,16 +15,16 @@ model user {
   image           String?
   created_at      DateTime          @default(now())
   updated_at      DateTime          @updatedAt
-  id              Int               @id @default(autoincrement())
+  id              Int               @id @unique @default(autoincrement())
   customerBooking customerBooking[]
   userProfile     userProfile?
 }
 
 model userProfile {
-  id          Int      @id @default(autoincrement())
+  id          Int      @id @unique @default(autoincrement())
   user_id     Int      @unique
   fullName    String
-  id_number   String
+  id_number   String   @unique
   dateOfBirth DateTime
   country     String
   user        user     @relation(fields: [user_id], references: [id])
@@ -44,26 +44,19 @@ model room {
   promotionPrice  Int?
   id              Int               @id @default(autoincrement())
   customerBooking customerBooking[]
-  roomAmminity    roomAmminity[]
+  roomAmenity     roomAmenity[]
   roomGallery     roomGallery[]
-}
-
-model roomAmminity {
-  id      Int    @id @default(autoincrement())
-  room_id Int
-  name    String
-  room    room   @relation(fields: [room_id], references: [id])
 }
 
 model roomGallery {
   id      Int    @id @default(autoincrement())
   room_id Int
   image   String
-  room    room   @relation(fields: [room_id], references: [id])
+  room    room   @relation(fields: [room_id], references: [id], onDelete: Cascade)
 }
 
 model customerBooking {
-  id                  Int              @id @default(autoincrement())
+  id                  Int              @id @unique @default(autoincrement())
   user_id             Int
   customerName        String
   customerEmail       String
@@ -82,21 +75,23 @@ model customerBooking {
   created_at          DateTime         @default(now())
   last_updated_at     DateTime         @updatedAt
   promotionCode       String?
+  order_id            String?
+  session_id          String?
   bookingRequest      bookingRequest[]
   room                room             @relation(fields: [room_id], references: [id])
   user                user             @relation(fields: [user_id], references: [id])
 }
 
 model bookingRequest {
-  id              Int             @id @default(autoincrement())
+  id              Int             @id @unique @default(autoincrement())
   booking_id      Int
   name            String
   price           Int
-  customerBooking customerBooking @relation(fields: [booking_id], references: [id])
+  customerBooking customerBooking @relation(fields: [booking_id], references: [id], onDelete: Cascade)
 }
 
 model hotel_info {
-  id               Int    @id @default(autoincrement())
+  id               Int    @id @unique @default(autoincrement())
   hotelName        String
   image            String
   hotelDescription String
@@ -105,5 +100,12 @@ model hotel_info {
 model promotion {
   promotionCode String
   discount      Int
-  id            Int    @id @default(autoincrement())
+  id            Int    @id @unique @default(autoincrement())
+}
+
+model roomAmenity {
+  id      Int    @id @default(autoincrement())
+  room_id Int
+  name    String
+  room    room   @relation(fields: [room_id], references: [id], onDelete: Cascade)
 }

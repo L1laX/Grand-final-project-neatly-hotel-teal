@@ -1,20 +1,26 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(req, res) {
+export async function GET() {
   try {
-    const userProfileId = await prisma.userProfile.findUnique({
-      where: { user_id: 1 },
+    const userProfileData = await prisma.userProfile.findUnique({
+      where: { user_id: true },
     });
 
-    if (!userProfileId) {
+    if (!userProfileData) {
       return NextResponse.status(404).json({ error: "User Account not found" });
     }
 
-    console.log({ data: userProfileId });
-    return NextResponse.status(500).json({ data: userProfileId });
+    console.log({ data: userProfileData });
+    return NextResponse.status(500).json({
+      success: true,
+      data: userProfileData,
+    });
   } catch (error) {
-    return NextResponse.status(500).json({ error: "Failed to update data" });
+    console.log("Error fetching user profile...");
+    return NextResponse.status(500).json({
+      error: "Error fetching user profile",
+    });
   }
 }
 
