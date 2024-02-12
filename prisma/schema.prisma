@@ -53,14 +53,14 @@ model roomAmenity {
   id      Int    @id @default(autoincrement())
   room_id Int
   name    String
-  room    room   @relation(fields: [room_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  room    room   @relation(fields: [room_id], references: [id], onDelete: Cascade)
 }
 
 model roomGallery {
   id      Int    @id @default(autoincrement())
   room_id Int
   image   String
-  room    room   @relation(fields: [room_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  room    room   @relation(fields: [room_id], references: [id], onDelete: Cascade)
 }
 
 model customerBooking {
@@ -73,8 +73,6 @@ model customerBooking {
   customerDateOfBirth DateTime
   paymentType         String
   paymentStatus       String
-  order_id            String?
-  session_id          String?
   discount            Int?
   guestCount          Int?
   totalPrice          Int?
@@ -85,8 +83,10 @@ model customerBooking {
   created_at          DateTime         @default(now())
   last_updated_at     DateTime         @updatedAt
   promotionCode       String?
+  order_id            String?
+  session_id          String?
   bookingRequest      bookingRequest[]
-  room                room?            @relation(fields: [room_id], references: [id], onDelete: SetNull)
+  room                room?            @relation(fields: [room_id], references: [id])
   user                user             @relation(fields: [user_id], references: [id])
 }
 
@@ -95,7 +95,7 @@ model bookingRequest {
   booking_id      Int
   name            String
   price           Int
-  customerBooking customerBooking @relation(fields: [booking_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  customerBooking customerBooking @relation(fields: [booking_id], references: [id], onDelete: Cascade)
 }
 
 model hotel_info {
