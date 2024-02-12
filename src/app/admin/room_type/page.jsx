@@ -13,7 +13,6 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import Image from "next/image";
 
 const columns = [
   {
@@ -69,6 +68,7 @@ const columns = [
 
 const RoomType = () => {
   const router = useRouter();
+  const [search, setSearch] = React.useState("");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const handleChangePage = (_event, newPage) => {
@@ -81,7 +81,9 @@ const RoomType = () => {
   };
   const getdata = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/admin/room_prop");
+      const res = await axios.get(
+        `http://localhost:3000/api/admin/room_prop?keywords=${search}`,
+      );
       const data = res.data;
       setRows(data.data);
     } catch (e) {
@@ -89,8 +91,8 @@ const RoomType = () => {
     }
   };
   useEffect(() => {
-    getdata();
-  }, []);
+    getdata(search);
+  }, [search]);
 
   return (
     <div className="flex flex-row bg-gray-100">
@@ -103,6 +105,7 @@ const RoomType = () => {
             router.push("/admin/room_type/create");
           }}
           buttonName={"+Create Room"}
+          setSearch={setSearch}
         />
         <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
           <Paper

@@ -2,8 +2,36 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
-  const result = await prisma.room.findMany();
-  return NextResponse.json({ message: "GET Methode success", data: result });
+  const searchParams = request.nextUrl.searchParams;
+  const keywords = searchParams.get("keywords");
+  const checked = keywords.replace(" ", " | ");
+  console.log(checked);
+  if (keywords) {
+    try {
+      const result = await prisma.room.findMany({
+        where: {
+          name: {
+            startsWith: keywords,
+            mode: "insensitive",
+          },
+        },
+      });
+      return NextResponse.json({
+        message: "GET Methode success",
+        data: result,
+      });
+    } catch (e) {
+      console.log(e);
+      return NextResponse.json({ message: "error", error: e }, { status: 500 });
+    }
+  }
+  try {
+    const result = await prisma.room.findMany();
+    return NextResponse.json({ message: "GET Methode success", data: result });
+  } catch (e) {
+    console.log(e);
+    return NextResponse.json({ message: "error", error: e }, { status: 500 });
+  }
 }
 
 export async function POST(request) {

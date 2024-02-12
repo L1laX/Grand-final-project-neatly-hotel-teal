@@ -12,6 +12,7 @@ const NavBar = ({
   handleSubmit,
   linkTo,
   customerName,
+  setSearch,
 }) => {
   return (
     <nav
@@ -49,6 +50,7 @@ p-4"
                 focus:ring-2
                 focus:ring-blue-400
                 ${button ? "mr-5" : ""}`}
+                onChange={(e) => setSearch(e.target.value)}
               />
             )}
             {/*Create Room*/}
