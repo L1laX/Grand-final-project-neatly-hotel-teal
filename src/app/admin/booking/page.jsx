@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Sidebar from "../Sidebar/page.jsx";
+import Sidebar from "@/components/navbar/SidebarAdmin.jsx";
 import NavBarAdmin from "@/components/navbar/NavbarAdminBooking.jsx";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";

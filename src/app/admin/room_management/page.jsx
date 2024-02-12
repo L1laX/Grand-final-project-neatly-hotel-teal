@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../../components/navbar/SidebarAdmin.jsx";
-import NavBarAdmin from "@/components/navbar/NavbarAdmin.jsx";
+import Sidebar from "@/components/navbar/SidebarAdmin.jsx";
+import NavBarAdmin from "@/components/navbar/NavbarRoomManagement.jsx";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -51,7 +51,6 @@ function RoomManagement() {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    // Fetch data from API and update rows state
     const fetchData = async () => {
       try {
         const response = await fetch("/api/admin/room_management");
@@ -86,12 +85,12 @@ function RoomManagement() {
   return (
     <div className="flex flex-row bg-gray-100">
       <Sidebar setActive={2} />
-      <div className="flex w-full flex-col ">
+      <div className="flex w-[100vw] flex-col">
         <NavBarAdmin navName={"Room Management"} setFilteredResults={setRows} />
         <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
           <Paper
             sx={{ width: "100%", height: "100%", overflow: "hidden" }}
-            className=" h-full w-full overflow-hidden rounded-lg border-2 border-gray-200 bg-white shadow-lg"
+            className="ml-10"
           >
             <TableContainer sx={{ maxH: "100vh" }}>
               <Table stickyHeader aria-label="sticky table">

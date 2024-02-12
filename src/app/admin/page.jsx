@@ -14,6 +14,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
 function CustomerBooking() {
+  const [search, setSearch] = useState("");
   const router = useRouter();
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
@@ -23,7 +24,9 @@ function CustomerBooking() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/admin/customer_booking");
+        const response = await fetch(
+          `/api/admin/customer_booking?keywords=${search}`,
+        );
         const data = await response.json();
 
         setRows(data.data);
@@ -34,7 +37,7 @@ function CustomerBooking() {
     };
 
     fetchData();
-  }, []);
+  }, [search]);
 
   const handleChangePage = (_event, newPage) => {
     setPage(newPage);
@@ -68,7 +71,7 @@ function CustomerBooking() {
     <div className="flex flex-row bg-gray-100">
       <Sidebar setActive={1} />
       <div className="flex w-full flex-col">
-        <NavBarAdmin navName={"Customer Booking"} />
+        <NavBarAdmin navName={"Customer Booking"} setSearch={setSearch} />
         <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
           <Paper
             sx={{ width: "100%", height: "100%", overflow: "hidden" }}
