@@ -17,11 +17,11 @@ const NavBarAdmin = ({
   const [input, setInput] = useState("");
 
   const fetchData = (value) => {
-    fetch(`/api/admin/customer_booking?keywords=${value}`)
+    fetch(`/api/admin/room_management?keywords=${value}`)
       .then((response) => response.json())
       .then((json) => {
-        const result = json.data.filter(({ customerName }) =>
-          customerName.toLowerCase().includes(value.toLowerCase()),
+        const result = json.data.filter(({ name }) =>
+          name.toLowerCase().includes(value.toLowerCase()),
         );
         setFilteredResults(result);
       })
