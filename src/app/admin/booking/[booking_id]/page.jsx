@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import Sidebar from "../../../../components/navbar/SidebarAdmin.jsx";
-import Link from "next/link";
 import NavBar from "@/components/navbar/NavbarAdmin";
 
 function BookingDetail({ params: { booking_id } }) {
