@@ -7,15 +7,12 @@ import PrimaryBtn from "@/components/common/PrimaryBtn";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { supabase } from "@/lib/supabase";
-import { prisma } from "@/lib/prisma";
 //import Validation from "./registervalidation.js";
 const Register = () => {
   const router = useRouter();
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiryDate, setExpiryDate] = useState("");
   const [id_number, setIdNumber] = useState("");
   const [avatar, setAvatar] = useState("");
   const [values, setValues] = useState({
@@ -65,10 +62,13 @@ const Register = () => {
     }
   };
 
+  const getCountry = (value) => {
+    setValues({ ...values, country: value });
+  };
+
   const handleDeleteAvatar = (e, avatar_id) => {
     e.preventDefault();
     const newAvatar = { ...avatar };
-    console.log(avatar_id);
     delete newAvatar[avatar_id];
     setAvatar({ ...newAvatar });
   };
@@ -77,7 +77,6 @@ const Register = () => {
     const avatarindex = Object.keys(avatar);
     const username = values.username;
     const uploadAvatar = avatar[avatarindex];
-    console.log(uploadAvatar);
     try {
       //upload to storage
       const { data, error } = await supabase.storage
@@ -86,6 +85,7 @@ const Register = () => {
       if (error) {
         return console.error(error);
       }
+      console.log(data);
       //get public url
       const url = supabase.storage.from("avatars").getPublicUrl(data.path);
       return url;
@@ -115,6 +115,8 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     //validate Email
+    const email = values.email.split(".");
+    const lastedEmail = email[email.length - 1];
     const validEmailRegex =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     //1st validation
@@ -124,22 +126,24 @@ const Register = () => {
       password: values.password.length < 6,
       dateOfBirth: validateDateofBirth(values.dateOfBirth),
       email:
-        values.email.length === 0 &&
-        !values.email.toLowerCase().match(validEmailRegex),
+        values.email.length === 0 ||
+        !values.email.toLowerCase().match(validEmailRegex) ||
+        !lastedEmail === "com" ||
+        !lastedEmail === "co" ||
+        !lastedEmail === "org",
       id_number: values.id_number.length !== 13,
       country: values.country.length < 1,
       image: Object.keys(avatar).length === 0,
     };
     // next validate
-    console.log(1);
     setErrors({ ...errors });
     if (
-      Object.keys(errors).filter((error) => errors[error] === true).length === 0
+      Object.keys(errors).filter((key) => errors[key] === true).length === 0
     ) {
-      console.log(2);
       const checkUser = await axios.post("/api/register/checkUser", {
         username: values.username,
         email: values.email,
+        id_number: values.id_number,
       });
       if (checkUser.data.message === "Username already exists") {
         return alert("Username already exists");
@@ -147,17 +151,29 @@ const Register = () => {
       if (checkUser.data.message === "Email already exists") {
         return alert("Email already exists");
       }
-      console.log(3);
+
       const data = await uploadAvatar(e);
       const publicUrl = data.data.publicUrl;
-      const sendingData = { ...values, image: publicUrl };
-      try {
-        const result = await axios.post("/api/register", sendingData);
-        if (result.status === 201) {
-          router.push("/login");
+      if (values.username.includes("admin")) {
+        const sendingData = { ...values, image: publicUrl, role: "admin" };
+        try {
+          const result = await axios.post("/api/register", sendingData);
+          if (result.status === 201) {
+            router.push("/login");
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch (e) {
-        console.error(e);
+      } else {
+        const sendingData = { ...values, image: publicUrl };
+        try {
+          const result = await axios.post("/api/register", sendingData);
+          if (result.status === 201) {
+            router.push("/login");
+          }
+        } catch (e) {
+          console.error(e);
+        }
       }
     }
   };
@@ -319,7 +335,7 @@ const Register = () => {
                     country
                   </lable>
                   <Country
-                    setCountry={getValue}
+                    setCountry={getCountry}
                     className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[446px]"
                   />
                   {errors.country && (

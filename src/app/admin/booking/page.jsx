@@ -49,13 +49,18 @@ function CustomerBooking() {
   };
 
   const columns = [
-    { id: "customerName", label: "Customer name", minWidth: 100 },
-    { id: "guestCount", label: "Guest(s)", minWidth: 100 },
-    { id: "room.name", label: "Room type", minWidth: 100, align: "right" },
-    { id: "totalPrice", label: "Amount", minWidth: 100, align: "right" },
-    { id: "room.bedType", label: "Bed type", minWidth: 100, align: "right" },
-    { id: "checkInDate", label: "Check-in", minWidth: 100, align: "right" },
-    { id: "checkOutDate", label: "Check-out", minWidth: 100, align: "right" },
+    {
+      id: "customerName",
+      label: "Customer name",
+      minWidth: 100,
+      align: "center",
+    },
+    { id: "guestCount", label: "Guest(s)", minWidth: 100, align: "center" },
+    { id: "room.name", label: "Room type", minWidth: 100, align: "center" },
+    { id: "totalPrice", label: "Amount", minWidth: 100, align: "center" },
+    { id: "room.bedType", label: "Bed type", minWidth: 100, align: "center" },
+    { id: "checkInDate", label: "Check-in", minWidth: 100, align: "center" },
+    { id: "checkOutDate", label: "Check-out", minWidth: 100, align: "center" },
   ];
 
   return (
@@ -110,7 +115,7 @@ function CustomerBooking() {
                           className="cursor-pointer text-center transition duration-200 ease-in-out hover:bg-gray-100"
                         >
                           {columns.map((column) => (
-                            <TableCell key={column.id} align={column.align}>
+                            <TableCell key={column.id} align="center">
                               {column.id === "checkInDate" ||
                               column.id === "checkOutDate"
                                 ? new Date(row[column.id]).toLocaleString()

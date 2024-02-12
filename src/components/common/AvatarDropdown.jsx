@@ -52,7 +52,7 @@ export default function AvatarDropdown({ image, name, session_id }) {
             </DropdownMenuItem>
           </div>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => signOut()}>
+          <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
             <div className="section flex  justify-center gap-2">
               <span className="image h-7 w-7 opacity-40 hover:opacity-75">
                 <Image src={LogoutIcon} alt="Logout-icon" />

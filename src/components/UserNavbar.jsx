@@ -7,9 +7,8 @@ import Link from "next/link";
 import PrimaryBtn from "./common/PrimaryBtn";
 import AvatarDropdown from "./common/AvatarDropdown";
 import { useSession, signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
 const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   console.log(session);
   return (
@@ -23,7 +22,7 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
           </div>
           <div className="menu ml-5 gap-5 max-md:hidden md:flex">
             <a
-              href={aboutid || "about"}
+              href={aboutid || "/#about"}
               className="cursor-pointer hover:opacity-75"
               // onClick={() => {
               //   toSection(aboutid);
@@ -32,7 +31,7 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
               About Neatly
             </a>
             <a
-              href={serviceid || "/"}
+              href={serviceid || "/#service"}
               className="cursor-pointer hover:opacity-75"
               // onClick={() => {
               //   toSection(serviceid);
@@ -40,8 +39,9 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
             >
               Service & Facilities
             </a>
+
             <a
-              href={roomsid || "rooms"}
+              href={roomsid || "/#rooms"}
               className="cursor-pointer hover:opacity-75"
               // onClick={() => {
               //   toSection(roomsid);
@@ -54,7 +54,7 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
 
         <div className="user-menu">
           <div className="none-user flex items-center justify-items-end justify-self-end ">
-            {session ? (
+            {session?.user?.role === "user" ? (
               <div className="dropdown relative flex items-center">
                 <div className="mr-7 cursor-pointer">
                   <Image
@@ -69,6 +69,15 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
                   session_id={session?.user.id}
                 />
               </div>
+            ) : session?.user?.role === "admin" ? (
+              <PrimaryBtn
+                btnName="To Admin Panel"
+                handleClick={() => {
+                  router.push("/admin");
+                }}
+              />
+            ) : status === "loading" ? (
+              "hello"
             ) : (
               <div className="flex items-center gap-5">
                 <button
