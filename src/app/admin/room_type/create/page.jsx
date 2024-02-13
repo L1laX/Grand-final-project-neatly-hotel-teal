@@ -8,6 +8,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { v4 as uuidv4 } from "uuid";
 
 const crateRoomType = () => {
   const router = useRouter();
@@ -16,7 +17,7 @@ const crateRoomType = () => {
     name: "",
     pricePerNight: "",
     promotionPrice: "",
-    galleryImage: [],
+    roomGallery: [],
     guests: "",
     bedType: "",
     size: "",
@@ -29,7 +30,7 @@ const crateRoomType = () => {
     name: false,
     pricePerNight: false,
     promotionPrice: false,
-    galleryImage: false,
+    roomGallery: false,
     guests: false,
     bedType: false,
     size: false,
@@ -43,7 +44,7 @@ const crateRoomType = () => {
   );
   const uploadImage = async (data) => {
     const uploadImage = [];
-    const fileName = values.name.toLowerCase().split(" ").join("_");
+    const fileName = uuidv4();
     if (Array.isArray(data)) {
       const newImage = [...data];
       for (let i = 0; i < newImage.length; i++) {
@@ -51,7 +52,7 @@ const crateRoomType = () => {
           try {
             const { data, error } = await supabase.storage
               .from("roomGallery")
-              .update(
+              .upload(
                 `roomGallery/${fileName}/${i}`,
                 newImage[i][Object.keys(newImage[i])[0]],
                 { upsert: true },
@@ -75,7 +76,7 @@ const crateRoomType = () => {
       try {
         const image = await supabase.storage
           .from("mainImage")
-          .update(`mainImage/${fileName}/mainImage`, data, { upsert: true });
+          .upload(`mainImage/${fileName}/mainImage`, data, { upsert: true });
         if (image?.error) {
           return console.error(image.error);
         }
@@ -92,11 +93,12 @@ const crateRoomType = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const newErrors = {
       mainImage: !values.roomMainImage,
       name: !values.name,
       pricePerNight: !values.pricePerNight,
-      galleryImage: values.galleryImage.length < 4,
+      roomGallery: values.roomGallery.length < 4,
       guests: !values.guests,
       bedType: !values.bedType,
       size: !values.size,
@@ -104,22 +106,29 @@ const crateRoomType = () => {
       roomAmenity: values.roomAmenity.length < 1 || !values.roomAmenity[0],
       promotionPrice: !values.promotionPrice && isPromotion,
     };
+
     setErrors({ ...newErrors });
+
     if (Object.values(newErrors).includes(true)) return alert("Form Error");
     alert("Form Submitted");
+    console.log(1);
     const uploadMainImage = await uploadImage(values.roomMainImage);
-    const uploadGalleryImage = await uploadImage(values.galleryImage);
+    console.log(2);
+    const uploadGalleryImage = await uploadImage(values.roomGallery);
+    console.log(3);
     const newValues = {
       ...values,
       roomMainImage: uploadMainImage[0],
-      galleryImage: uploadGalleryImage,
+      roomGallery: uploadGalleryImage,
     };
+    console.log(4);
+    console.log(5);
     const res = await axios.post("/api/admin/room_prop", newValues);
     if (res.status === 200) {
       alert("Form Submitted");
+      console.log(6);
       return router.push("/admin/room_type");
     }
-    alert;
   };
 
   return (

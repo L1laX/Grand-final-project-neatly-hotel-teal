@@ -7,40 +7,60 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
+import { v4 as uuidv4 } from "uuid";
 const page = ({ params: { room_id } }) => {
   const router = useRouter();
   const [values, setValues] = useState({});
-
+  const [oldGallery, setOldGallery] = useState([]);
+  const [oldMainImage, setOldMainImage] = useState({});
+  const [isPromotion, setIsPromotion] = useState(
+    values.promotionPrice ? true : false,
+  );
   const [errors, setErrors] = useState({
     roomMainImage: false,
     name: false,
     pricePerNight: false,
     promotionPrice: false,
-    galleryImage: false,
+    roomGallery: false,
     guest: false,
     bedType: false,
     size: false,
     description: false,
     roomAmenity: false,
     status: false,
-    promotionPrice: false,
   });
+
+  const fileNames = (i) => {
+    const item = i ? oldGallery[i] + "" : oldMainImage + "";
+    const publicIndex = item.split("/").findIndex((el) => el === "public");
+    const data = item
+      .split("/")
+      .filter((el, i) => {
+        if (i > publicIndex + 1) {
+          return el;
+        }
+      })
+      .join("/");
+    return data;
+  };
+
   const checkpicture = async (data) => {
     const uploadImage = [];
-    const fileName = values.name.toLowerCase().split(" ").join("_");
     if (Array.isArray(data)) {
       const newImage = [...data];
       for (let i = 0; i < newImage.length; i++) {
         if (typeof newImage[i] === "object") {
+          const fileName = oldGallery[i] ? fileNames(i) : uuidv4();
           try {
+            oldGallery[i]
+              ? await supabase.storage.from("roomGallery").remove([fileName])
+              : null;
             const { data, error } = await supabase.storage
               .from("roomGallery")
-              .update(
-                `roomGallery/${fileName}/${i}`,
-                newImage[i][Object.keys(newImage[i])[0]],
-                { upsert: true },
-              );
+              .upload(fileName, newImage[i][Object.keys(newImage[i])[0]], {
+                cacheControl: "3600",
+                upsert: true,
+              });
             if (error) {
               return console.error(error);
             }
@@ -57,11 +77,16 @@ const page = ({ params: { room_id } }) => {
       }
       return uploadImage;
     } else {
+      //main image
       if (typeof data === "object") {
+        const fileName = fileNames();
         try {
+          const deleteImage = await supabase.storage
+            .from("mainImage")
+            .remove([fileName]);
           const image = await supabase.storage
             .from("mainImage")
-            .update(`mainImage/${fileName}/mainImage`, data, { upsert: true });
+            .upload(fileName, data, { cacheControl: "3600", upsert: true });
           if (image?.error) {
             return console.error(image.error);
           }
@@ -85,22 +110,23 @@ const page = ({ params: { room_id } }) => {
       roomMainImage: !values.roomMainImage,
       name: !values.name,
       pricePerNight: !values.pricePerNight,
-      galleryImage: values.galleryImage.length < 4,
+      roomGallery: values.roomGallery.length < 4,
       guests: !values.guests,
       bedType: !values.bedType,
       size: !values.size,
       description: !values.description,
       roomAmenity: values.roomAmenity.length < 1 || !values.roomAmenity[0],
-      promotionPrice: !values.promotionPrice && isPromotion,
     };
     setErrors({ ...newErrors });
     if (Object.values(newErrors).includes(true)) return alert("Form Error");
     alert("Form Submitted");
+    console.log(1);
     const sendData = {
       ...values,
-      galleryImage: await checkpicture(values.galleryImage),
-      mainImage: await checkpicture(values.mainImage),
+      roomGallery: await checkpicture(values.roomGallery),
+      roomMainImage: await checkpicture(values.roomMainImage)[0],
     };
+    console.log(sendData);
     const result = await axios.put(`/api/admin/room_prop/${room_id}`, sendData);
     if (result.status === 200) {
       alert("Data Updated");
@@ -126,6 +152,8 @@ const page = ({ params: { room_id } }) => {
       const result = await axios.get(`/api/admin/room_prop/${room_id}`);
       const data = result.data;
       setValues(data.data);
+      setOldGallery(data.data.roomGallery);
+      setOldMainImage(data.data.roomMainImage);
     } catch (e) {
       console.log(e);
     }
@@ -154,6 +182,8 @@ const page = ({ params: { room_id } }) => {
               setValues={setValues}
               handleSubmit={handleSubmit}
               errors={errors}
+              isPromotion={isPromotion}
+              setIsPromotion={setIsPromotion}
             />
           </section>
           <button

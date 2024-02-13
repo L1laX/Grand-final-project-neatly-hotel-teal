@@ -20,7 +20,7 @@ export async function GET(request, { params: { room_id } }) {
     const data = {
       ...result,
       roomAmenity: amenity,
-      galleryImage: gallery,
+      roomGallery: gallery,
     };
     return NextResponse.json(
       { message: "GET Methode success", data: data },
@@ -35,7 +35,9 @@ export async function GET(request, { params: { room_id } }) {
 export async function PUT(request, { params: { room_id } }) {
   const body = await request.json();
 
-  const { roomAmenity, galleryImage, ...data } = body;
+  console.log(body);
+  const { roomAmenity, roomGallery, ...data } = body;
+
   try {
     const deleteRoomAmenity = await prisma.roomAmenity.deleteMany({
       where: {
@@ -65,7 +67,7 @@ export async function PUT(request, { params: { room_id } }) {
           create: roomAmenity.map((amenity) => ({ name: amenity })),
         },
         roomGallery: {
-          create: galleryImage.map((image) => ({ image: image })),
+          create: roomGallery.map((image) => ({ image: image })),
         },
       },
     });
@@ -85,7 +87,6 @@ export async function DELETE(request, { params: { room_id } }) {
       where: {
         id: +room_id,
       },
-
     });
     return NextResponse.json(
       { message: "DELETE Methode success", data: result },

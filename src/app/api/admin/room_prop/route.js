@@ -57,12 +57,15 @@ export async function POST(request) {
         }),
       },
       roomGallery: {
-        create: data.galleryImage.map((gallery) => {
-          return { image: gallery };
+        create: data.roomGallery.map((image) => {
+          return { image: image};
         }),
       },
     },
   });
 
-  return NextResponse.json({ message: "POST Methode success", data: result });
+  return NextResponse.json(
+    { message: "POST Methode success", data: result },
+    { status: 200 },
+  );
 }
