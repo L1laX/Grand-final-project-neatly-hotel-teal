@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, use } from "react";
-import Sidebar from "../../../components/navbar/SidebarAdmin";
+import Sidebar from "@/components/navbar/SidebarAdmin.jsx";
 import NavBar from "@/components/navbar/NavbarAdmin";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";

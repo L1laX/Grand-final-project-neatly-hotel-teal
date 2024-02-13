@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Sidebar from "../Sidebar/page.jsx";
-import NavBarAdmin from "@/components/navbar/NavbarAdminBooking.jsx";
+import axios from "axios"; // Import Axios
+import Sidebar from "@/components/navbar/SidebarAdmin.jsx";
+import NavBarAdmin from "@/components/navbar/NavbarAdmin.jsx";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -13,6 +14,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
 function CustomerBooking() {
+  const [search, setSearch] = useState("");
   const router = useRouter();
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
@@ -22,8 +24,10 @@ function CustomerBooking() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/admin/customer_booking");
-        const data = await response.json();
+        const response = await axios.get(
+          `/api/admin/customer_booking?keywords=${search}`,
+        );
+        const data = response.data;
 
         setRows(data.data);
         setLoading(false);
@@ -33,7 +37,11 @@ function CustomerBooking() {
     };
 
     fetchData();
-  }, []);
+  }, [search]);
+
+  useEffect(() => {
+    console.log("Fetched Data:", rows);
+  }, [rows]);
 
   const handleChangePage = (_event, newPage) => {
     setPage(newPage);
@@ -67,10 +75,7 @@ function CustomerBooking() {
     <div className="flex flex-row bg-gray-100">
       <Sidebar setActive={1} />
       <div className="flex w-full flex-col">
-        <NavBarAdmin
-          navName={"Customer Booking"}
-          setFilteredResults={setRows}
-        />
+        <NavBarAdmin navName={"Customer Booking"} setSearch={setSearch} />
         <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
           <Paper
             sx={{ width: "100%", height: "100%", overflow: "hidden" }}
@@ -112,10 +117,10 @@ function CustomerBooking() {
                           role="checkbox"
                           tabIndex={-1}
                           onClick={() => handleRowClick(row.id)}
-                          className="cursor-pointer text-center transition duration-200 ease-in-out hover:bg-gray-100"
+                          style={{ cursor: "pointer" }}
                         >
                           {columns.map((column) => (
-                            <TableCell key={column.id} align="center">
+                            <TableCell key={column.id} align={column.align}>
                               {column.id === "checkInDate" ||
                               column.id === "checkOutDate"
                                 ? new Date(row[column.id]).toLocaleString()
