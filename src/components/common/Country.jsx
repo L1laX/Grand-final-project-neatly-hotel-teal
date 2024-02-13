@@ -10,8 +10,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const Country = ({ setCountry, className }) => {
+const Country = ({ setCountry, className, value }) => {
   return (
+
     <Select
       id="country"
       name="country"

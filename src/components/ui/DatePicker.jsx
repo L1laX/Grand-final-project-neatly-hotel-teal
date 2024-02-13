@@ -13,7 +13,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export default function DatePicker() {
+export default function DatePicker({ placeholder }) {
   const [date, setDate] = useState();
   const timeElapsed = Date.now();
   const today = new Date(timeElapsed);
@@ -29,7 +29,7 @@ export default function DatePicker() {
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>{today.toDateString()}</span>}
+          {date ? format(date, "PPP") : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
