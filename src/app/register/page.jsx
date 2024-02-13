@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import { supabase } from "@/lib/supabase";
+import DatePicker from "@/components/common/DatePicker";
 //import Validation from "./registervalidation.js";
 const Register = () => {
   const router = useRouter();
@@ -65,6 +66,10 @@ const Register = () => {
   const getCountry = (value) => {
     setValues({ ...values, country: value });
   };
+  const getdateOfBirth = (date) => {
+    const value = new Date(date?.$d).toISOString();
+    setValues({ ...values, dateOfBirth: value });
+  };
 
   const handleDeleteAvatar = (e, avatar_id) => {
     e.preventDefault();
@@ -93,7 +98,7 @@ const Register = () => {
       console.error(error);
     }
   };
-
+  console.log(values);
   const validateDateofBirth = (date) => {
     if (!date) {
       return true;
@@ -206,7 +211,7 @@ const Register = () => {
                 name="fullName"
                 type="text"
                 id="text-input"
-                className="mt-1 rounded-md border border-gray-300 p-2 md:mb-[50px]  md:w-[930px]"
+                className="mt-1 h-[56px] rounded-md border border-gray-300 p-2 md:mb-[50px]  md:w-[930px]"
                 placeholder="Enter text..."
               />
               {errors.fullName && (
@@ -217,11 +222,11 @@ const Register = () => {
             </div>
 
             <div className="gap-5  md:flex  md:w-[932px] md:items-center  md:justify-center ">
-              <div className="left-section m-3 flex w-full flex-col  md:justify-center ">
-                <div className="user-section relative md:justify-center">
+              <div className="left-section flex w-full flex-col  md:justify-center">
+                <div className="user-section relative  mt-7 md:justify-center">
                   <label
                     htmlFor="text-input"
-                    className="text-sm font-medium text-gray-600"
+                    className="ml-3 text-sm font-medium text-gray-600"
                   >
                     username
                   </label>
@@ -231,7 +236,7 @@ const Register = () => {
                     onChange={getValue}
                     id="text-input"
                     name="username"
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[446px]"
+                    className="mx-2 mt-1 h-[56px] w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[466px]"
                     placeholder="Enter text..."
                   />
                   {errors.username && (
@@ -240,10 +245,10 @@ const Register = () => {
                     </div>
                   )}
                 </div>
-                <div className="password relative">
+                <div className="password relative ml-2">
                   <label
                     htmlFor="text-input"
-                    className="text-sm  text-gray-600"
+                    className="ml-2  text-sm text-gray-600 "
                   >
                     password
                   </label>
@@ -253,7 +258,7 @@ const Register = () => {
                     id="text-input"
                     onChange={getValue}
                     name="password"
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px]"
+                    className="mt-1 h-[56px] rounded-md border border-gray-300 p-2 md:mb-[61px] md:w-[466px]"
                     placeholder="Enter text..."
                   />
                   {errors.password && (
@@ -262,22 +267,14 @@ const Register = () => {
                     </div>
                   )}
                 </div>
-                <div className="Date-section relative">
+                <div className="Date-section relative flex flex-col">
                   <lable
                     htmlFor="text-input"
                     className="text-sm font-medium text-gray-600"
-                  >
-                    date of birth
-                  </lable>
-                  <input
-                    // onChange={getDate}
-                    type="date"
-                    id="text-input"
-                    name="dateOfBirth"
-                    onChange={getValue}
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px]"
-                    placeholder="Enter text..."
-                  />
+                  ></lable>
+                  <div className="date-picker mt-1 h-[56px] w-full rounded-md p-2 md:mb-[83px]">
+                    <DatePicker getdateOfBirth={getdateOfBirth} />
+                  </div>
                   {errors.dateOfBirth && (
                     <div className=" absolute bottom-5 text-red-600">
                       Your age must not empty and be greater than 18.
@@ -296,7 +293,7 @@ const Register = () => {
                     id="text-input"
                     name="email"
                     onChange={getValue}
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[446px]"
+                    className="mt-1 h-[55px] w-full rounded-md border border-gray-300 p-2 md:mb-[47px] md:w-[446px]"
                     placeholder="Enter text..."
                   />
                   {errors.email && (
@@ -318,7 +315,7 @@ const Register = () => {
                     id="text-input"
                     name="id_number"
                     onChange={getValue}
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px]"
+                    className="mt-1 h-[55px] w-full rounded-md border border-gray-300 p-2 md:mb-[47px]"
                     placeholder="Enter text..."
                   />
                   {errors.id_number && (
@@ -336,7 +333,7 @@ const Register = () => {
                   </lable>
                   <Country
                     setCountry={getCountry}
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[446px]"
+                    className="mt-1 h-[55px] w-full rounded-md border border-gray-300 p-2 md:mb-[47px] md:w-[446px]"
                   />
                   {errors.country && (
                     <div className=" absolute bottom-5 text-red-600">

@@ -28,12 +28,12 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
       setValues({ ...values, roomMainImage: file });
     }
 
-    if (name === "imageGallery") {
+    if (name === "roomGallery") {
       const id = Date.now();
       const value = e.target.files[0];
       setValues({
         ...values,
-        galleryImage: [...values.galleryImage, { [id]: value }],
+        roomGallery: [...values.roomGallery, { [id]: value }],
       });
     }
   };
@@ -43,13 +43,13 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
     if (name === "roomMainImage") {
       return setValues({ ...values, roomMainImage: "" });
     }
-    if (name === "imageGallery") {
-      if (values.galleryImage.length === 1) {
-        return setValues({ ...values, galleryImage: [] });
+    if (name === "roomGallery") {
+      if (values.roomGallery.length === 1) {
+        return setValues({ ...values, roomGallery: [] });
       }
-      const newImage = [...values.galleryImage];
+      const newImage = [...values.roomGallery];
       newImage.splice(i, 1);
-      return setValues({ ...values, galleryImage: [...newImage] });
+      return setValues({ ...values, roomGallery: [...newImage] });
     }
   };
   const dragStart = (e) => {
@@ -61,13 +61,13 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
 
   const drop = (type) => {
     if (type === "image") {
-      const newGallery = [...values.galleryImage];
+      const newGallery = [...values.roomGallery];
       const dragItemContent = newGallery[dragItem.current];
       newGallery.splice(dragItem.current, 1);
       newGallery.splice(dragOverItem.current, 0, dragItemContent);
       dragItem.current = null;
       dragOverItem.current = null;
-      return setValues({ ...values, galleryImage: newGallery });
+      return setValues({ ...values, roomGallery: newGallery });
     }
     const newAmenity = [...values.roomAmenity];
     const dragItemContent = newAmenity[dragItem.current];
@@ -81,7 +81,6 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
   const addAmenity = (e) => {
     e.preventDefault();
     const newAmenity = [...values.roomAmenity];
-    console.log(newAmenity);
     newAmenity.push("");
     setValues({ ...values, roomAmenity: newAmenity });
   };
@@ -302,7 +301,7 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
                 />
               </label>
             )}
-            {errors?.mainImage && (
+            {errors?.roomMainImage && (
               <div className=" absolute left-32 top-9 w-64 text-red-600">
                 Please upload main image
               </div>
@@ -311,7 +310,7 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
           <div className="image-gallery-header relative">
             <p className="pb-2 pt-9">
               Image Gallery(At least 4 pictures) *
-              {errors?.galleryImage && (
+              {errors?.roomGallery && (
                 <span className="w-64 pl-5 text-red-600">
                   Image gallery must be at least 4 pictures
                 </span>
@@ -319,7 +318,7 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
             </p>
           </div>
           <div className="image-gallery preview flex flex-wrap gap-6">
-            {values.galleryImage && !Object.keys(values.galleryImage).length ? (
+            {values.roomGallery && !Object.keys(values.roomGallery).length ? (
               <label className="cursor-grab active:cursor-grabbing">
                 <Image
                   src={UploadPicSmall}
@@ -329,7 +328,7 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
                   height={120}
                 />
                 <input
-                  name="imageGallery"
+                  name="roomGallery"
                   type="file"
                   hidden
                   accept="image/*"
@@ -337,11 +336,11 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
                   onChange={handleMainImage}
                 />
               </label>
-            ) : values.galleryImage &&
-              Object.keys(values.galleryImage).length < 10 ? (
-              Object.keys(values.galleryImage).map((id, i) => {
-                const file = values.galleryImage[id];
-                if (i === Object.keys(values.galleryImage).length - 1) {
+            ) : values.roomGallery &&
+              Object.keys(values.roomGallery).length < 10 ? (
+              Object.keys(values.roomGallery).map((id, i) => {
+                const file = values.roomGallery[id];
+                if (i === Object.keys(values.roomGallery).length - 1) {
                   return (
                     <div key={id} className="flex gap-5">
                       <div
@@ -365,7 +364,7 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
                         <button
                           className="image-remove-button absolute -right-2 -top-3 flex h-6 w-6 items-center justify-center rounded-full bg-orange-600 p-3 px-3 text-sm text-white transition-colors hover:bg-orange-500"
                           onClick={(event) =>
-                            handleDeleteImage(event, id, "imageGallery", i)
+                            handleDeleteImage(event, id, "roomGallery", i)
                           }
                         >
                           x
@@ -380,7 +379,7 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
                           height={120}
                         />
                         <input
-                          name="imageGallery"
+                          name="roomGallery"
                           type="file"
                           hidden
                           accept="image/*"
@@ -415,7 +414,7 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
                       <button
                         className="image-remove-button absolute -right-2 -top-3 flex h-6 w-6 items-center justify-center rounded-full bg-orange-600 p-3 px-3 text-sm text-white transition-colors hover:bg-orange-500"
                         onClick={(event) =>
-                          handleDeleteImage(event, id, "imageGallery", i)
+                          handleDeleteImage(event, id, "roomGallery", i)
                         }
                       >
                         x
@@ -434,7 +433,7 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
                   height={120}
                 />
                 <input
-                  name="imageGallery"
+                  name="roomGallery"
                   type="file"
                   hidden
                   accept="image/*"

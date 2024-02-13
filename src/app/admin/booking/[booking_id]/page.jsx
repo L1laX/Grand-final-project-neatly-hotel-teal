@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import Sidebar from "../../../../components/navbar/SidebarAdmin.jsx";
-import Link from "next/link";
 import NavBar from "@/components/navbar/NavbarAdmin";
 import axios from "axios"; // Import axios
 
