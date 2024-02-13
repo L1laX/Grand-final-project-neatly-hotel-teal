@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const Country = ({ setCountry, className }) => {
+const Country = ({ setCountry, className, value }) => {
   return (
     <Select>
       <SelectTrigger
@@ -24,7 +24,9 @@ const Country = ({ setCountry, className }) => {
         }
         onChange={(e) => setCountry(e)}
       >
-        <SelectValue placeholder="Select your country"></SelectValue>
+        <SelectValue
+          placeholder={!value ? "Select your country" : value}
+        ></SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
