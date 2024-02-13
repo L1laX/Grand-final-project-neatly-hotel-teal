@@ -262,7 +262,6 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
           <h4>Room Image</h4>
           <div className="main-image relative rounded-full">
             <p className="pb-2 pt-9">Main Image*</p>
-
             {values.roomMainImage ? (
               <div className="image-preview-container relative w-fit">
                 <img

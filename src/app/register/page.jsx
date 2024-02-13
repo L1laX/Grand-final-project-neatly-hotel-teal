@@ -98,7 +98,7 @@ const Register = () => {
       console.error(error);
     }
   };
-  console.log(values);
+ 
   const validateDateofBirth = (date) => {
     if (!date) {
       return true;
