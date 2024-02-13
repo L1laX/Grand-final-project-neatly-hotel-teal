@@ -18,13 +18,7 @@ const Country = ({ setCountry, className }) => {
       onValueChange={(e) => setCountry(e)}
       defaultValue=""
     >
-      <SelectTrigger
-        className={
-          className
-            ? "mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[446px]"
-            : "country"
-        }
-      >
+      <SelectTrigger className={className ? className : "country"}>
         <SelectValue placeholder="Select your country"></SelectValue>
       </SelectTrigger>
       <SelectContent>
