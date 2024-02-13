@@ -23,7 +23,7 @@ const crateRoomType = () => {
     size: "",
     description: "",
     roomAmenity: [""],
-    status: "Vacant",
+    status: "vacant",
   });
   const [errors, setErrors] = useState({
     roomMainImage: false,
