@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/navbar/SidebarAdmin.jsx";
 import NavBarAdmin from "@/components/navbar/NavbarRoomManagement.jsx";
@@ -11,59 +10,70 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import Dropdown from "@/components/navbar/StatusDropdown";
+import axios from "axios";
 
-const columns = [
-  {
-    id: "id",
-    label: "Room no.",
-    minWidth: 100,
-    align: "center",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "name",
-    label: "Room type",
-    minWidth: 100,
-    align: "center",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "bedType",
-    label: "Bed type",
-    minWidth: 100,
-    align: "center",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "status",
-    label: "Status",
-    minWidth: 100,
-    align: "center",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-];
+const RoomTableRow = ({ row, columns, onStatusUpdate }) => (
+  <TableRow
+    hover
+    role="checkbox"
+    tabIndex={-1}
+    key={row.id}
+    className="cursor-pointer"
+  >
+    {columns.map((column) => (
+      <TableCell
+        key={column.id}
+        align={column.align}
+        className="break-all text-center"
+      >
+        {column.render
+          ? column.render(row[column.id], row, onStatusUpdate)
+          : column.format && typeof row[column.id] === "number"
+            ? column.format(row[column.id])
+            : row[column.id]}
+      </TableCell>
+    ))}
+  </TableRow>
+);
 
-function RoomManagement() {
+const StatusDropdownCell = ({ status, row, onStatusUpdate }) => (
+  <TableCell align="center">
+    <Dropdown status={status} row={row} onStatusUpdate={onStatusUpdate} />
+  </TableCell>
+);
+
+const RoomManagement = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchInput, setSearchInput] = useState("");
   const [rows, setRows] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/admin/room_management");
-        const data = await response.json();
-        setRows(data.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("/api/admin/room_management");
+      const data = response.data;
+      setRows(data.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
+
+  const handleStatusUpdate = async (roomId, newStatus) => {
+    try {
+      console.log("Room status updated successfully");
+
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating room status:", error);
+    }
+  };
 
   const handleChangePage = (_event, newPage) => {
     setPage(newPage);
@@ -81,6 +91,44 @@ function RoomManagement() {
         value.toLowerCase().includes(searchInput.toLowerCase()),
     ),
   );
+
+  const columns = [
+    {
+      id: "id",
+      label: "Room no.",
+      minWidth: 100,
+      align: "center",
+      format: (value) => value.toLocaleString("en-US"),
+    },
+    {
+      id: "name",
+      label: "Room type",
+      minWidth: 100,
+      align: "center",
+      format: (value) => value.toLocaleString("en-US"),
+    },
+    {
+      id: "bedType",
+      label: "Bed type",
+      minWidth: 100,
+      align: "center",
+      format: (value) => value.toLocaleString("en-US"),
+    },
+    {
+      id: "status",
+      label: "Status",
+      minWidth: 100,
+      align: "center",
+      format: (value) => value.toLocaleString("en-US"),
+      render: (status, row) => (
+        <StatusDropdownCell
+          status={status}
+          row={row}
+          onStatusUpdate={handleStatusUpdate}
+        />
+      ),
+    },
+  ];
 
   return (
     <div className="flex flex-row bg-gray-100">
@@ -128,28 +176,11 @@ function RoomManagement() {
                         page * rowsPerPage + rowsPerPage,
                       )
                       .map((row) => (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
+                        <RoomTableRow
                           key={row.id}
-                          className="cursor-pointer"
-                        >
-                          {columns.map((column) => (
-                            <TableCell
-                              key={column.id}
-                              align={column.align}
-                              className="break-all text-center"
-                            >
-                              {column.render
-                                ? column.render(row[column.id], row)
-                                : column.format &&
-                                    typeof row[column.id] === "number"
-                                  ? column.format(row[column.id])
-                                  : row[column.id]}
-                            </TableCell>
-                          ))}
-                        </TableRow>
+                          row={row}
+                          columns={columns}
+                        />
                       ))
                   )}
                 </TableBody>
@@ -169,6 +200,6 @@ function RoomManagement() {
       </div>
     </div>
   );
-}
+};
 
 export default RoomManagement;

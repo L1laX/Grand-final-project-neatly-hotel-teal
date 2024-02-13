@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Sidebar from "../../components/navbar/SidebarAdmin.jsx";
+import Sidebar from "@/components/navbar/SidebarAdmin.jsx";
 import NavBarAdmin from "@/components/navbar/NavbarAdmin.jsx";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
