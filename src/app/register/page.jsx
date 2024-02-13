@@ -7,15 +7,13 @@ import PrimaryBtn from "@/components/common/PrimaryBtn";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { supabase } from "@/lib/supabase";
-import { prisma } from "@/lib/prisma";
+import DatePicker from "@/components/common/DatePicker";
 //import Validation from "./registervalidation.js";
 const Register = () => {
   const router = useRouter();
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiryDate, setExpiryDate] = useState("");
   const [id_number, setIdNumber] = useState("");
   const [avatar, setAvatar] = useState("");
   const [values, setValues] = useState({
@@ -65,10 +63,17 @@ const Register = () => {
     }
   };
 
+  const getCountry = (value) => {
+    setValues({ ...values, country: value });
+  };
+  const getdateOfBirth = (date) => {
+    const value = new Date(date?.$d).toISOString();
+    setValues({ ...values, dateOfBirth: value });
+  };
+
   const handleDeleteAvatar = (e, avatar_id) => {
     e.preventDefault();
     const newAvatar = { ...avatar };
-    console.log(avatar_id);
     delete newAvatar[avatar_id];
     setAvatar({ ...newAvatar });
   };
@@ -77,7 +82,6 @@ const Register = () => {
     const avatarindex = Object.keys(avatar);
     const username = values.username;
     const uploadAvatar = avatar[avatarindex];
-    console.log(uploadAvatar);
     try {
       //upload to storage
       const { data, error } = await supabase.storage
@@ -86,6 +90,7 @@ const Register = () => {
       if (error) {
         return console.error(error);
       }
+      console.log(data);
       //get public url
       const url = supabase.storage.from("avatars").getPublicUrl(data.path);
       return url;
@@ -93,7 +98,7 @@ const Register = () => {
       console.error(error);
     }
   };
-
+  console.log(values);
   const validateDateofBirth = (date) => {
     if (!date) {
       return true;
@@ -115,6 +120,8 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     //validate Email
+    const email = values.email.split(".");
+    const lastedEmail = email[email.length - 1];
     const validEmailRegex =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     //1st validation
@@ -124,22 +131,24 @@ const Register = () => {
       password: values.password.length < 6,
       dateOfBirth: validateDateofBirth(values.dateOfBirth),
       email:
-        values.email.length === 0 &&
-        !values.email.toLowerCase().match(validEmailRegex),
+        values.email.length === 0 ||
+        !values.email.toLowerCase().match(validEmailRegex) ||
+        !lastedEmail === "com" ||
+        !lastedEmail === "co" ||
+        !lastedEmail === "org",
       id_number: values.id_number.length !== 13,
       country: values.country.length < 1,
       image: Object.keys(avatar).length === 0,
     };
     // next validate
-    console.log(1);
     setErrors({ ...errors });
     if (
-      Object.keys(errors).filter((error) => errors[error] === true).length === 0
+      Object.keys(errors).filter((key) => errors[key] === true).length === 0
     ) {
-      console.log(2);
       const checkUser = await axios.post("/api/register/checkUser", {
         username: values.username,
         email: values.email,
+        id_number: values.id_number,
       });
       if (checkUser.data.message === "Username already exists") {
         return alert("Username already exists");
@@ -147,17 +156,29 @@ const Register = () => {
       if (checkUser.data.message === "Email already exists") {
         return alert("Email already exists");
       }
-      console.log(3);
+
       const data = await uploadAvatar(e);
       const publicUrl = data.data.publicUrl;
-      const sendingData = { ...values, image: publicUrl };
-      try {
-        const result = await axios.post("/api/register", sendingData);
-        if (result.status === 201) {
-          router.push("/login");
+      if (values.username.includes("admin")) {
+        const sendingData = { ...values, image: publicUrl, role: "admin" };
+        try {
+          const result = await axios.post("/api/register", sendingData);
+          if (result.status === 201) {
+            router.push("/login");
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch (e) {
-        console.error(e);
+      } else {
+        const sendingData = { ...values, image: publicUrl };
+        try {
+          const result = await axios.post("/api/register", sendingData);
+          if (result.status === 201) {
+            router.push("/login");
+          }
+        } catch (e) {
+          console.error(e);
+        }
       }
     }
   };
@@ -190,7 +211,7 @@ const Register = () => {
                 name="fullName"
                 type="text"
                 id="text-input"
-                className="mt-1 rounded-md border border-gray-300 p-2 md:mb-[50px]  md:w-[930px]"
+                className="mt-1 h-[56px] rounded-md border border-gray-300 p-2 md:mb-[50px]  md:w-[930px]"
                 placeholder="Enter text..."
               />
               {errors.fullName && (
@@ -201,11 +222,11 @@ const Register = () => {
             </div>
 
             <div className="gap-5  md:flex  md:w-[932px] md:items-center  md:justify-center ">
-              <div className="left-section m-3 flex w-full flex-col  md:justify-center ">
-                <div className="user-section relative md:justify-center">
+              <div className="left-section flex w-full flex-col  md:justify-center">
+                <div className="user-section relative  mt-7 md:justify-center">
                   <label
                     htmlFor="text-input"
-                    className="text-sm font-medium text-gray-600"
+                    className="ml-3 text-sm font-medium text-gray-600"
                   >
                     username
                   </label>
@@ -215,7 +236,7 @@ const Register = () => {
                     onChange={getValue}
                     id="text-input"
                     name="username"
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[446px]"
+                    className="mx-2 mt-1 h-[56px] w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[466px]"
                     placeholder="Enter text..."
                   />
                   {errors.username && (
@@ -224,10 +245,10 @@ const Register = () => {
                     </div>
                   )}
                 </div>
-                <div className="password relative">
+                <div className="password relative ml-2">
                   <label
                     htmlFor="text-input"
-                    className="text-sm  text-gray-600"
+                    className="ml-2  text-sm text-gray-600 "
                   >
                     password
                   </label>
@@ -237,7 +258,7 @@ const Register = () => {
                     id="text-input"
                     onChange={getValue}
                     name="password"
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px]"
+                    className="mt-1 h-[56px] rounded-md border border-gray-300 p-2 md:mb-[61px] md:w-[466px]"
                     placeholder="Enter text..."
                   />
                   {errors.password && (
@@ -246,22 +267,14 @@ const Register = () => {
                     </div>
                   )}
                 </div>
-                <div className="Date-section relative">
+                <div className="Date-section relative flex flex-col">
                   <lable
                     htmlFor="text-input"
                     className="text-sm font-medium text-gray-600"
-                  >
-                    date of birth
-                  </lable>
-                  <input
-                    // onChange={getDate}
-                    type="date"
-                    id="text-input"
-                    name="dateOfBirth"
-                    onChange={getValue}
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px]"
-                    placeholder="Enter text..."
-                  />
+                  ></lable>
+                  <div className="date-picker mt-1 h-[56px] w-full rounded-md p-2 md:mb-[83px]">
+                    <DatePicker getdateOfBirth={getdateOfBirth} />
+                  </div>
                   {errors.dateOfBirth && (
                     <div className=" absolute bottom-5 text-red-600">
                       Your age must not empty and be greater than 18.
@@ -280,7 +293,7 @@ const Register = () => {
                     id="text-input"
                     name="email"
                     onChange={getValue}
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[446px]"
+                    className="mt-1 h-[55px] w-full rounded-md border border-gray-300 p-2 md:mb-[47px] md:w-[446px]"
                     placeholder="Enter text..."
                   />
                   {errors.email && (
@@ -302,7 +315,7 @@ const Register = () => {
                     id="text-input"
                     name="id_number"
                     onChange={getValue}
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px]"
+                    className="mt-1 h-[55px] w-full rounded-md border border-gray-300 p-2 md:mb-[47px]"
                     placeholder="Enter text..."
                   />
                   {errors.id_number && (
@@ -319,8 +332,8 @@ const Register = () => {
                     country
                   </lable>
                   <Country
-                    setCountry={getValue}
-                    className="mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[446px]"
+                    setCountry={getCountry}
+                    className="mt-1 h-[55px] w-full rounded-md border border-gray-300 p-2 md:mb-[47px] md:w-[446px]"
                   />
                   {errors.country && (
                     <div className=" absolute bottom-5 text-red-600">

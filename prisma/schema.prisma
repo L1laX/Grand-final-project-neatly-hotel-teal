@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -48,6 +49,13 @@ model room {
   roomGallery     roomGallery[]
 }
 
+
+model roomAmenity {
+  id      Int    @id @default(autoincrement())
+  room_id Int
+  name    String
+  room    room   @relation(fields: [room_id], references: [id], onDelete: Cascade)
+}
 model roomGallery {
   id      Int    @id @default(autoincrement())
   room_id Int
@@ -69,7 +77,7 @@ model customerBooking {
   guestCount          Int?
   totalPrice          Int?
   additionalRequest   String?
-  room_id             Int
+  room_id             Int?
   checkInDate         DateTime?
   checkOutDate        DateTime?
   created_at          DateTime         @default(now())
@@ -78,7 +86,7 @@ model customerBooking {
   order_id            String?
   session_id          String?
   bookingRequest      bookingRequest[]
-  room                room             @relation(fields: [room_id], references: [id])
+  room                room?            @relation(fields: [room_id], references: [id])
   user                user             @relation(fields: [user_id], references: [id])
 }
 
@@ -101,11 +109,4 @@ model promotion {
   promotionCode String
   discount      Int
   id            Int    @id @unique @default(autoincrement())
-}
-
-model roomAmenity {
-  id      Int    @id @default(autoincrement())
-  room_id Int
-  name    String
-  room    room   @relation(fields: [room_id], references: [id], onDelete: Cascade)
 }

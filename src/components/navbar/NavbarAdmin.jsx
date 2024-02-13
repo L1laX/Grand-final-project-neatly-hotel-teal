@@ -1,6 +1,6 @@
 import React from "react";
 import PrimaryBtn from "../common/PrimaryBtn";
-import BackArrow from "/src/asset/icons/BackArrow.svg";
+import BackArrow from "/src/asset/icons/arrow_back.svg";
 import Image from "next/legacy/image";
 import Link from "next/link";
 const NavBar = ({
@@ -10,6 +10,9 @@ const NavBar = ({
   notSearch,
   backarrow,
   handleSubmit,
+  linkTo,
+  customerName,
+  setSearch,
 }) => {
   return (
     <nav
@@ -19,16 +22,17 @@ p-4"
       <div className="flex items-center justify-between">
         <div className="flex items-center justify-center gap-4 text-xl font-bold text-black">
           {backarrow && (
-            <Link href={"/admin/room_type"}>
+            <Link className="mt-2 hover:opacity-85" href={linkTo}>
               <Image
-                className="cursor-pointer"
+                className="cursor-pointer "
                 src={BackArrow}
-                width={15}
-                height={15}
+                width={30}
+                height={30}
                 alt="back arrow"
               ></Image>
             </Link>
           )}
+          <p>{customerName}</p>
           {navName}
         </div>
         <div className="flex items-center">
@@ -46,6 +50,7 @@ p-4"
                 focus:ring-2
                 focus:ring-blue-400
                 ${button ? "mr-5" : ""}`}
+                onChange={(e) => setSearch(e.target.value)}
               />
             )}
             {/*Create Room*/}

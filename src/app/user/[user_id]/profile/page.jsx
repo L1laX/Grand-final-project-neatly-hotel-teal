@@ -6,6 +6,7 @@ import PrimaryBtn from "@/components/common/PrimaryBtn";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import Country from "@/components/common/Country";
+
 import DatePicker from "@/components/ui/DatePicker";
 
 export default function UserProfile({ params: { user_id } }) {

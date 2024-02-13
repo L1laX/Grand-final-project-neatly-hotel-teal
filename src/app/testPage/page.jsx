@@ -1,9 +1,13 @@
-const testPage = () => {
+"use client";
+
+import React from "react";
+import DatePk from "@/components/common/DatePicker";
+const page = () => {
   return (
     <div>
-      test page
+      <DatePk />
     </div>
-  )
-}
+  );
+};
 
-export default testPage
+export default page;

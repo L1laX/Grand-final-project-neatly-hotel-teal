@@ -12,21 +12,15 @@ import {
 
 const Country = ({ setCountry, className, value }) => {
   return (
-    <Select>
-      <SelectTrigger
-        id="country"
-        name="country"
-        defaultValue=""
-        className={
-          className
-            ? "mt-1 w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[446px]"
-            : "country"
-        }
-        onChange={(e) => setCountry(e)}
-      >
-        <SelectValue
-          placeholder={!value ? "Select your country" : value}
-        ></SelectValue>
+
+    <Select
+      id="country"
+      name="country"
+      onValueChange={(e) => setCountry(e)}
+      defaultValue=""
+    >
+      <SelectTrigger className={className ? className : "country"}>
+        <SelectValue placeholder="Select your country"></SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
