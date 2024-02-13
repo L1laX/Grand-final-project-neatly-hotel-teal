@@ -7,7 +7,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Input } from "@/components/ui/input";
 
-export default function DatePickerComponent({ getdateOfBirth }) {
+export default function DatePickerComponent({ getdateOfBirth, value }) {
   //   const [date, setDate] = React.useState(dayjs(valueDate));
   //   console.log(date);
   //   console.log(new Date(date?.$d).toISOString());
@@ -20,6 +20,7 @@ export default function DatePickerComponent({ getdateOfBirth }) {
           //     value={date}
           format="dd, DD MMMM YYYY"
           label="Date of Birth"
+          value={value ? dayjs(value) : null}
           onChange={(newValue) => {
             getdateOfBirth(newValue);
           }}

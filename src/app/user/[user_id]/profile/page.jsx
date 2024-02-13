@@ -1,32 +1,70 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/legacy/image";
-import BgUpload from "@/asset/input/photo.svg";
+import UploadPic from "@/asset/input/photo.svg";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import Country from "@/components/common/Country";
-
-import DatePicker from "@/components/ui/DatePicker";
+import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
+import DatePicker from "@/components/common/DatePicker";
 
 export default function UserProfile({ params: { user_id } }) {
-  const [avatar, setAvatar] = useState("");
+  const router = useRouter();
   const [userProfiles, setUserProfiles] = useState("");
-
+  const [oldAvatar, setOldAvatar] = useState("");
   // fetching data
+  const getImagePath = (name) => {
+    const publicIndex = name.split("/").findIndex((el) => el === "public");
+    const data = name
+      .split("/")
+      .filter((el, i) => {
+        if (i > publicIndex + 1) {
+          return el;
+        }
+      })
+      .join("/");
+    return data;
+  };
   const getUserProfile = async () => {
     try {
       const response = await axios.get(`/api/user/edit_profile/${user_id}`);
       // console.log(response.data);
-      setUserProfiles(response.data.data);
+      const {
+        fullName,
+        id_number,
+        dateOfBirth,
+        country,
+        user: { email, image },
+      } = response.data.data;
+      setUserProfiles({
+        fullName,
+        id_number,
+        dateOfBirth,
+        country,
+        email,
+        image,
+      });
+      setOldAvatar(image);
     } catch (error) {
       console.log("Fetching API failed...", error);
     }
   };
-
+  const handleMainImage = (e) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+    if (file.size >= 10 * 1024 * 1024) {
+      return alert("File size should be less than 10MB");
+    }
+    return setUserProfiles({ ...userProfiles, image: file });
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserProfiles((prevData) => ({ ...prevData, [name]: value }));
+  };
+  const getCountry = (value) => {
+    setUserProfiles({ ...userProfiles, country: value });
   };
 
   // updated data
@@ -41,48 +79,47 @@ export default function UserProfile({ params: { user_id } }) {
       console.log("Fetching data failed...", error);
     }
   };
-
-  const handleSubmit = (e) => {
+  console.log(userProfiles);
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    //uploadAvatar image
+    if (typeof userProfiles.image === "object") {
+      const url = await uploadAvatar();
+      console.log(url.data.publicUrl);
+      const sendData = { ...userProfiles, image: url.data.publicUrl };
+      // sendadata to backend
+      const result = await axios.put(
+        `/api/user/edit_profile/${user_id}`,
+        sendData,
+      );
+      return router.refresh();
+    }
+    //if not update image
+    const result = await axios.put(
+      `/api/user/edit_profile/${user_id}`,
+      userProfiles,
+    );
+    return router.refresh();
     // userProfiles คือ state (เก็บค่าที่ GET และ onChange)
     // updatedProfile(userProfiles);
-    updatedProfile();
+    //updatedProfile();
   };
 
-  useEffect(() => {
-    getUserProfile();
-  }, []);
-
-  const handleAvatar = (e) => {
-    const file = e.target.files[0];
-    if (file.size <= 10 * 1024 * 1024) {
-      const id = Date.now();
-      const value = e.target.files[0];
-      setAvatar({ ...avatar, [id]: value });
-    } else {
-      alert("File size should be less than 10MB");
-    }
-  };
-
-  const handleDeleteAvatar = (e, avatar_id) => {
+  const handleDeleteAvatar = (e) => {
     e.preventDefault();
-    const newAvatar = { ...avatar };
-    console.log(avatar_id);
-    delete newAvatar[avatar_id];
-    setAvatar({ ...newAvatar });
+    setUserProfiles({ ...userProfiles, image: "" });
   };
 
-  const uploadAvatar = async (e) => {
-    e.preventDefault();
-    const avatarindex = Object.keys(avatar);
-    const username = values.username;
-    const uploadAvatar = avatar[avatarindex];
-    console.log(uploadAvatar);
+  const uploadAvatar = async () => {
+    const fileName = getImagePath(oldAvatar);
     try {
       //upload to storage
       const { data, error } = await supabase.storage
         .from("avatars")
-        .upload(`avatars/${username}`, uploadAvatar);
+        .update(fileName, userProfiles.image, {
+          cacheControl: "3600",
+          upsert: true,
+        });
       if (error) {
         return console.error(error);
       }
@@ -93,6 +130,13 @@ export default function UserProfile({ params: { user_id } }) {
       console.error(error);
     }
   };
+  const getdateOfBirth = (date) => {
+    const value = new Date(date?.$d).toISOString();
+    setUserProfiles({ ...userProfiles, dateOfBirth: value });
+  };
+  useEffect(() => {
+    getUserProfile();
+  }, []);
 
   return (
     <form className=" mx-8 my-10 md:mx-64 md:my-20 ">
@@ -131,8 +175,8 @@ export default function UserProfile({ params: { user_id } }) {
                     type="email"
                     name="email"
                     onChange={handleChange}
-                    value={userProfiles.user?.email}
-                    placeholder={userProfiles.user?.email}
+                    value={userProfiles?.email}
+                    placeholder={userProfiles?.email}
                   />
                   <p className=" text-red-500">cannot be empty</p>
                 </label>
@@ -152,12 +196,9 @@ export default function UserProfile({ params: { user_id } }) {
               </div>
               <div className="dateOfBirth-container grid grid-cols-2 gap-4">
                 <label htmlFor="dateOfBirth">
-                  Date of Birth
-                  {/* รอแก้ไข */}
                   <DatePicker
-                    selected={handleChange}
-                    onSelect={userProfiles?.dateOfBirth}
-                    placeholder={userProfiles?.dateOfBirth}
+                    value={userProfiles?.dateOfBirth}
+                    getdateOfBirth={getdateOfBirth}
                   />
                 </label>
               </div>
@@ -165,9 +206,9 @@ export default function UserProfile({ params: { user_id } }) {
                 <label htmlFor="Country">
                   Country
                   <Country
+                    className="mt-1 h-[55px] w-full rounded-md border border-gray-300 p-2 md:mb-[47px] md:w-[446px]"
                     value={userProfiles?.country}
-                    country={userProfiles?.country}
-                    setCountry={handleChange}
+                    setCountry={getCountry}
                   />
                 </label>
               </div>
@@ -178,46 +219,41 @@ export default function UserProfile({ params: { user_id } }) {
         <div className="image-uploading">
           <h5 className="my-5 text-[#9AA1B9]">Profile Picture</h5>
           <div className="upload-section relative mt-5 flex h-52 gap-10">
-            {Object.keys(avatar).length ? (
-              Object.keys(avatar).map((id) => {
-                const file = avatar[id];
-                return (
-                  <div key={id} className="image-preview-container relative">
-                    <img
-                      className="image-preview border border-amber-500 shadow-lg transition-transform hover:scale-110"
-                      src={URL.createObjectURL(file)}
-                      alt={file.name}
-                      width={100}
-                    />
-                    <button
-                      className="image-remove-button absolute -right-2 -top-3 flex h-6 w-6 items-center justify-center rounded-full bg-orange-600 p-3 px-3 text-sm text-white transition-colors hover:bg-orange-500"
-                      onClick={(event) => handleDeleteAvatar(event, id)}
-                    >
-                      x
-                    </button>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="image-upload relative">
-                <label>
-                  <Image
-                    src={userProfiles.image}
-                    alt="background upload"
-                    className="cursor-pointer shadow-lg transition-transform hover:scale-110"
-                  />
-                  <input
-                    id="avatar"
-                    name="avatar"
-                    type="file"
-                    placeholder="Enter last name here"
-                    multiple
-                    accept="image/*"
-                    hidden
-                    onChange={handleAvatar}
-                  />
-                </label>
+            {userProfiles.image ? (
+              <div className="image-preview-container relative w-fit">
+                <img
+                  className="image-preview border border-amber-500 shadow-lg transition-transform hover:scale-110"
+                  src={
+                    typeof userProfiles.image === "object"
+                      ? URL.createObjectURL(userProfiles.image)
+                      : userProfiles.image
+                  }
+                  alt={"main image"}
+                  width={100}
+                />
+                <button
+                  className="image-remove-button absolute -right-2 -top-3 flex h-6 w-6 items-center justify-center rounded-full bg-orange-600 p-3 px-3 text-sm text-white transition-colors hover:bg-orange-500"
+                  onClick={(event) => handleDeleteAvatar(event)}
+                >
+                  x
+                </button>
               </div>
+            ) : (
+              <label>
+                <Image
+                  src={UploadPic}
+                  alt="background upload"
+                  className="t cursor-pointer shadow-lg hover:opacity-95"
+                />
+                <input
+                  name="roomMainImage"
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  multiple
+                  onChange={handleMainImage}
+                />
+              </label>
             )}
           </div>
         </div>
