@@ -1,8 +1,9 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/navbar/SidebarAdmin.jsx";
-import axios from "axios"; // Import Axios
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
+import { supabase } from "@/lib/supabase";
 
 import Paper from "@mui/material/Paper";
 import { useRouter } from "next/navigation";
@@ -33,7 +34,24 @@ const HotelInfo = () => {
         setHotelDetails(firstHotel);
         setHotelName(firstHotel?.hotelName || "");
         setHotelDescription(firstHotel?.hotelDescription || "");
-        setHotelLogoPreview(firstHotel?.image || null);
+
+        if (firstHotel?.image) {
+          const { data: imageData, error: imageError } = await supabase.storage
+            .from("logo")
+            .download(firstHotel.image);
+
+          if (!imageError) {
+            const imageUrl = URL.createObjectURL(new Blob([imageData]));
+            setHotelLogoPreview(imageUrl);
+          } else {
+            console.error(
+              "Error fetching image from Supabase Storage:",
+              imageError,
+            );
+          }
+        } else {
+          setHotelLogoPreview(null);
+        }
       } else {
         console.error("Error fetching Hotel Information:", data);
       }
@@ -44,7 +62,8 @@ const HotelInfo = () => {
     }
   };
 
-  const handleDeleteLogoPreview = () => {
+  const handleDeleteLogoPreview = (e) => {
+    e.preventDefault();
     setHotelLogoPreview(null);
     setImage(null);
   };
@@ -79,33 +98,33 @@ const HotelInfo = () => {
       };
       reader.readAsDataURL(file);
 
-      const uuid = generateUUID();
-      setImage({ file, uuid });
+      setImage({ file });
     }
-  };
-
-  const generateUUID = () => {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-      /[xy]/g,
-      function (c) {
-        var r = (Math.random() * 16) | 0,
-          v = c === "x" ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      },
-    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const filename = `${uuidv4()}-${image.file.name}`;
+
+    const { data, error } = await supabase.storage
+      .from("logo")
+      .upload(filename, image.file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (error) {
+      console.error("Error uploading image:", error);
+      return;
+    }
+
+    const imageFilepath = data.path;
+
     const formData = new FormData();
     formData.append("hotelName", hotelName);
     formData.append("hotelDescription", hotelDescription);
-
-    if (image && image.file) {
-      const imageString = URL.createObjectURL(image.file);
-      formData.set("image", imageString);
-    }
+    formData.append("image", imageFilepath);
 
     try {
       const response = await axios.put("/api/admin/hotel_info", {
@@ -115,17 +134,15 @@ const HotelInfo = () => {
         image: formData.get("image"),
       });
 
-      const data = response.data;
+      const responseData = response.data;
 
       if (response.status === 200) {
         console.log("Hotel information updated successfully");
         fetchHotelInfo();
         router.push("/admin/hotel_info");
       } else {
-        console.error("Error updating hotel information:", data);
+        console.error("Error updating hotel information:", responseData);
       }
-
-      router.push("/admin/hotel_info");
     } catch (error) {
       console.error("Error updating hotel information:", error);
     }
