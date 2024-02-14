@@ -135,7 +135,7 @@ const RoomManagement = () => {
       <Sidebar setActive={2} />
       <div className="flex w-[100vw] flex-col">
         <NavBarAdmin navName={"Room Management"} setFilteredResults={setRows} />
-        <div className="room-type-table mr-7 mt-16 flex items-center justify-center">
+        <div className="room-type-table ml-8 mr-7 mt-16 flex items-center justify-center">
           <Paper
             sx={{ width: "100%", height: "100%", overflow: "hidden" }}
             className="ml-10"
