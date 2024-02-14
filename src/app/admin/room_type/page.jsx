@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/navbar/SidebarAdmin.jsx";
 import NavBar from "@/components/navbar/NavbarAdmin";
 import Paper from "@mui/material/Paper";
@@ -13,6 +13,8 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const columns = [
   {
@@ -71,16 +73,15 @@ const RoomType = () => {
   const [search, setSearch] = React.useState("");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const handleChangePage = (_event, newPage) => {
-    setPage(newPage);
-  };
   const [rows, setRows] = useState([]);
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-  const getdata = async () => {
+
+  const fetchData = async () => {
     try {
+      toast.info("Fetching Room Data...", {
+        position: "top-center",
+        autoClose: false,
+      });
+
       const res = await axios.get(
         `http://localhost:3000/api/admin/room_prop?keywords=${search}`,
       );
@@ -88,11 +89,26 @@ const RoomType = () => {
       setRows(data.data);
     } catch (e) {
       console.log(e);
+      toast.error("Failed to fetch Room Data. Please try again later.", {
+        position: "top-center",
+      });
+    } finally {
+      toast.dismiss();
     }
   };
+
   useEffect(() => {
-    getdata(search);
+    fetchData();
   }, [search]);
+
+  const handleChangePage = (_event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
   return (
     <div className="flex flex-row bg-gray-100">
@@ -200,6 +216,7 @@ const RoomType = () => {
           </Paper>
         </div>
       </div>
+      <ToastContainer position="top-center" />
     </div>
   );
 };

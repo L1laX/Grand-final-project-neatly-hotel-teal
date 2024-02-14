@@ -3,7 +3,9 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../../../../components/navbar/SidebarAdmin.jsx";
 import NavBar from "@/components/navbar/NavbarAdmin";
-import axios from "axios"; // Import axios
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function BookingDetail({ params: { booking_id } }) {
   const [booking, setBooking] = useState(null);
@@ -13,6 +15,11 @@ function BookingDetail({ params: { booking_id } }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        toast.info("Fetching Booking Details...", {
+          position: "top-center",
+          autoClose: false,
+        });
+
         const response = await axios.get(
           `/api/admin/customer_booking/${booking_id}`,
         );
@@ -20,9 +27,17 @@ function BookingDetail({ params: { booking_id } }) {
 
         setBooking(data.data);
         setLoading(false);
+        toast.success("Booking Details Fetched Successfully!", {
+          position: "top-center",
+        });
       } catch (error) {
         console.error("Error fetching data from API:", error.message);
         setError("Failed to fetch data. Please try again.");
+        toast.error("Failed to fetch Booking Details. Please try again.", {
+          position: "top-center",
+        });
+      } finally {
+        toast.dismiss();
       }
     };
 
@@ -32,11 +47,25 @@ function BookingDetail({ params: { booking_id } }) {
   console.log(booking);
 
   if (loading) {
-    return <div>Loading...</div>;
+    toast.info("Loading...", {
+      position: "top-center",
+      autoClose: false,
+    });
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    toast.error(`Error: ${error}`, {
+      position: "top-center",
+      autoClose: false,
+    });
+
+    return null;
+  }
+  if (!booking) {
+    toast.error("Failed to fetch booking details. Please try again.", {
+      position: "top-center",
+    });
+    return null;
   }
 
   const {
@@ -84,7 +113,7 @@ function BookingDetail({ params: { booking_id } }) {
     <>
       <div className="flex flex-row bg-gray-100">
         <Sidebar />
-        <div className="flex w-full flex-col">
+        <div className="flex w-full flex-col pl-4">
           <NavBar
             customerName={customerName}
             navName={room.name}
@@ -225,6 +254,7 @@ function BookingDetail({ params: { booking_id } }) {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 }
