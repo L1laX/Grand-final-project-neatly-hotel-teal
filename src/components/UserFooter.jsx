@@ -43,10 +43,17 @@ const UserFooter = () => {
         {/* Social Icon */}
         <div className="footer-social mx-5 flex justify-between pt-10 md:mx-20">
           <div className=" gap-3">
-            <Image src={FacebookLightIcon} width={24} height={24} />
-            <Image src={InstagramLightIcon} width={24} height={24} />
-            <Image src={TwitterLightIcon} width={24} height={24} />
+            <a href="https://www.facebook.com/">
+              <Image src={FacebookLightIcon} width={24} height={24} />
+            </a>
+            <a href="https://www.instagram.com/">
+              <Image src={InstagramLightIcon} width={24} height={24} />
+            </a>
+            <a href="https://www.twitter.com/">
+              <Image src={TwitterLightIcon} width={24} height={24} />
+            </a>
           </div>
+
           <p className=" text-sm font-normal text-white">
             Copyright ©2022 Neatly Hotel
           </p>
