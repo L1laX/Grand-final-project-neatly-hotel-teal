@@ -36,16 +36,16 @@ import { addDays, format } from "date-fns";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-
+import { useSession } from "next-auth/react";
 export default function Home() {
   const [date, setDate] = useState({
     from: new Date(),
     to: addDays(new Date(), 2),
   });
-
+  const { data: session } = useSession();
   // const [room, setRoom] = useState(1);
   // const [guest, setGuest] = useState(1);
-
+  const router = useRouter();
   const [roomAndGuest, setRoomAndGuest] = useState({
     room: 1,
     guest: 2,
@@ -99,7 +99,9 @@ export default function Home() {
       alert("At least 2 days 1 night");
     }
   };
-
+  if (session?.user.role === "admin") {
+    return router.push("/admin");
+  }
   return (
     <>
       <UserNavbar

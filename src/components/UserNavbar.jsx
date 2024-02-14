@@ -10,7 +10,7 @@ import { useSession, signIn } from "next-auth/react";
 const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
-  
+
   return (
     <section className="flex w-full items-center justify-center border-4 border-double border-indigo-600 bg-white py-8">
       <div className="flex w-11/12 justify-between border-4 border-double border-indigo-600 lg:w-5/6">
@@ -71,6 +71,7 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
               </div>
             ) : session?.user?.role === "admin" ? (
               <PrimaryBtn
+                primaryButton={"bg-green-500 hover:bg-green-600"}
                 btnName="To Admin Panel"
                 handleClick={() => {
                   router.push("/admin");

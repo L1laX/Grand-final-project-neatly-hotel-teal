@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 import UploadPic from "@/asset/input/photo.svg";
 import UploadPicSmall from "@/asset/input/uploadSmallPhoto.svg";
 import Image from "next/legacy/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import DragIcon from "@/asset/input/dragicon.svg";
 import SecondaryBtn from "./common/SecondaryBtn";
 import { orange } from "@mui/material/colors";
@@ -52,10 +52,14 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
       return setValues({ ...values, roomGallery: [...newImage] });
     }
   };
+  const allowDrop = (e) => {
+    e.preventDefault();
+  };
   const dragStart = (e) => {
     dragItem.current = e.target.getAttribute("drag_id");
   };
   const dragEnter = (e) => {
+    e.preventDefault();
     dragOverItem.current = e.currentTarget.getAttribute("drag_id");
   };
 
@@ -316,7 +320,11 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
               )}
             </p>
           </div>
-          <div className="image-gallery preview flex flex-wrap gap-6">
+          <div
+            className="image-gallery preview flex flex-wrap gap-6"
+            draggable={true}
+            onDragOver={allowDrop}
+          >
             {values.roomGallery && !Object.keys(values.roomGallery).length ? (
               <label className="cursor-grab active:cursor-grabbing">
                 <Image
@@ -451,23 +459,28 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
               <p> Please enter at least one amenity</p>
             </span>
           )}
-          <div className="amenity-list cursor-grab active:cursor-grabbing">
+          <div
+            className="amenity-list cursor-grab active:cursor-grabbing"
+            draggable={true}
+            onDragOver={allowDrop}
+          >
             {values.roomAmenity &&
               values.roomAmenity.length &&
               values.roomAmenity.map((item, i) => {
                 return (
                   <div
                     className="item flex w-full cursor-grab p-4 active:cursor-grabbing"
-                    draggable
                     key={i}
                     onDragStart={dragStart}
                     onDragEnter={dragEnter}
                     onDragEnd={drop}
                     drag_id={i}
+                    draggable={true}
                   >
                     <div
                       className="icon cursor-grab active:cursor-grabbing"
                       drag_id={i}
+                      draggable
                     >
                       <Image
                         src={DragIcon}

@@ -98,7 +98,7 @@ const Register = () => {
       console.error(error);
     }
   };
- 
+
   const validateDateofBirth = (date) => {
     if (!date) {
       return true;
@@ -202,7 +202,7 @@ const Register = () => {
               Basic Information
             </h4>
 
-            <div className="fullName-section relative ml-2 flex w-fit flex-col gap-2 md:justify-center">
+            <div className="fullName-section relative  flex w-fit flex-col gap-2 md:justify-center">
               <label htmlFor="text-input" className="ml-1  text-gray-600">
                 full name
               </label>
@@ -211,7 +211,7 @@ const Register = () => {
                 name="fullName"
                 type="text"
                 id="text-input"
-                className="mt-1 h-[56px] rounded-md border border-gray-300 p-2 md:mb-[50px]  md:w-[930px]"
+                className="mt-1 h-[56px] rounded-md border border-gray-300 p-2 md:mb-[50px]  md:w-[940px]"
                 placeholder="Enter text..."
               />
               {errors.fullName && (
