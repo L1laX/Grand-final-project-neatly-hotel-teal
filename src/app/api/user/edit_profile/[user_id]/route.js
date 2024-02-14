@@ -32,31 +32,40 @@ export async function GET(request, { params: { user_id } }) {
 }
 
 export async function PUT(request, { params: { user_id } }) {
-  const data = await request.json();
-  const { fullName, id_number, dateOfBirth, country, email, image } = data;
-  console.log(data);
   try {
-    const isDataExist = await prisma.userProfile.findUnique({
+    // checking Email and ID number shouldn't be the same
+    const isIdNumberExist = await prisma.userProfile.findUnique({
       where: { user_id: +user_id },
       data: {
-        id_number: id_number,
+        id_number: newIdNum,
       },
-      include: { user: { email: email } },
+    });
+    console.log(isIdNumberExist);
+    const isEmailExist = await prisma.user.findUnique({
+      where: { user_id: +user_id },
+      include: { user: { email: newEmail } },
     });
 
-    if (data === isDataExist) {
-      return NextResponse.json({ error: "Already Exist" });
+    if (isIdNumberExist) {
+      return NextResponse.json(
+        { message: "This id number already exist" },
+        { status: 409 },
+      );
     }
-    const updateProfileData = await prisma.userProfile.update({
-      where: { user_id: +user_id },
+
+    if (isEmailExist) {
+      return NextResponse.json(
+        { message: "This email already exist" },
+        { status: 409 },
+      );
+    }
+
+    const updateProfileData = await prisma.user.update({
+      where: { id: +user_id },
       data: {
-        fullName,
-        id_number,
-        dateOfBirth,
-        country,
+        update: { email: "", image: "" },
       },
     });
-    console.log(updateProfileData);
     if (!updateProfileData) {
       return NextResponse.json({ error: "User Account not found" });
     }
@@ -72,3 +81,4 @@ export async function PUT(request, { params: { user_id } }) {
     });
   }
 }
+

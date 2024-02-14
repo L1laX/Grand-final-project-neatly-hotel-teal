@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, use } from "react";
-import Sidebar from "../../../components/navbar/SidebarAdmin";
+import Sidebar from "@/components/navbar/SidebarAdmin.jsx";
 import NavBar from "@/components/navbar/NavbarAdmin";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -150,9 +150,9 @@ const RoomType = () => {
                               >
                                 {column.format &&
                                 typeof value === "number" &&
-                                (column.id === "price" ||
+                                (column.id === "pricePerNight" ||
                                   column.id === "promotionPrice") ? (
-                                  column.format(value)
+                                  value.toLocaleString() + ".00"
                                 ) : column.id === "roomMainImage" ? (
                                   <div className="image flex w-full justify-center">
                                     <img

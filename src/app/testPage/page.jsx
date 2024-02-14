@@ -53,6 +53,5 @@ const testPage = () => {
       </div>
     </div>
   );
-};
 
 export default testPage;

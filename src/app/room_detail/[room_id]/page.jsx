@@ -14,63 +14,107 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import React from "react";
+import axios from "axios";
+import { Room } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 
-export default function RoomDetailById({ params }) {
+//add1
+// const prisma = new PrismaClient();
+
+export default function RoomDetailById({ params: { room_id } }) {
+  // add2 usestate
+  const [carouselImages, setCarouselImages] = useState([]);
+
+  const fetchCarouselImages = async () => {
+    try {
+      const images = await axios.get(`/api/room_detail/${room_id}`); // Fetch images from Prisma
+      setCarouselImages(images.data.data);
+      console.log(images.data.data.roomGallery[0]);
+    } catch (error) {
+      console.error("Error fetching carousel images:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCarouselImages();
+  }, []);
+
   return (
     <main>
       <div className=" content-page sm: lg: xl: flex flex-col items-center gap-5 ">
-        <p className=" slide-room flex justify-center rounded border-2 border-white bg-gray-600">
+        {/* <p className=" slide-room flex justify-center rounded border-2 border-white bg-gray-600">
           Room Detail By Id No.{params.room_id}
-        </p>
-        {/* ////add carousel test */}
+        </p> */}
+
         <div className="slide-top m-20  w-4/5  ">
           <Carousel>
             <CarouselContent>
-              <CarouselItem className="basis-1/3">
-                <Image src={BG} />
-              </CarouselItem>
-              <CarouselItem className="basis-1/3">
-                <Image src={BG} />
-              </CarouselItem>
-              <CarouselItem className="basis-1/3">
-                <Image src={BG} />
-              </CarouselItem>
-              <CarouselItem className="basis-1/3">
-                <Image src={BG} />
-              </CarouselItem>
+              {/* {carouselImages.roomGallery?.length > 0
+                ? carouselImages.roomGallery.map((item, index) => (
+                    <CarouselItem className="basis-1/3" key={index}>
+                      <Image
+                        className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                        src={item.image}
+                        alt="sample image"
+                        unoptimized
+                        width={600}
+                        height={400}
+                      />
+                    </CarouselItem>
+                  ))
+                : null} */}
+              {carouselImages.roomGallery?.length > 0 &&
+                carouselImages.roomGallery.map((item, index) => (
+                  <CarouselItem className="basis-1/3" key={index}>
+                    <Image
+                      className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                      src={item.image}
+                      alt="sample image"
+                      unoptimized
+                      width={1000}
+                      height={1000}
+                    />
+                  </CarouselItem>
+                ))}
             </CarouselContent>
             <CarouselNext />
             <CarouselPrevious />
           </Carousel>
         </div>
-        {/* ////slide above here vv copy from naam for adap /// */}
+
         <div className="under-slide justify-c flex w-3/5 items-center  ">
           <div className="center-box  flex flex-col   ">
             <div className="box-2 flex flex-col gap-10 ">
-              <p className=" room-name   text-6xl text-green-800 ">
-                Superior Garden View
+              <p className=" room-name   text-xl text-green-800 md:text-xl lg:text-6xl ">
+                {carouselImages.name}
               </p>
               <div className="box2-2 flex flex-row  gap-10 ">
                 <div className="2-2left  flex flex-col  ">
                   <p className=" text-base  text-gray-700">
-                    Rooms (36sqm) with full garden views, 1 single bed, bathroom
-                    with bathtub & shower.
+                    {carouselImages.description}
                   </p>
                   <div className="book-detail flex flex-row text-sm ">
-                    <p className=" text-gray-700">2 person </p>|
-                    <p className="  text-gray-700">1 Double bed </p>|
-                    <p className="  text-gray-700">32 sqm </p>
+                    <p className=" gap-1 text-gray-700">
+                      {carouselImages.guests} person
+                    </p>
+                    |
+                    <p className="  text-gray-700"> {carouselImages.bedType}</p>
+                    |
+                    <p className="  gap-1 text-gray-700 ">
+                      {carouselImages.size}sqm
+                    </p>
                   </div>
                 </div>
                 <div className="2-2right flex flex-col gap-3 ">
                   <div className=" flex flex-col gap-1 ">
                     <p className="before-discount  text-gray-700 line-through">
-                      THB 3,100.00
+                      {carouselImages.pricePerNight}
                     </p>
-                    <p>THB 2,500.00</p>
+                    <p>{carouselImages.promotionPrice}</p>
                   </div>
-                  <Link href="/room_detail/">
+                  <Link href="/booking/">
                     <PrimaryBtn btnName="Book Now" />
+                    {/* edit link to new destination */}
                   </Link>
                 </div>
               </div>
@@ -105,12 +149,72 @@ export default function RoomDetailById({ params }) {
               <p className="   flex justify-center  text-xl font-bold ">
                 Other Rooms
               </p>
+              {/* //add test below */}
+
+              <div className="random-room flex justify-center">
+                <div className="slide-random m-20 flex items-center justify-center">
+                  <div className="  bg-slate-500">
+                    {carouselImages.length &&
+                      carouselImages.map((item, index) => (
+                        <Carousel>
+                          <CarouselContent className="flex items-center justify-center">
+                            <CarouselItem className="  relative basis-1/3">
+                              <Image
+                                className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                                src={BG}
+                              />
+                              <div className="absolute left-10 top-60 flex h-full w-full flex-col items-start ">
+                                <h5
+                                  key={index}
+                                  className="text-2xl font-bold text-white"
+                                >
+                                  {item.name}
+                                </h5>
+                                <h6 className="text-base text-white">
+                                  Explore Room →
+                                </h6>
+                              </div>
+                            </CarouselItem>
+
+                            <CarouselItem className="  relative basis-1/3">
+                              <Image
+                                className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                                src={BG}
+                                //change url pic
+                              />
+                              <div className="absolute left-10 top-60 flex h-full w-full flex-col items-start ">
+                                <h5
+                                  key={index}
+                                  className="text-2xl font-bold text-white"
+                                >
+                                  {carouselImages.name}
+                                </h5>
+                                <h6 className="text-base text-white">
+                                  Explore Room →
+                                </h6>
+                              </div>
+                            </CarouselItem>
+                          </CarouselContent>
+
+                          <CarouselNext />
+                          <CarouselPrevious />
+                        </Carousel>
+                      ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* //above is testing */}
+              {/* //below is lasted code */}
               <div className="random-room  flex justify-center  ">
                 <div className="slide-randon m-20 flex items-center justify-center">
                   <Carousel>
                     <CarouselContent className="flex items-center justify-center">
                       <CarouselItem className="  relative basis-1/3">
-                        <Image src={BG} />
+                        <Image
+                          className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                          src={BG}
+                        />
                         <div className="absolute left-10 top-60 flex h-full w-full flex-col items-start ">
                           <h5 className="text-2xl font-bold text-white">
                             Deluxe
@@ -119,7 +223,10 @@ export default function RoomDetailById({ params }) {
                         </div>
                       </CarouselItem>
                       <CarouselItem className=" relative basis-1/3">
-                        <Image src={BG} />
+                        <Image
+                          className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                          src={BG}
+                        />
                         <div className="absolute left-10 top-60 flex h-full w-full flex-col items-start ">
                           <h5 className="text-2xl font-bold text-white">
                             Superior
@@ -135,6 +242,7 @@ export default function RoomDetailById({ params }) {
                   </Carousel>
                 </div>
               </div>
+              {/* //end of lasted code for random slide */}
             </div>
           </div>
         </div>

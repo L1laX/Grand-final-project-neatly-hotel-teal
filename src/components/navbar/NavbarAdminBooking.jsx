@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import PrimaryBtn from "../common/PrimaryBtn";
-import BackArrow from "/src/asset/icons/BackArrow.svg";
+import BackArrow from "@/asset/icons/arrow_back.svg";
 import Image from "next/legacy/image";
 import Link from "next/link";
 
@@ -45,7 +45,7 @@ const NavBarAdmin = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center justify-center gap-4 text-xl font-bold text-black">
           {backarrow && (
-            <Link href={"/admin/room_type"}>
+            <Link href={"/admin/booking"}>
               <Image
                 className="cursor-pointer"
                 src={BackArrow}

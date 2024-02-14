@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../../../../components/navbar/SidebarAdmin.jsx";
 import NavBar from "@/components/navbar/NavbarAdmin";
+import axios from "axios"; // Import axios
 
 function BookingDetail({ params: { booking_id } }) {
   const [booking, setBooking] = useState(null);
@@ -12,10 +13,10 @@ function BookingDetail({ params: { booking_id } }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
+        const response = await axios.get(
           `/api/admin/customer_booking/${booking_id}`,
         );
-        const data = await response.json();
+        const data = response.data;
 
         setBooking(data.data);
         setLoading(false);
@@ -38,7 +39,6 @@ function BookingDetail({ params: { booking_id } }) {
     return <div>Error: {error}</div>;
   }
 
-  // Destructure the properties from booking only if booking exists
   const {
     customerName,
     guestCount,

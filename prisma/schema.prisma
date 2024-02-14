@@ -49,13 +49,13 @@ model room {
   roomGallery     roomGallery[]
 }
 
+
 model roomAmenity {
   id      Int    @id @default(autoincrement())
   room_id Int
   name    String
   room    room   @relation(fields: [room_id], references: [id], onDelete: Cascade)
 }
-
 model roomGallery {
   id      Int    @id @default(autoincrement())
   room_id Int
