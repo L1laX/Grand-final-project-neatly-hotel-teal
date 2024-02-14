@@ -7,30 +7,19 @@ import DatePicker from "@/components/ui/DatePicker";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import Country from "@/components/common/Country";
-import { useSession } from "next-auth/react";
 
-export default function UserProfile() {
-  const { data: session } = useSession();
-
+export default function UserProfile({ params: { user_id } }) {
   const [avatar, setAvatar] = useState("");
-  const [userProfiles, setUserProfiles] = useState({
-    fullName: "",
-    email: "",
-    dateOfBirth: "",
-    id_number: "",
-    country: "",
-    image: "",
-  });
+  const [userProfiles, setUserProfiles] = useState("");
 
   // fetching data
-  const getProfileId = async () => {
+  const getUserProfile = async () => {
     try {
-      const response = await axios.get(`/api/user/edit_profile/`);
-      console.log(response.data);
-      setUserProfiles(response.data);
-      console.log(userProfiles);
+      const response = await axios.get(`/api/user/edit_profile/${user_id}`);
+      // console.log(response.data);
+      setUserProfiles(response.data.data);
     } catch (error) {
-      console.log("Fetching data failed...", error);
+      console.log("Fetching API failed...", error);
     }
   };
 
@@ -42,8 +31,8 @@ export default function UserProfile() {
   // updated data
   const updatedProfile = async () => {
     try {
-      const response = await axios.put(`/api/user/edit_profile/`, {
-        userProfiles,
+      const response = await axios.put(`/api/user/edit_profile/${user_id}`, {
+        ...userProfiles,
       });
       console.log(response.data);
       setUserProfiles(response.data);
@@ -55,12 +44,13 @@ export default function UserProfile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updatedProfile(userProfiles);
-    // back to {/User}
+    // userProfiles คือ state (เก็บค่าที่ GET และ onChange)
+    // updatedProfile(userProfiles);
+    updatedProfile();
   };
 
   useEffect(() => {
-    getProfileId();
+    getUserProfile();
   }, []);
 
   const handleAvatar = (e) => {
@@ -108,6 +98,7 @@ export default function UserProfile() {
     <form className=" mx-8 my-10 md:mx-64 md:my-20 ">
       <div className="form-container mb-14 flex flex-col divide-y-2">
         {/* Submit Update */}
+
         <div className="user-profile-head flex items-center justify-between">
           <h2>Profile</h2>
           <PrimaryBtn btnName="Update Profile" handleClick={handleSubmit} />
@@ -124,14 +115,13 @@ export default function UserProfile() {
                   type="text"
                   name="fullName"
                   onChange={handleChange}
-                  value={userProfiles.fullName}
-                  placeholder={userProfiles.fullName}
+                  value={userProfiles?.fullName}
+                  placeholder={userProfiles?.fullName}
                 />
-                <p className=" text-red-500">
-                  {userProfiles.fullName}Fullname cannot be empty
-                </p>
+                <p className=" text-red-500">Fullname cannot be empty</p>
               </label>
             </div>
+
             <div className="form-container-section-2 grid gap-4 md:grid-cols-2">
               <div className=" email-container">
                 <label htmlFor="email">
@@ -141,8 +131,8 @@ export default function UserProfile() {
                     type="email"
                     name="email"
                     onChange={handleChange}
-                    value={userProfiles.email}
-                    placeholder={userProfiles.email}
+                    value={userProfiles.user?.email}
+                    placeholder={userProfiles.user?.email}
                   />
                   <p className=" text-red-500">cannot be empty</p>
                 </label>
@@ -155,8 +145,8 @@ export default function UserProfile() {
                     type="text"
                     name="id_number"
                     onChange={handleChange}
-                    value={userProfiles.id_number}
-                    placeholder={userProfiles.email}
+                    value={userProfiles?.id_number}
+                    placeholder={userProfiles?.id_number}
                   />
                 </label>
               </div>
@@ -164,15 +154,20 @@ export default function UserProfile() {
                 <label htmlFor="dateOfBirth">
                   Date of Birth
                   <DatePicker
-                    selected={userProfiles.dateOfBirth}
-                    onSelect={handleChange}
+                    selected={handleChange}
+                    onSelect={userProfiles?.dateOfBirth}
+                    placeholder={userProfiles?.dateOfBirth}
                   />
                 </label>
               </div>
               <div className="country-container">
                 <label htmlFor="Country">
                   Country
-                  <Country setCountry={handleChange} />
+                  <Country
+                    value={userProfiles?.country}
+                    country={userProfiles?.country}
+                    setCountry={handleChange}
+                  />
                 </label>
               </div>
             </div>
@@ -206,7 +201,7 @@ export default function UserProfile() {
               <div className="image-upload relative">
                 <label>
                   <Image
-                    src={BgUpload}
+                    src={userProfiles.image}
                     alt="background upload"
                     className="cursor-pointer shadow-lg transition-transform hover:scale-110"
                   />
