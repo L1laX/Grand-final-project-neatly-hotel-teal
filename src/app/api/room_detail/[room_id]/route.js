@@ -17,13 +17,10 @@ export async function GET(req, { params: { room_id } }) {
     },
   });
   console.log(result);
-
   
-
-
-
   return NextResponse.json(
     { message: "Success", data: result },
     { status: 200 },
   );
 }
+

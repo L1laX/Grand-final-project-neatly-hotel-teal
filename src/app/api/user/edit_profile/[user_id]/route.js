@@ -66,7 +66,6 @@ export async function PUT(request, { params: { user_id } }) {
         update: { email: "", image: "" },
       },
     });
-
     if (!updateProfileData) {
       return NextResponse.json({ error: "User Account not found" });
     }
@@ -82,3 +81,4 @@ export async function PUT(request, { params: { user_id } }) {
     });
   }
 }
+

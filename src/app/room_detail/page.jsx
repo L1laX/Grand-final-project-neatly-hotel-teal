@@ -43,12 +43,22 @@ export default function RoomDetail({ searchParams }) {
   // const [guest, setGuest] = useState(parseInt(searchParams.guest, 10));
 
   const getRoomList = async () => {
-    const { from: checkIn, to: checkOut } = date;
+    if (!date?.from && !date?.to) {
+      setDate({ from: new Date(), to: addDays(new Date(), 2) });
+    }else if(date?.from && !date?.to){
+      setDate(prev => ({
+        ...prev,
+        to: addDays(prev.from, 2)
+      }));      
+    }
+    const checkIn = date?.from || new Date;
+    const checkOut = date?.to || addDays(checkIn, 2)
+    //console.log("ccccciiiii",checkIn,"cccccoooo",checkOut)
     //ถ้าไม่เปลี่ยน format เมื่อส่ง query ไป +จะหาย จาก 2024-03-30T00:00:00.000+07:00 กลายเป็น 2024-03-30T00:00:00.000 07:00
     const checkInDate = format(new Date(checkIn), "yyyy-MM-dd");
     const checkOutDate = format(new Date(checkOut), "yyyy-MM-dd");
     const result = await axios.get(
-      `http://localhost:3000/api/room_detail?checkin=${checkInDate}&checkout=${checkOutDate}`,
+      `/api/room_detail?checkin=${checkInDate}&checkout=${checkOutDate}&room=${roomAndGuest.room}&guest=${roomAndGuest.guest}`,
     );
     setRooms(result.data);
     console.log(result.data);
