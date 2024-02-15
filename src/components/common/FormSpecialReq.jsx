@@ -2,12 +2,17 @@ import PrimaryBtn from "@/components/common/PrimaryBtn";
 
 // Step 2 : FormSpecialReq
 
-const FormSpecialReq = ({ nextStep, prevStep }) => {
+const FormSpecialReq = ({
+  nextStep,
+  prevStep,
+  handleInputChange,
+  getRequest,
+  values,
+}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     nextStep();
   };
-
   return (
     <form className="mr-6 rounded bg-white p-10" onSubmit={handleSubmit}>
       {/* Checkbox Standard Request */}
@@ -25,6 +30,8 @@ const FormSpecialReq = ({ nextStep, prevStep }) => {
             <input
               type="checkbox"
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
+              name="earlyCheckIn"
+              onChange={getRequest}
             ></input>
             Early check-in
           </label>
@@ -32,6 +39,8 @@ const FormSpecialReq = ({ nextStep, prevStep }) => {
             <input
               type="checkbox"
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
+              name="lateCheckOut"
+              onChange={getRequest}
             ></input>
             Late check-out
           </label>
@@ -39,22 +48,28 @@ const FormSpecialReq = ({ nextStep, prevStep }) => {
             <input
               type="checkbox"
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
+              name="nonSmokingRoom"
+              onChange={getRequest}
             ></input>
-            Early check-in
+            Non-smoking room
           </label>
           <label htmlFor="Early check-in" className="bullet-text mb-6">
             <input
               type="checkbox"
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
+              name="aRoomOnTheHighFloor"
+              onChange={getRequest}
             ></input>
-            Early check-in
+            A room on the high floor
           </label>
           <label htmlFor="Early check-in" className="bullet-text mb-6">
             <input
               type="checkbox"
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
+              name="aQuietRoom"
+              onChange={getRequest}
             ></input>
-            Early check-in
+            A quiet room
           </label>
         </div>
       </div>
@@ -67,6 +82,8 @@ const FormSpecialReq = ({ nextStep, prevStep }) => {
             <input
               type="checkbox"
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
+              name="babyCot"
+              onChange={getRequest}
             ></input>
             Baby cot (+THB 400)
           </label>
@@ -74,6 +91,8 @@ const FormSpecialReq = ({ nextStep, prevStep }) => {
             <input
               type="checkbox"
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
+              name="airportTransfer"
+              onChange={getRequest}
             ></input>
             Airport transfer (+THB 200)
           </label>
@@ -81,6 +100,8 @@ const FormSpecialReq = ({ nextStep, prevStep }) => {
             <input
               type="checkbox"
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
+              name="extraBed"
+              onChange={getRequest}
             ></input>
             Extra bed (+THB 500)
           </label>
@@ -88,6 +109,8 @@ const FormSpecialReq = ({ nextStep, prevStep }) => {
             <input
               type="checkbox"
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
+              name="extraPillows"
+              onChange={getRequest}
             ></input>
             Extra pilloes (+THB 100)
           </label>
@@ -98,6 +121,8 @@ const FormSpecialReq = ({ nextStep, prevStep }) => {
             <input
               type="checkbox"
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
+              name="phoneChargersAndAdapters"
+              onChange={getRequest}
             ></input>
             Phone chargers and adapters (+THB 100)
           </label>
@@ -105,6 +130,8 @@ const FormSpecialReq = ({ nextStep, prevStep }) => {
             <input
               type="checkbox"
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
+              name="breakfast"
+              onChange={getRequest}
             ></input>
             Breakfast (+THB 150)
           </label>
@@ -117,6 +144,9 @@ const FormSpecialReq = ({ nextStep, prevStep }) => {
         <textarea
           className=" h-24 w-full rounded border-2 border-[##d6d9e4] p-2 outline-none"
           placeholder="Additional Request"
+          name="additionalRequest"
+          onChange={handleInputChange}
+          value={values.additionalRequest}
         ></textarea>
       </div>
 

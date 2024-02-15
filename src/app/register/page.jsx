@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import { supabase } from "@/lib/supabase";
+import { Input } from "@/components/ui/input";
 import DatePicker from "@/components/common/DatePicker";
 //import Validation from "./registervalidation.js";
 const Register = () => {
@@ -188,11 +189,11 @@ const Register = () => {
         <Image src={bg1} alt="background image" />
       </div>
       <form
-        className="absolute top-60 flex flex-col  justify-center  rounded  bg-slate-50 p-10  shadow md:w-[1092px] "
+        className="absolute top-60 flex flex-col items-center  justify-center  rounded  bg-slate-50 p-10  shadow md:w-[1092px] "
         onSubmit={handleSubmit}
       >
-        <div className=" md:flex-col">
-          <h2 className="mb-4 text-start text-[50px] font-bold  md:mb-[50px] md:text-start">
+        <div className="w-full">
+          <h2 className="mb-4 text-start text-[50px] font-bold md:mb-[50px]  md:ml-9 md:text-start">
             Register
           </h2>
         </div>
@@ -201,46 +202,44 @@ const Register = () => {
             <h4 className="text-start md:mb-[50px] md:text-start">
               Basic Information
             </h4>
-
-            <div className="fullName-section relative  flex w-fit flex-col gap-2 md:justify-center">
-              <label htmlFor="text-input" className="ml-1  text-gray-600">
+            <div className="fullName-section relative flex flex-col gap-2 md:justify-center">
+              <label htmlFor="text-input" className="ml-1 text-gray-600">
                 full name
               </label>
-              <input
+              <Input
                 onChange={getValue}
                 name="fullName"
                 type="text"
                 id="text-input"
-                className="mt-1 h-[56px] rounded-md border border-gray-300 p-2 md:mb-[50px]  md:w-[940px]"
+                className={`grid outline-none md:w-[940px] ${errors.fullName && "border-red-600"}`}
                 placeholder="Enter text..."
               />
               {errors.fullName && (
-                <div className=" absolute bottom-5 text-red-600">
+                <div className=" absolute -bottom-7 left-2 text-red-600">
                   Please enter your name
                 </div>
               )}
             </div>
 
             <div className="gap-5  md:flex  md:w-[932px] md:items-center  md:justify-center ">
-              <div className="left-section flex w-full flex-col  md:justify-center">
-                <div className="user-section relative  mt-7 md:justify-center">
+              <div className="left-section ml-1 mt-7 flex w-full flex-col gap-10 md:h-[400px]">
+                <div className="user-section relative ml-2">
                   <label
                     htmlFor="text-input"
                     className="ml-3 text-sm font-medium text-gray-600"
                   >
                     username
                   </label>
-                  <input
-                    // onChange={getUserName}
+                  <Input
                     type="text"
                     onChange={getValue}
                     id="text-input"
                     name="username"
-                    className="mx-2 mt-1 h-[56px] w-full rounded-md border border-gray-300 p-2 md:mb-[50px] md:w-[466px]"
+                    className={`mx-2 mt-1 grid h-[56px] w-full  p-2 outline-none md:w-[466px] ${errors.username && "border-red-600"}`}
                     placeholder="Enter text..."
                   />
                   {errors.username && (
-                    <div className=" absolute bottom-5 text-red-600">
+                    <div className=" absolute -bottom-7 left-7 text-red-600">
                       Please enter your username
                     </div>
                   )}
@@ -252,17 +251,17 @@ const Register = () => {
                   >
                     password
                   </label>
-                  <input
+                  <Input
                     // onChange={getPassword}
                     type="text"
                     id="text-input"
                     onChange={getValue}
                     name="password"
-                    className="mt-1 h-[56px] rounded-md border border-gray-300 p-2 md:mb-[61px] md:w-[466px]"
+                    className={`mx-2 mt-1 grid h-[56px] w-full  p-2 outline-none md:w-[466px] ${errors.password && "border-red-600"}`}
                     placeholder="Enter text..."
                   />
                   {errors.password && (
-                    <div className=" absolute bottom-5 text-red-600">
+                    <div className=" absolute -bottom-10 left-7 text-red-600 ">
                       Password must be more than 12 characters
                     </div>
                   )}
@@ -272,32 +271,35 @@ const Register = () => {
                     htmlFor="text-input"
                     className="text-sm font-medium text-gray-600"
                   ></lable>
-                  <div className="date-picker mt-1 h-[56px] w-full rounded-md p-2 md:mb-[83px]">
+                  <div className="date-picker  ml-2 mt-4 h-[56px] rounded-md p-2 md:w-[480px]">
                     <DatePicker getdateOfBirth={getdateOfBirth} />
                   </div>
                   {errors.dateOfBirth && (
-                    <div className=" absolute bottom-5 text-red-600">
+                    <div className=" absolute -bottom-10 left-7  text-red-600">
                       Your age must not empty and be greater than 18.
                     </div>
                   )}
                 </div>
               </div>
-              <div className="right-section flex  flex-col ">
+              <div className="right-section  mt-7 flex w-full flex-col  gap-10 md:h-[400px]">
                 <div className="email-section relative">
-                  <lable htmlFor="text-input" className="text-sm text-gray-600">
+                  <lable
+                    htmlFor="text-input"
+                    className="ml-4 text-sm text-gray-600"
+                  >
                     email
                   </lable>
-                  <input
+                  <Input
                     // onChange={getEmail}
                     type="text"
                     id="text-input"
                     name="email"
                     onChange={getValue}
-                    className="mt-1 h-[55px] w-full rounded-md border border-gray-300 p-2 md:mb-[47px] md:w-[446px]"
+                    className={`mx-2 mt-1 grid h-[56px] w-full  p-2 outline-none  md:w-[440px] ${errors.email && "border-red-600"}`}
                     placeholder="Enter text..."
                   />
                   {errors.email && (
-                    <div className="absolute bottom-5 text-red-600">
+                    <div className="absolute -bottom-7 left-7  text-red-600">
                       email is not valid
                     </div>
                   )}
@@ -305,21 +307,20 @@ const Register = () => {
                 <div className="id-section border-white-500 relative">
                   <lable
                     htmlFor="text-input"
-                    className="text-sm font-medium text-gray-600"
+                    className="ml-4 text-sm font-medium text-gray-600"
                   >
                     id number
                   </lable>
-                  <input
+                  <Input
                     value={id_number}
                     type="text"
                     id="text-input"
                     name="id_number"
                     onChange={getValue}
-                    className="mt-1 h-[55px] w-full rounded-md border border-gray-300 p-2 md:mb-[47px]"
-                    placeholder="Enter text..."
+                    className={`mx-2 mt-1 grid h-[56px] w-full  p-2 outline-none md:w-[440px] ${errors.id && "border-red-600"}`}
                   />
                   {errors.id_number && (
-                    <div className=" absolute bottom-5 text-red-600">
+                    <div className=" absolute -bottom-7 left-7  text-red-600">
                       ID number must be 13 characters
                     </div>
                   )}
@@ -327,16 +328,16 @@ const Register = () => {
                 <div className="contry-section relative">
                   <lable
                     htmlFor="text-input"
-                    className="text-sm font-medium text-gray-600"
+                    className="ml-4 mt-10  text-sm font-medium text-gray-600"
                   >
                     country
                   </lable>
                   <Country
                     setCountry={getCountry}
-                    className="mt-1 h-[55px] w-full rounded-md border border-gray-300 p-2 md:mb-[47px] md:w-[446px]"
+                    className={`ml-3 h-[55px] w-full rounded-md p-2 outline-none hover:border-orange-500 focus:border-orange-500  md:w-[440px] ${errors.country && "border-red-600"} `}
                   />
                   {errors.country && (
-                    <div className=" absolute bottom-5 text-red-600">
+                    <div className=" absolute -bottom-7 left-7 text-red-600">
                       Please select your country
                     </div>
                   )}
@@ -401,7 +402,7 @@ const Register = () => {
             </div>
           </div>
         </div>
-        <div className="buttin-section">
+        <div className="buttin-section ml-20 w-full">
           <div className=" flex-col md:flex-col ">
             <PrimaryBtn btnName="Register" primaryButton="w-[446px]" />
           </div>

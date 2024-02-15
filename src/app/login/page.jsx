@@ -26,7 +26,7 @@ const Login = () => {
       });
       if (result.status === 200) {
         setIsValid(true);
-        router.push("/");
+        router.push("/admin");
       }
       if (result.status === 401) {
         setIsValid(false);
