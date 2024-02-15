@@ -44,6 +44,7 @@ export default function Home() {
     from: new Date(),
     to: addDays(new Date(), 2),
   });
+  const { data: session } = useSession();
   // const [room, setRoom] = useState(1);
   // const [guest, setGuest] = useState(1);
   const router = useRouter();
