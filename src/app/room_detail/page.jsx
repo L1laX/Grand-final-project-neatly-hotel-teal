@@ -123,6 +123,7 @@ export default function RoomDetail({ searchParams }) {
             key={index}
             roomitem={item.id}
             roomname={item.name}
+            roomimage={item.roomMainImage}
             handleBooking={item.id}
           />
         ))}
