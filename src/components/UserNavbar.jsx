@@ -12,8 +12,8 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
   const router = useRouter();
   
   return (
-    <section className="flex w-full items-center justify-center border-4 border-double border-indigo-600 bg-white py-8">
-      <div className="flex w-11/12 justify-between border-4 border-double border-indigo-600 lg:w-5/6">
+    <section className="flex w-full items-center justify-center bg-white py-5">
+      <div className="flex w-11/12 justify-between lg:w-5/6">
         <div className="web-menu flex items-center">
           <div className="logo flex">
             <Link href={"/"} className="hover:opacity-90">

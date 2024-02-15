@@ -83,6 +83,8 @@ export async function PUT(request, { params: { user_id } }) {
       },
       { status: 200 },
     );
+
+
   } catch (error) {
     console.log("Update user profile failed...");
     return NextResponse.json(
@@ -93,3 +95,4 @@ export async function PUT(request, { params: { user_id } }) {
     );
   }
 }
+

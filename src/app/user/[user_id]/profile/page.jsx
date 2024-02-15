@@ -6,6 +6,7 @@ import PrimaryBtn from "@/components/common/PrimaryBtn";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import Country from "@/components/common/Country";
+
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import DatePicker from "@/components/common/DatePicker";
@@ -14,6 +15,7 @@ export default function UserProfile({ params: { user_id } }) {
   const router = useRouter();
   const [userProfiles, setUserProfiles] = useState("");
   const [oldAvatar, setOldAvatar] = useState("");
+
   const [errors, setErrors] = useState({
     fullName: false,
     username: false,
@@ -43,6 +45,7 @@ export default function UserProfile({ params: { user_id } }) {
     try {
       const response = await axios.get(`/api/user/edit_profile/${user_id}`);
       // console.log(response.data);
+
       const {
         fullName,
         id_number,
@@ -59,6 +62,7 @@ export default function UserProfile({ params: { user_id } }) {
         image,
       });
       setOldAvatar(image);
+
     } catch (error) {
       console.log("Fetching API failed...", error);
     }
@@ -117,6 +121,7 @@ export default function UserProfile({ params: { user_id } }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
 
     const lastedEmail = userProfiles.email.length - 1;
     const errors = {

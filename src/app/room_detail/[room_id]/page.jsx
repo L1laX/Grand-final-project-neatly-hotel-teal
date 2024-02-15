@@ -16,19 +16,20 @@ import {
 import React from "react";
 import axios from "axios";
 import { Room } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 
 //add1
 // const prisma = new PrismaClient();
 
-export default function RoomDetailById({ params }) {
+export default function RoomDetailById({ params: { room_id } }) {
   // add2 usestate
   const [carouselImages, setCarouselImages] = useState([]);
 
   const fetchCarouselImages = async () => {
     try {
-      const images = await axios.get("/api/room_detail"); // Fetch images from Prisma
-      console.log(images.data);
-      setCarouselImages(images.data);
+      const images = await axios.get(`/api/room_detail/${room_id}`); // Fetch images from Prisma
+      setCarouselImages(images.data.data);
+      console.log(images.data.data.roomGallery[0]);
     } catch (error) {
       console.error("Error fetching carousel images:", error);
     }
@@ -48,30 +49,33 @@ export default function RoomDetailById({ params }) {
         <div className="slide-top m-20  w-4/5  ">
           <Carousel>
             <CarouselContent>
-              <CarouselItem className="basis-1/3">
-                <Image
-                  className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-                  src={BG}
-                />
-              </CarouselItem>
-              <CarouselItem className="basis-1/3">
-                <Image
-                  className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-                  src={BG}
-                />
-              </CarouselItem>
-              <CarouselItem className="basis-1/3">
-                <Image
-                  className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-                  src={BG}
-                />
-              </CarouselItem>
-              <CarouselItem className="basis-1/3">
-                <Image
-                  className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-                  src={BG}
-                />
-              </CarouselItem>
+              {/* {carouselImages.roomGallery?.length > 0
+                ? carouselImages.roomGallery.map((item, index) => (
+                    <CarouselItem className="basis-1/3" key={index}>
+                      <Image
+                        className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                        src={item.image}
+                        alt="sample image"
+                        unoptimized
+                        width={600}
+                        height={400}
+                      />
+                    </CarouselItem>
+                  ))
+                : null} */}
+              {carouselImages.roomGallery?.length > 0 &&
+                carouselImages.roomGallery.map((item, index) => (
+                  <CarouselItem className="basis-1/3" key={index}>
+                    <Image
+                      className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                      src={item.image}
+                      alt="sample image"
+                      unoptimized
+                      width={1000}
+                      height={1000}
+                    />
+                  </CarouselItem>
+                ))}
             </CarouselContent>
             <CarouselNext />
             <CarouselPrevious />
@@ -82,30 +86,35 @@ export default function RoomDetailById({ params }) {
           <div className="center-box  flex flex-col   ">
             <div className="box-2 flex flex-col gap-10 ">
               <p className=" room-name   text-xl text-green-800 md:text-xl lg:text-6xl ">
-                Superior Garden View
+                {carouselImages.name}
               </p>
               <div className="box2-2 flex flex-row  gap-10 ">
                 <div className="2-2left  flex flex-col  ">
                   <p className=" text-base  text-gray-700">
-                    Rooms (36sqm) with full garden views, 1 single bed, bathroom
-                    with bathtub & shower.
+                    {carouselImages.description}
                   </p>
                   <div className="book-detail flex flex-row text-sm ">
-                    <p className=" text-gray-700">2 person </p>|
-                    <p className="  text-gray-700">1 Double bed </p>|
-                    <p className="  text-gray-700">32 sqm </p>
+                    <p className=" gap-1 text-gray-700">
+                      {carouselImages.guests} person
+                    </p>
+                    |
+                    <p className="  text-gray-700"> {carouselImages.bedType}</p>
+                    |
+                    <p className="  gap-1 text-gray-700 ">
+                      {carouselImages.size}sqm
+                    </p>
                   </div>
                 </div>
                 <div className="2-2right flex flex-col gap-3 ">
                   <div className=" flex flex-col gap-1 ">
                     <p className="before-discount  text-gray-700 line-through">
-                      THB 3,100.00
+                      {carouselImages.pricePerNight}
                     </p>
-                    <p>THB 2,500.00</p>
+                    <p>{carouselImages.promotionPrice}</p>
                   </div>
-                  <Link href="/room_detail/">
+                  <Link href="/booking/">
                     <PrimaryBtn btnName="Book Now" />
-                     {/* edit link to new destination */}
+                    {/* edit link to new destination */}
                   </Link>
                 </div>
               </div>
@@ -152,10 +161,13 @@ export default function RoomDetailById({ params }) {
                             <CarouselItem className="  relative basis-1/3">
                               <Image
                                 className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-                                src={BG} />
+                                src={BG}
+                              />
                               <div className="absolute left-10 top-60 flex h-full w-full flex-col items-start ">
-                              
-                                <h5 key={index} className="text-2xl font-bold text-white">
+                                <h5
+                                  key={index}
+                                  className="text-2xl font-bold text-white"
+                                >
                                   {item.name}
                                 </h5>
                                 <h6 className="text-base text-white">
@@ -175,7 +187,7 @@ export default function RoomDetailById({ params }) {
                                   key={index}
                                   className="text-2xl font-bold text-white"
                                 >
-                                  {item.name}
+                                  {carouselImages.name}
                                 </h5>
                                 <h6 className="text-base text-white">
                                   Explore Room →
