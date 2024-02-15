@@ -44,7 +44,6 @@ export default function Home() {
     from: new Date(),
     to: addDays(new Date(), 2),
   });
-  const { data: session } = useSession();
   // const [room, setRoom] = useState(1);
   // const [guest, setGuest] = useState(1);
   const router = useRouter();
@@ -132,9 +131,6 @@ export default function Home() {
       alert("At least 2 days 1 night");
     }
   };
-  if (session?.user.role === "admin") {
-    return router.push("/admin");
-  }
   return (
     <>
       <div class="fixed bottom-4 right-2 z-50 h-14 w-14 lg:bottom-6 lg:right-6">

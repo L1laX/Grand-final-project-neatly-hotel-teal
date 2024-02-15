@@ -8,6 +8,7 @@ import DragIcon from "@/asset/input/dragicon.svg";
 import SecondaryBtn from "./common/SecondaryBtn";
 import { orange } from "@mui/material/colors";
 import Checkbox from "@mui/material/Checkbox";
+import { Input } from "@/components/ui/input";
 
 const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
   const dragItem = useRef();
@@ -106,9 +107,9 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
           <h4>Basic Information</h4>
           <div className="Roomtype relative flex w-full flex-col">
             <label htmlFor="name">Room Type *</label>
-            <input
+            <Input
               type="text"
-              className="mt-1 w-full rounded-md border border-gray-300 p-1"
+              className="mt-1 w-full rounded-md border border-gray-300 p-1 outline-none focus:border-orange-500"
               name="name"
               onChange={getValue}
               value={values.name}
@@ -123,10 +124,10 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
           <div className="room-bedType flex gap-8">
             <div className="size relative flex w-1/2 flex-col">
               <label htmlFor="size">Room size[sqm] *</label>
-              <input
+              <Input
                 type="number"
                 name="size"
-                className="mt-1 w-full rounded-md border border-gray-300 p-1 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                className="mt-1 w-full rounded-md border border-gray-300 p-1 outline-none [appearance:textfield] focus:border-orange-500 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 onChange={getValue}
                 value={values.size}
                 min={1}
@@ -141,7 +142,7 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
               <label htmlFor="bedType">Bed Type *</label>
               <select
                 name="bedType"
-                className="mt-1 w-full rounded-md border border-gray-300 p-1"
+                className="mt-1 w-full rounded-md border border-gray-300 p-1 outline-none hover:border-orange-500 focus:border-orange-500"
                 defaultValue=""
                 onChange={getValue}
                 value={values.bedType}
@@ -166,7 +167,7 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
           <div className="guests relative flex w-[300px] flex-col">
             <label htmlFor="guests">Guest(s) *</label>
             <select
-              className=" mt-1 w-full rounded-md border border-gray-300 p-1"
+              className=" mt-1 w-full rounded-md border border-gray-300 p-1  outline-none hover:border-orange-500 focus:border-orange-500"
               name="guests"
               defaultValue=""
               onChange={getValue}
@@ -190,11 +191,11 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
           <div className="pricePerNight-promotion flex justify-between gap-8">
             <div className="pricePerNight relative flex  w-1/3 flex-col">
               <label htmlFor="pricePerNight">Price per Night(THB) *</label>
-              <input
+              <Input
                 type="number"
                 name="pricePerNight"
                 min={1}
-                className="mt-1 w-full rounded-md border border-gray-300 p-1 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                className="mt-1 w-full rounded-md border border-gray-300 p-1 outline-none [appearance:textfield] focus:border-orange-500 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 onChange={getValue}
                 value={values.pricePerNight}
               />
@@ -228,11 +229,11 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
               <label htmlFor="promotionPrice" className=" mt-1 w-[450px]">
                 Promotion Price (THB)
               </label>
-              <input
+              <Input
                 type="number"
                 name="promotionPrice"
                 min={1}
-                className="mt-1 w-full rounded-md border border-gray-300 p-1 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                className="mt-1 w-full rounded-md border border-gray-300 p-1 outline-none [appearance:textfield] focus:border-orange-500 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 value={values.promotionPrice ? values.promotionPrice : " "}
                 onChange={getValue}
                 disabled={values.promotionPrice ? null : "disabled"}
@@ -248,7 +249,7 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
             <label htmlFor="description">Room Description *</label>
             <textarea
               name="description"
-              className="mt-1 w-full rounded-md border border-gray-300 p-1"
+              className="mt-1 w-full rounded-md border border-gray-300 p-1  outline-none hover:border-orange-500 focus:border-orange-500"
               onChange={getValue}
               cols="30"
               rows="3"
@@ -279,7 +280,7 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
                   width={100}
                 />
                 <button
-                  className="image-remove-button absolute -right-2 -top-3 flex h-6 w-6 items-center justify-center rounded-full bg-orange-600 p-3 px-3 text-sm text-white transition-colors hover:bg-orange-500"
+                  className="image-remove-button absolute -right-2 -top-3 flex h-6 w-6 items-center justify-center rounded-full bg-orange-600 p-3 px-3 text-sm text-white outline-none transition-colors hover:bg-orange-500 focus:border-orange-500"
                   onClick={(event) =>
                     handleDeleteImage(event, "", "roomMainImage", "")
                   }
@@ -494,7 +495,7 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
                       <input
                         type="text"
                         value={item}
-                        className="mt-1 w-full rounded-lg border p-2"
+                        className="mt-1 w-full rounded-lg border p-2  outline-none hover:border-orange-500 focus:border-orange-500"
                         onChange={(e) => {
                           const value = e.target.value;
                           const newAmenity = [...values.roomAmenity];
