@@ -1,11 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Image from "next/legacy/image";
 import UploadPic from "@/asset/input/photo.svg";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import Country from "@/components/common/Country";
+
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import DatePicker from "@/components/common/DatePicker";
@@ -14,7 +15,19 @@ export default function UserProfile({ params: { user_id } }) {
   const router = useRouter();
   const [userProfiles, setUserProfiles] = useState("");
   const [oldAvatar, setOldAvatar] = useState("");
-  // fetching data
+
+  const [errors, setErrors] = useState({
+    fullName: false,
+    username: false,
+    password: false,
+    dateOfBirth: false,
+    email: false,
+    id_number: false,
+    country: false,
+    image: false,
+  });
+
+  // get image path
   const getImagePath = (name) => {
     const publicIndex = name.split("/").findIndex((el) => el === "public");
     const data = name
@@ -27,10 +40,12 @@ export default function UserProfile({ params: { user_id } }) {
       .join("/");
     return data;
   };
+  // fetching data
   const getUserProfile = async () => {
     try {
       const response = await axios.get(`/api/user/edit_profile/${user_id}`);
       // console.log(response.data);
+
       const {
         fullName,
         id_number,
@@ -47,6 +62,7 @@ export default function UserProfile({ params: { user_id } }) {
         image,
       });
       setOldAvatar(image);
+
     } catch (error) {
       console.log("Fetching API failed...", error);
     }
@@ -59,8 +75,30 @@ export default function UserProfile({ params: { user_id } }) {
     }
     return setUserProfiles({ ...userProfiles, image: file });
   };
+
+  //validate
+
+  const isValidEmail = (email) => {
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return regex.test(email) === false;
+  };
+
+  const isValidIdNumber = (id_number) => {
+    const regex = /^[0-9]{13}$/;
+    return regex.test(id_number) === false;
+  };
+
   const handleChange = (e) => {
+    e.preventDefault();
     const { name, value } = e.target;
+    if (name === "id_number") {
+      if (value.length > 13) {
+        return;
+      }
+      const newValue = value.replace(/\D/g, "");
+      return setUserProfiles({ ...userProfiles, [name]: newValue });
+    }
+
     setUserProfiles((prevData) => ({ ...prevData, [name]: value }));
   };
   const getCountry = (value) => {
@@ -80,8 +118,29 @@ export default function UserProfile({ params: { user_id } }) {
     }
   };
   console.log(userProfiles);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+
+    const lastedEmail = userProfiles.email.length - 1;
+    const errors = {
+      fullName: userProfiles.fullName.length <= 1,
+      dateOfBirth: userProfiles.dateOfBirth.length <= 1,
+      email:
+        userProfiles.email.length === 0 ||
+        isValidEmail(userProfiles.email) ||
+        lastedEmail === ".",
+      id_number:
+        userProfiles.id_number.length > 13 ||
+        isValidIdNumber(userProfiles.id_number) ||
+        userProfiles.id_number.length === 0,
+      country: userProfiles.country.length <= 1,
+      image: Object.keys(userProfiles.image).length === 0,
+    };
+
+    setErrors({ ...errors });
+
     //uploadAvatar image
     if (typeof userProfiles.image === "object") {
       const url = await uploadAvatar();
@@ -99,10 +158,11 @@ export default function UserProfile({ params: { user_id } }) {
       `/api/user/edit_profile/${user_id}`,
       userProfiles,
     );
+    if (result.data.error) return alert(result.data.error);
+    console.log(result);
     return router.refresh();
     // userProfiles คือ state (เก็บค่าที่ GET และ onChange)
     // updatedProfile(userProfiles);
-    //updatedProfile();
   };
 
   const handleDeleteAvatar = (e) => {
@@ -162,7 +222,9 @@ export default function UserProfile({ params: { user_id } }) {
                   value={userProfiles?.fullName}
                   placeholder={userProfiles?.fullName}
                 />
-                <p className=" text-red-500">Fullname cannot be empty</p>
+                {errors.fullName && (
+                  <p className=" text-red-500">Name cannot be empty</p>
+                )}
               </label>
             </div>
 
@@ -178,7 +240,9 @@ export default function UserProfile({ params: { user_id } }) {
                     value={userProfiles?.email}
                     placeholder={userProfiles?.email}
                   />
-                  <p className=" text-red-500">cannot be empty</p>
+                  {errors.email && (
+                    <p className=" text-red-500">Invalid email</p>
+                  )}
                 </label>
               </div>
               <div className=" idnumber-container">
@@ -193,24 +257,33 @@ export default function UserProfile({ params: { user_id } }) {
                     placeholder={userProfiles?.id_number}
                   />
                 </label>
+                {errors.id_number && (
+                  <p className=" text-red-500">Invalid ID number</p>
+                )}
               </div>
-              <div className="dateOfBirth-container grid grid-cols-2 gap-4">
+              <div className="dateOfBirth-container mt-4 pt-3">
                 <label htmlFor="dateOfBirth">
                   <DatePicker
                     value={userProfiles?.dateOfBirth}
                     getdateOfBirth={getdateOfBirth}
                   />
                 </label>
+                {errors.dateOfBirth && (
+                  <p className=" text-red-500">Birthdate cannot be empty</p>
+                )}
               </div>
               <div className="country-container">
                 <label htmlFor="Country">
                   Country
                   <Country
-                    className="mt-1 h-[55px] w-full rounded-md border border-gray-300 p-2 md:mb-[47px] md:w-[446px]"
+                    className="mt-1 h-[55px] w-full rounded-md border border-gray-300 p-2 md:mb-[47px] "
                     value={userProfiles?.country}
                     setCountry={getCountry}
                   />
                 </label>
+                {errors.country && (
+                  <p className=" text-red-500">Country cannot be empty</p>
+                )}
               </div>
             </div>
           </div>

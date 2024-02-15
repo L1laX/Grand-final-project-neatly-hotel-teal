@@ -1,13 +1,14 @@
 import { getToken } from "next-auth/jwt";
-import {  NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function middleware(request) {
   const res = NextResponse.next();
   //get token from request
   const token = await getToken({
     req: request,
-    secret: process.env.SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
   });
+  console.log(token);
   const { pathname } = request.nextUrl;
   if (token && token.role === "user" && pathname.startsWith("/user")) {
     return res;

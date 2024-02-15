@@ -54,7 +54,7 @@ export async function POST(request) {
       },
       roomGallery: {
         create: data.roomGallery.map((image) => {
-          return { image: image};
+          return { image: image };
         }),
       },
     },

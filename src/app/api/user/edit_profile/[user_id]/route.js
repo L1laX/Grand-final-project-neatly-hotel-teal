@@ -33,52 +33,66 @@ export async function GET(request, { params: { user_id } }) {
 
 export async function PUT(request, { params: { user_id } }) {
   try {
-    // checking Email and ID number shouldn't be the same
-    const isIdNumberExist = await prisma.userProfile.findUnique({
-      where: { user_id: +user_id },
-      data: {
-        id_number: newIdNum,
-      },
-    });
-    console.log(isIdNumberExist);
+    const { fullName, idNumber, dateOfBirth, country, email, image } =
+      await request.json();
+    const userData = { fullName, idNumber, dateOfBirth, country, email, image };
+
+    if (!userData) {
+      return NextResponse.json(
+        { error: "Missing require fields" },
+        { status: 400 },
+      );
+    }
+
     const isEmailExist = await prisma.user.findUnique({
-      where: { user_id: +user_id },
-      include: { user: { email: newEmail } },
+      where: { email: email },
     });
+    console.log(isEmailExist);
 
-    if (isIdNumberExist) {
+    if (isEmailExist && isEmailExist.id !== +user_id) {
       return NextResponse.json(
-        { message: "This id number already exist" },
-        { status: 409 },
+        { error: "Email already exist" },
+        { status: 404 },
       );
     }
 
-    if (isEmailExist) {
-      return NextResponse.json(
-        { message: "This email already exist" },
-        { status: 409 },
-      );
-    }
-
-    const updateProfileData = await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id: +user_id },
       data: {
-        update: { email: "", image: "" },
+        email: email,
+        image: image,
+        userProfile: {
+          update: {
+            where: { user_id: +user_id },
+            data: {
+              fullName,
+              idNumber,
+              dateOfBirth,
+              country,
+            },
+          },
+        },
       },
+      include: { userProfile: true },
     });
 
-    if (!updateProfileData) {
-      return NextResponse.json({ error: "User Account not found" });
-    }
+    return NextResponse.json(
+      {
+        message: "Update user success",
+        data: updatedUser,
+      },
+      { status: 200 },
+    );
 
-    return NextResponse.json({
-      success: true,
-      data: updateProfileData,
-    });
+
   } catch (error) {
     console.log("Update user profile failed...");
-    return NextResponse.json({
-      error: "Update user profile failed",
-    });
+    return NextResponse.json(
+      {
+        error: "Update user profile failed",
+      },
+      { status: 500 },
+    );
   }
 }
+

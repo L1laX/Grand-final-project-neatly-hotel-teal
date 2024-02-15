@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import UserFooter from "@/components/UserFooter";
 import Image from "next/legacy/image";
@@ -19,6 +19,8 @@ import Wifi from "/src/asset/icons/ant-design_wifi-outlined";
 import Car from "/src/asset/icons/carbon_car";
 import Phone from "/src/asset/icons/bx_phone-call";
 import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
+import ScrollToTopButton from "@/components/ui/scrollToTop";
+import NextPrevBtn from '@/asset/icons/next_button';
 import {
   Select,
   SelectContent,
@@ -50,13 +52,44 @@ export default function Home() {
     guest: 2,
   });
 
-  const settingsSlide = {
+  const imgSlider = useRef(null);
+
+  const settings = {
     className: "center",
     centerMode: true,
     infinite: true,
-    centerPadding: "60px",
-    slidesToShow: 3,
     speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    autoplay: true,
+    arrows: false,
+    autoplaySpeed:4000,
+    initialSlide: 0,
+    responsive: [
+      {
+        breakpoint: 1536,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+        }
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
   };
 
   const settingsComments = {
@@ -100,13 +133,16 @@ export default function Home() {
   };
   return (
     <>
+      <div class="fixed bottom-4 right-2 z-50 h-14 w-14 lg:bottom-6 lg:right-6">
+        <ScrollToTopButton />
+      </div>
       <UserNavbar
         aboutid={"#about"}
         serviceid={"#service"}
         roomsid={"#rooms"}
         isHomepage={true}
       />
-      <header className="relative flex h-[26rem] max-h-full items-center justify-center sm:h-[36rem] lg:h-[48rem] xl:h-[58rem]">
+      <header className="relative flex h-[26rem] max-h-full items-center justify-center sm:h-[36rem] lg:h-[48rem] xl:h-[58rem] 2xl:h-[62rem]">
         <Image
           src={Hero}
           alt="Neatly Hero Section"
@@ -115,15 +151,15 @@ export default function Home() {
         />
 
         <div className="to-94% from-1% absolute inset-0 bg-gradient-to-b from-neutral-900 to-transparent"></div>
-        <div className="z-10 flex h-full w-11/12 flex-col items-center justify-evenly border-4 border-double border-indigo-600 lg:w-5/6">
+        <div className="z-10 flex h-full w-11/12 flex-col items-center justify-evenly lg:w-5/6">
           <div>
-            <h1 className="border-4 border-double border-indigo-600 text-center text-3xl text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
+            <h1 className="text-center text-3xl text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
               <p>A Best Place for Your</p>
               <p>Neatly Experience</p>
             </h1>
           </div>
-          <div className="h-82 flex w-full flex-row rounded-lg border-4 border-double border-indigo-600 bg-white shadow md:h-44 lg:h-48 xl:h-56">
-            <div className="flex w-full flex-col items-center justify-around gap-2 border-4 border-double border-indigo-600 py-4 md:flex-row md:gap-8 md:px-16 lg:gap-10">
+          <div className="h-82 flex w-full flex-row rounded-lg bg-white shadow md:h-44 lg:h-48 xl:h-56">
+            <div className="flex w-full flex-col items-center justify-around gap-2 py-4 md:flex-row md:gap-8 md:px-16 lg:gap-10">
               <DateRangeRoomGuest
                 handleDateRangeRoomGuest={{
                   calendarDesign: "h-10 sm:h-14 w-56 sm:w-full",
@@ -176,7 +212,7 @@ export default function Home() {
       </header>
 
       <section id="about" className=" flex justify-center">
-        <div className="flex h-full w-11/12 flex-col items-center border-4 border-double border-indigo-600 py-16 sm:py-20 md:py-24 lg:w-5/6 lg:py-28 xl:py-32">
+        <div className="flex h-full w-11/12 flex-col items-center py-16 sm:py-20 md:py-24 lg:w-5/6 lg:py-28 xl:py-32">
           <h2 className="self-start text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
             Neatly Hotel
           </h2>
@@ -194,41 +230,79 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="service" className="flex">
+      <section
+        id="service"
+        className="mb-20 flex items-center justify-center"
+      >
+        <div className="absolute z-50 w-11/12 flex justify-between">
+          <button
+            className=""
+            onClick={() => imgSlider?.current?.slickPrev()}
+          >
+            <NextPrevBtn className="lg:h-14 lg:w-14 md:w-10 md:h-10 h-8 w-8 transition ease-in-out duration-200  hover:scale-90 rotate-180" />
+          </button>
+          <button
+            className=""
+            onClick={() => imgSlider?.current?.slickNext()}
+          >
+            <NextPrevBtn className="lg:h-14 lg:w-14 md:w-10 md:h-10 h-8 w-8 transition ease-in-out duration-200  hover:scale-90 rotate-0" />
+          </button>
+        </div>
         <div className="w-full">
-          <Slider {...settingsSlide}>
-            <div>
-              <Image className="" src={SuperiorGardenView} alt="Suite" />
+          <Slider ref={imgSlider} {...settings}>
+            <div className="relative h-[16rem] md:h-[20rem] lg:h-[24rem] xl:h-[34rem]">
+              <Image
+                className=""
+                layout="fill"
+                objectFit="cover"
+                src={SuperiorGardenView}
+                alt="Suite"
+              />
             </div>
-            <div>
+            <div className="relative h-[16rem] md:h-[20rem] lg:h-[24rem] xl:h-[34rem]">
               <Image
                 className=""
                 src={Superior}
                 alt="Suite"
-                height={1329.25}
+                layout="fill"
                 objectFit="cover"
               />
             </div>
-            <div>
+            <div className="relative h-[16rem] md:h-[20rem] lg:h-[24rem] xl:h-[34rem]">
               <Image
                 className=""
-                src={Hero}
+                src={Deluxe}
                 alt="Suite"
-                height={1279.5}
+                layout="fill"
                 objectFit="cover"
               />
             </div>
-            <div>
-              <Image className="" src={Suite} alt="Suite" />
+            <div className="relative h-[16rem] md:h-[20rem] lg:h-[24rem] xl:h-[34rem]">
+              <Image
+                className=""
+                src={PremierSeaView}
+                alt="Suite"
+                layout="fill"
+                objectFit="cover"
+              />
             </div>
-            <div>
-              <Image className="" src={PremierSeaView} alt="Suite" />
+            <div className="relative h-[16rem] md:h-[20rem] lg:h-[24rem] xl:h-[34rem]">
+              <Image
+                className=""
+                src={Supreme}
+                alt="Suite"
+                layout="fill"
+                objectFit="cover"
+              />
             </div>
-            <div>
-              <Image className="" src={Supreme} alt="Suite" />
-            </div>
-            <div>
-              <Image className="" src={Suite} alt="Suite" />
+            <div className="relative h-[16rem] md:h-[20rem] lg:h-[24rem] xl:h-[34rem]">
+              <Image
+                className=""
+                src={Suite}
+                alt="Suite"
+                layout="fill"
+                objectFit="cover"
+              />
             </div>
           </Slider>
         </div>
@@ -236,10 +310,10 @@ export default function Home() {
 
       <section id="rooms">
         <div className="flex flex-col items-center bg-[#465C50]">
-          <h2 className="my-16 border-4 border-double border-indigo-600 text-[2.175rem] text-white sm:my-20 sm:text-[3.5rem] md:my-24 xl:my-28 xl:text-7xl">
+          <h2 className="my-16 text-[2.175rem] text-white sm:my-20 sm:text-[3.5rem] md:my-24 xl:my-28 xl:text-7xl">
             Service & Facilities
           </h2>
-          <div className="mb-16 flex w-11/12 justify-evenly border-4 border-double border-indigo-600 sm:mb-20 md:mb-24 xl:mb-28">
+          <div className="mb-16 flex w-11/12 justify-evenly sm:mb-20 md:mb-24 xl:mb-28">
             <div className="flex flex-col items-center">
               <Spa className="h-10 w-10 invert md:h-12 md:w-12 lg:h-14 lg:w-14 xl:h-16 xl:w-16" />
               <p className="text-white max-lg:hidden lg:text-xs xl:text-sm">
@@ -287,7 +361,7 @@ export default function Home() {
       </section>
 
       <section className="sm:py-22 flex flex-col items-center py-14 md:py-28 lg:py-36 xl:py-40">
-        <h2 className="mb-10 border-4 border-double border-indigo-600 text-center text-4xl sm:mb-14 sm:text-5xl md:mb-20 md:text-6xl lg:mb-24 lg:text-7xl xl:mb-28 xl:text-8xl">
+        <h2 className="mb-10 text-center text-4xl sm:mb-14 sm:text-5xl md:mb-20 md:text-6xl lg:mb-24 lg:text-7xl xl:mb-28 xl:text-8xl">
           Rooms & Suits
         </h2>
 
@@ -403,14 +477,14 @@ export default function Home() {
       </section>
 
       <section className="flex flex-col items-center bg-[#E6EBE9]">
-        <div className="flex h-full w-11/12 flex-col items-center justify-evenly border-4 border-double border-indigo-600 lg:w-5/6">
-          <h2 className="my-10 border-4 border-double border-indigo-600 text-center text-4xl sm:my-14 sm:text-5xl md:my-20 md:text-6xl lg:my-24 lg:text-7xl xl:my-28 xl:text-8xl">
+        <div className="flex h-full w-11/12 flex-col items-center justify-evenly lg:w-5/6">
+          <h2 className="my-10 text-center text-4xl sm:my-14 sm:text-5xl md:my-20 md:text-6xl lg:my-24 lg:text-7xl xl:my-28 xl:text-8xl">
             Our Customer Says
           </h2>
           <div className="mb-10 w-full sm:mb-14 sm:text-5xl md:mb-20 md:text-6xl lg:mb-24 lg:text-7xl xl:mb-28">
             <Slider {...settingsComments}>
               <div>
-                <h3 className="border-4 border-double border-indigo-600 px-10 text-center max-sm:text-3xl lg:px-20">
+                <h3 className="px-10 text-center max-sm:text-3xl lg:px-20">
                   “lorem ipsum dolor sit amet minim mollit non deserunt ullamco
                   est sit aliqua dolor do amet sint, velit official consequat
                   duis enim velit mollit, exercitation minim amet consequat
@@ -418,7 +492,7 @@ export default function Home() {
                 </h3>
               </div>
               <div>
-                <h3 className="border-4 border-double border-indigo-600 px-10 text-center max-sm:text-3xl lg:px-20">
+                <h3 className="px-10 text-center max-sm:text-3xl lg:px-20">
                   “lorem ipsum dolor sit amet minim mollit non deserunt ullamco
                   est sit aliqua dolor do amet sint, velit official consequat
                   duis enim velit mollit, exercitation minim amet consequat

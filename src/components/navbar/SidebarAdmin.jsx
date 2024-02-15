@@ -11,7 +11,7 @@ const Sidebar = ({ setActive }) => {
   const sidebarItem = [
     {
       name: "Customer Booking",
-      href: "/admin/",
+      href: "/admin/booking",
       svg: "",
     },
     {
