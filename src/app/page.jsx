@@ -20,7 +20,7 @@ import Car from "/src/asset/icons/carbon_car";
 import Phone from "/src/asset/icons/bx_phone-call";
 import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 import ScrollToTopButton from "@/components/ui/scrollToTop";
-import NextPrevBtn from '@/asset/icons/next_button';
+import NextPrevBtn from "@/asset/icons/next_button";
 import {
   Select,
   SelectContent,
@@ -44,6 +44,7 @@ export default function Home() {
     from: new Date(),
     to: addDays(new Date(), 2),
   });
+  const { data: session } = useSession();
   // const [room, setRoom] = useState(1);
   // const [guest, setGuest] = useState(1);
   const router = useRouter();
@@ -63,7 +64,7 @@ export default function Home() {
     slidesToScroll: 4,
     autoplay: true,
     arrows: false,
-    autoplaySpeed:4000,
+    autoplaySpeed: 4000,
     initialSlide: 0,
     responsive: [
       {
@@ -72,24 +73,24 @@ export default function Home() {
           slidesToShow: 3,
           slidesToScroll: 3,
           infinite: true,
-        }
+        },
       },
       {
         breakpoint: 768,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
-          initialSlide: 2
-        }
+          initialSlide: 2,
+        },
       },
       {
         breakpoint: 480,
         settings: {
           slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }
-    ]
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   const settingsComments = {
@@ -230,22 +231,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section
-        id="service"
-        className="mb-20 flex items-center justify-center"
-      >
-        <div className="absolute z-50 w-11/12 flex justify-between">
-          <button
-            className=""
-            onClick={() => imgSlider?.current?.slickPrev()}
-          >
-            <NextPrevBtn className="lg:h-14 lg:w-14 md:w-10 md:h-10 h-8 w-8 transition ease-in-out duration-200  hover:scale-90 rotate-180" />
+      <section id="service" className="mb-20 flex items-center justify-center">
+        <div className="absolute z-50 flex w-11/12 justify-between">
+          <button className="" onClick={() => imgSlider?.current?.slickPrev()}>
+            <NextPrevBtn className="h-8 w-8 rotate-180 transition duration-200 ease-in-out hover:scale-90 md:h-10 md:w-10  lg:h-14 lg:w-14" />
           </button>
-          <button
-            className=""
-            onClick={() => imgSlider?.current?.slickNext()}
-          >
-            <NextPrevBtn className="lg:h-14 lg:w-14 md:w-10 md:h-10 h-8 w-8 transition ease-in-out duration-200  hover:scale-90 rotate-0" />
+          <button className="" onClick={() => imgSlider?.current?.slickNext()}>
+            <NextPrevBtn className="h-8 w-8 rotate-0 transition duration-200 ease-in-out hover:scale-90 md:h-10 md:w-10  lg:h-14 lg:w-14" />
           </button>
         </div>
         <div className="w-full">
