@@ -7,39 +7,26 @@ export async function GET(request) {
   const checked = keywords.replace(" ", " | ");
   console.log(checked);
 
-  if (!keywords) {
-    try {
-      const result = await prisma.room.findMany({});
-      return NextResponse.json({
-        message: "GET Methode success",
-        data: result,
-      });
-    } catch (e) {
-      console.log(e);
-      return NextResponse.json({ message: "error", error: e }, { status: 500 });
-    }
-  } else {
-    try {
-      const result = await prisma.room.findMany(
-        keywords
-          ? {
-              where: {
-                name: {
-                  startsWith: keywords,
-                  mode: "insensitive",
-                },
+  try {
+    const result = await prisma.room.findMany(
+      keywords
+        ? {
+            where: {
+              name: {
+                startsWith: keywords,
+                mode: "insensitive",
               },
-            }
-          : {},
-      );
-      return NextResponse.json({
-        message: "GET Methode success",
-        data: result,
-      });
-    } catch (e) {
-      console.log(e);
-      return NextResponse.json({ message: "error", error: e }, { status: 500 });
-    }
+            },
+          }
+        : {},
+    );
+    return NextResponse.json({
+      message: "GET Methode success",
+      data: result,
+    });
+  } catch (e) {
+    console.log(e);
+    return NextResponse.json({ message: "error", error: e }, { status: 500 });
   }
 }
 

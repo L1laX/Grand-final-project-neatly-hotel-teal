@@ -81,9 +81,7 @@ const RoomType = () => {
   };
   const getdata = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:3000/api/admin/room_prop?keywords=${search}`,
-      );
+      const res = await axios.get(`/api/admin/room_prop?keywords=${search}`);
       const data = res.data;
       setRows(data.data);
     } catch (e) {
