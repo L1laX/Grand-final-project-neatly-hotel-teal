@@ -202,9 +202,9 @@ const Register = () => {
             <h4 className="text-start md:mb-[50px] md:text-start">
               Basic Information
             </h4>
-            <div className="fullName-section relative flex flex-col gap-2 md:justify-center">
-              <label htmlFor="text-input" className="ml-1 text-gray-600">
 
+            <div className="fullName-section relative  flex w-fit flex-col gap-2 md:justify-center">
+              <label htmlFor="text-input" className="ml-1  text-gray-600">
                 full name
               </label>
               <Input
