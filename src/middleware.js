@@ -8,6 +8,7 @@ export async function middleware(request) {
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
+  console.log(token);
   const { pathname } = request.nextUrl;
   if (token && token.role === "user" && pathname.startsWith("/user")) {
     return res;
