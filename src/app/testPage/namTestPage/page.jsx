@@ -35,13 +35,6 @@ const NamTestPage = () => {
     console.log("onChange:", dateStr);
   };
   return (
-    // <Space direction="vertical">
-    //   <DatePicker
-    //     defaultValue={defaultValue}
-    //     locale={buddhistLocale}
-    //     onChange={onChange}
-    //   />
-    // </Space>
     <div>
       <DatePicker
         defaultValue={defaultValue}
