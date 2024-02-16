@@ -29,7 +29,7 @@ export default function RoomDetailById({ params: { room_id } }) {
     try {
       const images = await axios.get(`/api/room_detail/${room_id}`); // Fetch images from Prisma
       setCarouselImages(images.data.data);
-      console.log(images.data.data.roomGallery[0]);
+      console.log(images.data.data);
     } catch (error) {
       console.error("Error fetching carousel images:", error);
     }
@@ -46,23 +46,9 @@ export default function RoomDetailById({ params: { room_id } }) {
           Room Detail By Id No.{params.room_id}
         </p> */}
 
-        <div className="slide-top m-20  w-4/5  ">
+        <div className="slide-top m-20  ">
           <Carousel>
             <CarouselContent>
-              {/* {carouselImages.roomGallery?.length > 0
-                ? carouselImages.roomGallery.map((item, index) => (
-                    <CarouselItem className="basis-1/3" key={index}>
-                      <Image
-                        className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-                        src={item.image}
-                        alt="sample image"
-                        unoptimized
-                        width={600}
-                        height={400}
-                      />
-                    </CarouselItem>
-                  ))
-                : null} */}
               {carouselImages.roomGallery?.length > 0 &&
                 carouselImages.roomGallery.map((item, index) => (
                   <CarouselItem className="basis-1/3" key={index}>
@@ -121,26 +107,50 @@ export default function RoomDetailById({ params: { room_id } }) {
               <div className=" py-5">
                 <p className=" font-bold">Room Amenities</p>
                 <div className="flex flex-col justify-between gap-6 p-4 md:flex-row">
-                  <ul className="amenities-1 list-disc">
-                    <li className="bullet-text">Safe in Room</li>
-                    <li className="bullet-text">Air Conditioning</li>
-                    <li className="bullet-text">
-                      High speed internet connection
-                    </li>
-                    <li className="bullet-text">Hairdryer</li>
-                    <li className="bullet-text">Shower</li>
-                    <li className="bullet-text">Bathroom amenities</li>
-                    <li className="bullet-text">Lamp</li>
+                  <ul className="amenities-1 list-disc ">
+                    {carouselImages?.roomAmenity?.length &&
+                      carouselImages?.roomAmenity?.map((item, index, arr) => {
+                        if (index < arr.length / 2) {
+                          return (
+                            <li key={index} className="bullet-text">
+                              {item.name}
+                            </li>
+                          );
+                        } else {
+                          return null;
+                        }
+                      })}
+
+                    {/* <li className="bullet-text">Air Conditioning</li>
+<li className="bullet-text">
+High speed internet connection
+</li>
+<li className="bullet-text">Hairdryer</li>
+<li className="bullet-text">Shower</li>
+<li className="bullet-text">Bathroom amenities</li>
+<li className="bullet-text">Lamp</li> */}
                   </ul>
                   <ul className="amenities-2 list-disc">
-                    <li className="bullet-text">Minibar</li>
-                    <li className="bullet-text">Telephone</li>
-                    <li className="bullet-text">Ironing board</li>
-                    <li className="bullet-text">
-                      A floor only accessible via a guest room key
-                    </li>
-                    <li className="bullet-text">Alarm clock</li>
-                    <li className="bullet-text">Bathrobe</li>
+                    {carouselImages?.roomAmenity?.length &&
+                      carouselImages?.roomAmenity?.map((item, index, arr) => {
+                        if (index >= arr.length / 2) {
+                          return (
+                            <li key={index} className="bullet-text">
+                              {item.name}
+                            </li>
+                          );
+                        } else {
+                          return null;
+                        }
+                      })}
+                    {/* <li className="bullet-text">Minibar</li>
+<li className="bullet-text">Telephone</li>
+<li className="bullet-text">Ironing board</li>
+<li className="bullet-text">
+A floor only accessible via a guest room key
+</li>
+<li className="bullet-text">Alarm clock</li>
+<li className="bullet-text">Bathrobe</li> */}
                   </ul>
                 </div>
               </div>
@@ -154,52 +164,25 @@ export default function RoomDetailById({ params: { room_id } }) {
               <div className="random-room flex justify-center">
                 <div className="slide-random m-20 flex items-center justify-center">
                   <div className="  bg-slate-500">
-                    {carouselImages.length &&
-                      carouselImages.map((item, index) => (
-                        <Carousel>
-                          <CarouselContent className="flex items-center justify-center">
-                            <CarouselItem className="  relative basis-1/3">
+                    <Carousel>
+                      <CarouselContent>
+                        {carouselImages.roomGallery?.length > 0 &&
+                          carouselImages.roomGallery.map((item, index) => (
+                            <CarouselItem className="basis-1/3" key={index}>
                               <Image
                                 className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-                                src={BG}
+                                src={item.image}
+                                alt="sample image"
+                                unoptimized
+                                width={1000}
+                                height={1000}
                               />
-                              <div className="absolute left-10 top-60 flex h-full w-full flex-col items-start ">
-                                <h5
-                                  key={index}
-                                  className="text-2xl font-bold text-white"
-                                >
-                                  {item.name}
-                                </h5>
-                                <h6 className="text-base text-white">
-                                  Explore Room →
-                                </h6>
-                              </div>
                             </CarouselItem>
-
-                            <CarouselItem className="  relative basis-1/3">
-                              <Image
-                                className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-                                src={BG}
-                                //change url pic
-                              />
-                              <div className="absolute left-10 top-60 flex h-full w-full flex-col items-start ">
-                                <h5
-                                  key={index}
-                                  className="text-2xl font-bold text-white"
-                                >
-                                  {carouselImages.name}
-                                </h5>
-                                <h6 className="text-base text-white">
-                                  Explore Room →
-                                </h6>
-                              </div>
-                            </CarouselItem>
-                          </CarouselContent>
-
-                          <CarouselNext />
-                          <CarouselPrevious />
-                        </Carousel>
-                      ))}
+                          ))}
+                      </CarouselContent>
+                      <CarouselNext />
+                      <CarouselPrevious />
+                    </Carousel>
                   </div>
                 </div>
               </div>

@@ -5,7 +5,6 @@ import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Input } from "@/components/ui/input";
 
 export default function DatePickerComponent({ getdateOfBirth, value }) {
   //   const [date, setDate] = React.useState(dayjs(valueDate));
@@ -24,7 +23,37 @@ export default function DatePickerComponent({ getdateOfBirth, value }) {
           onChange={(newValue) => {
             getdateOfBirth(newValue);
           }}
+          InputLabelProps={{
+            sx: { color: "red", "&.Mui-focused": { color: "green" } },
+          }}
           slotProps={{
+            layout: {
+              sx: {
+                ".MuiPickersMonth-monthButton": {
+                  color: "#f8bbd0",
+                  borderRadius: 2,
+                  borderWidth: 1,
+                  borderColor: "#e91e63",
+                  border: "1px solid",
+                  backgroundColor: "#880e4f",
+                },
+              },
+            },
+            textField: {
+              sx: {
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": {
+                    borderColor: "#e76b39",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#e76b39",
+                  },
+                  "& label": {
+                    borderColor: "#e76b39",
+                  },
+                },
+              },
+            },
             day: {
               sx: {
                 "&.MuiPickersDay-root.Mui-selected": {

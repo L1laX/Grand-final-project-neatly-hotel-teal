@@ -122,7 +122,9 @@ export default function RoomDetail({ searchParams }) {
           <RoomCard
             key={index}
             roomitem={item.id}
+
             roomName={item.room.name}
+
             handleBooking={item.id}
             roomAvailable={item.availableRoom}
             roomGuests={item.room.guests}
