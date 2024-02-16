@@ -118,12 +118,14 @@ export default function RoomDetail({ searchParams }) {
         </div>
       </div>
       <div className="divide-y-2 divide-gray-300 lg:m-20">
-        {rooms.map((item, index) => (
+        {rooms.length && rooms?.map((item, index) => (
           <RoomCard
             key={index}
             roomitem={item.id}
-            roomname={item.name}
+            roomName={item.room.name}
             handleBooking={item.id}
+            roomAvailable={item.availableRoom}
+            roomGuests={item.room.guests}
           />
         ))}
       </div>

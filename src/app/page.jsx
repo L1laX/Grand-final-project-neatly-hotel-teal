@@ -232,29 +232,22 @@ export default function Home() {
         </div>
       </section>
 
-      <section
-        id="service"
-        className="mb-20 flex items-center justify-center"
-      >
-        <div className="absolute z-50 w-11/12 flex justify-between">
-          <button
-            className=""
-            onClick={() => imgSlider?.current?.slickPrev()}
-          >
-            <NextPrevBtn className="lg:h-14 lg:w-14 md:w-10 md:h-10 h-8 w-8 transition ease-in-out duration-200  hover:scale-90 rotate-180" />
+      <section id="service" className="mb-20 flex items-center relative">
+        <div className="absolute z-50 lg:left-20 sm:left-14 left-3 top-1/2 transform -translate-y-1/2">
+          <button className="" onClick={() => imgSlider?.current?.slickPrev()}>
+            <NextPrevBtn className="h-8 w-8 rotate-180 transition duration-200 ease-in-out hover:scale-90 md:h-10 md:w-10  lg:h-14 lg:w-14" />
           </button>
-          <button
-            className=""
-            onClick={() => imgSlider?.current?.slickNext()}
-          >
-            <NextPrevBtn className="lg:h-14 lg:w-14 md:w-10 md:h-10 h-8 w-8 transition ease-in-out duration-200  hover:scale-90 rotate-0" />
+        </div>
+        <div className="absolute z-50 lg:right-20 sm:right-14 right-3 top-1/2 transform -translate-y-1/2">
+          <button className="" onClick={() => imgSlider?.current?.slickNext()}>
+            <NextPrevBtn className="h-8 w-8 rotate-0 transition duration-200 ease-in-out hover:scale-90 md:h-10 md:w-10  lg:h-14 lg:w-14" />
           </button>
         </div>
         <div className="w-full">
           <Slider ref={imgSlider} {...settings}>
             <div className="relative h-[16rem] md:h-[20rem] lg:h-[24rem] xl:h-[34rem]">
               <Image
-                className=""
+                className="cursor-grab active:cursor-grabbing"
                 layout="fill"
                 objectFit="cover"
                 src={SuperiorGardenView}
@@ -263,7 +256,7 @@ export default function Home() {
             </div>
             <div className="relative h-[16rem] md:h-[20rem] lg:h-[24rem] xl:h-[34rem]">
               <Image
-                className=""
+                className="cursor-grab active:cursor-grabbing"
                 src={Superior}
                 alt="Suite"
                 layout="fill"
@@ -272,7 +265,7 @@ export default function Home() {
             </div>
             <div className="relative h-[16rem] md:h-[20rem] lg:h-[24rem] xl:h-[34rem]">
               <Image
-                className=""
+                className="cursor-grab active:cursor-grabbing"
                 src={Deluxe}
                 alt="Suite"
                 layout="fill"
@@ -281,7 +274,7 @@ export default function Home() {
             </div>
             <div className="relative h-[16rem] md:h-[20rem] lg:h-[24rem] xl:h-[34rem]">
               <Image
-                className=""
+                className="cursor-grab active:cursor-grabbing"
                 src={PremierSeaView}
                 alt="Suite"
                 layout="fill"
@@ -290,7 +283,7 @@ export default function Home() {
             </div>
             <div className="relative h-[16rem] md:h-[20rem] lg:h-[24rem] xl:h-[34rem]">
               <Image
-                className=""
+                className="cursor-grab active:cursor-grabbing"
                 src={Supreme}
                 alt="Suite"
                 layout="fill"
@@ -299,7 +292,7 @@ export default function Home() {
             </div>
             <div className="relative h-[16rem] md:h-[20rem] lg:h-[24rem] xl:h-[34rem]">
               <Image
-                className=""
+                className="cursor-grab active:cursor-grabbing"
                 src={Suite}
                 alt="Suite"
                 layout="fill"
