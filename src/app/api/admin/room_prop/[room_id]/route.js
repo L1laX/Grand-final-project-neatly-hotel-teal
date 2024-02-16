@@ -5,7 +5,7 @@ export async function GET(request, { params: { room_id } }) {
   try {
     const result = await prisma.room.findUnique({
       where: {
-        id: +room_id,
+        id: room_id,
       },
       include: {
         roomAmenity: true,

@@ -20,7 +20,7 @@ import Car from "/src/asset/icons/carbon_car";
 import Phone from "/src/asset/icons/bx_phone-call";
 import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 import ScrollToTopButton from "@/components/ui/scrollToTop";
-import NextPrevBtn from '@/asset/icons/next_button';
+import NextPrevBtn from "@/asset/icons/next_button";
 import {
   Select,
   SelectContent,
@@ -63,7 +63,7 @@ export default function Home() {
     slidesToScroll: 4,
     autoplay: true,
     arrows: false,
-    autoplaySpeed:4000,
+    autoplaySpeed: 4000,
     initialSlide: 0,
     responsive: [
       {
@@ -72,24 +72,24 @@ export default function Home() {
           slidesToShow: 3,
           slidesToScroll: 3,
           infinite: true,
-        }
+        },
       },
       {
         breakpoint: 768,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
-          initialSlide: 2
-        }
+          initialSlide: 2,
+        },
       },
       {
         breakpoint: 480,
         settings: {
           slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }
-    ]
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   const settingsComments = {
@@ -229,7 +229,6 @@ export default function Home() {
           </p>
         </div>
       </section>
-
       <section id="service" className="mb-20 flex items-center relative">
         <div className="absolute z-50 lg:left-20 sm:left-14 left-3 top-1/2 transform -translate-y-1/2">
           <button className="" onClick={() => imgSlider?.current?.slickPrev()}>
