@@ -14,20 +14,21 @@ model user {
   password        String
   role            String
   image           String?
-  created_at      DateTime          @default(now())
-  updated_at      DateTime          @updatedAt
-  id              Int               @id @unique @default(autoincrement())
+  created_at      DateTime          @default(now()) @db.Timestamptz(3)
+  updated_at      DateTime          @updatedAt @db.Timestamptz(3)
+  id              String            @id @unique @default(uuid())
   customerBooking customerBooking[]
   userProfile     userProfile?
 }
 
 model userProfile {
-  id          Int      @id @unique @default(autoincrement())
-  user_id     Int      @unique
+  id          String   @id @unique @default(uuid())
+  user_id     String   @unique
   fullName    String
   id_number   String   @unique
-  dateOfBirth DateTime
+  dateOfBirth DateTime @db.Timestamptz(3)
   country     String
+  paymeny_id  String?
   user        user     @relation(fields: [user_id], references: [id])
 }
 
@@ -36,70 +37,69 @@ model room {
   size            String
   bedType         String
   status          String
-  checkInDate     DateTime?
-  checkOutDate    DateTime?
+  checkInDate     DateTime?         @db.Timestamptz(3)
+  checkOutDate    DateTime?         @db.Timestamptz(3)
   guests          Int
   description     String
   roomMainImage   String
   pricePerNight   Int
   promotionPrice  Int?
-  id              Int               @id @default(autoincrement())
+  id              String            @id @unique @default(uuid())
   customerBooking customerBooking[]
   roomAmenity     roomAmenity[]
   roomGallery     roomGallery[]
 }
 
-
 model roomAmenity {
-  id      Int    @id @default(autoincrement())
-  room_id Int
+  id      String @id @unique @default(uuid())
+  room_id String
   name    String
   room    room   @relation(fields: [room_id], references: [id], onDelete: Cascade)
 }
+
 model roomGallery {
-  id      Int    @id @default(autoincrement())
-  room_id Int
+  id      Int    @id @unique @default(autoincrement())
+  room_id String
   image   String
   room    room   @relation(fields: [room_id], references: [id], onDelete: Cascade)
 }
 
 model customerBooking {
-  id                  Int              @id @unique @default(autoincrement())
-  user_id             Int
+  id                  String           @id @unique @default(uuid())
+  user_id             String
   customerName        String
   customerEmail       String
   customer_id_number  String
   customerCountry     String
-  customerDateOfBirth DateTime
+  customerDateOfBirth DateTime         @db.Timestamptz(3)
   paymentType         String
   paymentStatus       String
   discount            Int?
   guestCount          Int?
   totalPrice          Int?
   additionalRequest   String?
-  room_id             Int?
-  checkInDate         DateTime?
-  checkOutDate        DateTime?
-  created_at          DateTime         @default(now())
-  last_updated_at     DateTime         @updatedAt
+  room_id             String?
+  checkInDate         DateTime?        @db.Timestamptz(3)
+  checkOutDate        DateTime?        @db.Timestamptz(3)
+  created_at          DateTime         @default(now()) @db.Timestamptz(3)
+  last_updated_at     DateTime         @updatedAt @db.Timestamptz(3)
   promotionCode       String?
   order_id            String?
-  session_id          String?
   bookingRequest      bookingRequest[]
   room                room?            @relation(fields: [room_id], references: [id])
   user                user             @relation(fields: [user_id], references: [id])
 }
 
 model bookingRequest {
-  id              Int             @id @unique @default(autoincrement())
-  booking_id      Int
+  id              String          @id @unique @default(uuid())
+  booking_id      String
   name            String
   price           Int
   customerBooking customerBooking @relation(fields: [booking_id], references: [id], onDelete: Cascade)
 }
 
 model hotel_info {
-  id               Int    @id @unique @default(autoincrement())
+  id               String @id @unique @default(uuid())
   hotelName        String
   image            String
   hotelDescription String
@@ -108,5 +108,5 @@ model hotel_info {
 model promotion {
   promotionCode String
   discount      Int
-  id            Int    @id @unique @default(autoincrement())
+  id            String @id @unique @default(uuid())
 }

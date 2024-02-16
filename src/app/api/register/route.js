@@ -69,7 +69,9 @@ export async function POST(req) {
             create: {
               fullName: fullName,
               id_number: id_number,
-              dateOfBirth: new Date(dateOfBirth).toISOString(),
+              dateOfBirth: new Date(
+                new Date(dateOfBirth).setUTCHours(0, 0, 0, 0),
+              ).toISOString(),
               country: country,
             },
           },
