@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET(request, { params: { user_id } }) {
   try {
     const userProfileData = await prisma.userProfile.findUnique({
-      where: { user_id: +user_id },
+      where: { user_id: user_id },
       include: { user: true },
     });
 
@@ -49,7 +49,7 @@ export async function PUT(request, { params: { user_id } }) {
     });
     console.log(isEmailExist);
 
-    if (isEmailExist && isEmailExist.id !== +user_id) {
+    if (isEmailExist && isEmailExist.id !== user_id) {
       return NextResponse.json(
         { error: "Email already exist" },
         { status: 404 },
@@ -57,13 +57,13 @@ export async function PUT(request, { params: { user_id } }) {
     }
 
     const updatedUser = await prisma.user.update({
-      where: { id: +user_id },
+      where: { id: user_id },
       data: {
         email: email,
         image: image,
         userProfile: {
           update: {
-            where: { user_id: +user_id },
+            where: { user_id: user_id },
             data: {
               fullName,
               idNumber,
@@ -83,8 +83,6 @@ export async function PUT(request, { params: { user_id } }) {
       },
       { status: 200 },
     );
-
-
   } catch (error) {
     console.log("Update user profile failed...");
     return NextResponse.json(
@@ -95,4 +93,3 @@ export async function PUT(request, { params: { user_id } }) {
     );
   }
 }
-
