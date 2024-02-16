@@ -27,15 +27,16 @@ import {
 
 export const RoomCard = ({
   roomitem,
-  roomname,
+  roomName,
   roomimage,
-  roomguest,
+  roomGuests,
   roomdesc,
   roomprice,
   roomdisc,
   roombedtype,
   roomsize,
   handleBooking,
+  roomAvailable
 }) => {
   // const handleBooking = () => {
   //   alert("rediect to Booking Page: /booking/id");
@@ -78,18 +79,19 @@ export const RoomCard = ({
           </AlertDialog>
 
           <section className="room-detail flex flex-col lg:justify-between">
-            <div className="lg:flex">
+            <div className="lg:flex flex-col">
               <div className="lg:w-1/2">
                 <Link href={{ pathname: `/room_detail/${roomitem}` }}>
-                  <h4 className=" cursor-pointer">{roomname}</h4>
+                  <h1 className=" cursor-pointer">{roomName}</h1>
                 </Link>
                 <p className="font-sans text-base font-normal text-[#646D89]">
-                  {roomguest} Guests | {roombedtype} | {roomsize}
+                  {roomGuests} Guests per room | {roombedtype} | {roomsize}
                 </p>
                 <p className="font-sans text-base font-normal text-[#646D89]">
                   {roomdesc}
                 </p>
               </div>
+              <h1>availableRoom = {roomAvailable}</h1>
               <div className=" pt-5 lg:flex lg:w-1/2 lg:flex-col lg:items-end lg:pt-0">
                 <p className="text-left font-sans text-base font-normal text-[#646D89] line-through">
                   THB {roomdisc}
@@ -149,7 +151,7 @@ export const RoomCard = ({
                       <div className="content-detail divide-y-2 divide-gray-300 p-4">
                         <div className=" py-5">
                           <p className="font-sans text-base font-normal text-[#646D89]">
-                            {roomguest} Guests | {roombedtype} | {roomsize}
+                            {roomGuests} Guests | {roombedtype} | {roomsize}
                           </p>
                           <p className="font-sans text-base font-normal text-[#646D89]">
                             {roomdesc}
