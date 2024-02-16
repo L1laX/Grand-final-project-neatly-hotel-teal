@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -55,20 +53,85 @@ const Dropdown = ({ status, row, onStatusUpdate }) => {
     setDropdownVisible(false);
   };
 
-  const filteredItems = [
-    { value: "vacant", label: "Vacant" },
-    { value: "occupied", label: "Occupied" },
-    { value: "assignClean", label: "Assign Clean" },
-    { value: "assignDirty", label: "Assign Dirty" },
-    { value: "vacantClean", label: " Vacant Clean" },
-    { value: "vacantCleanInspected", label: "Vacant Clean Inspected" },
-    { value: "vacantCleanPick Up", label: "Vacant Clean Pick Up" },
-    { value: "occupiedClean", label: "Occupied Clean" },
-    { value: "occupiedCleanInspected", label: "Occupied Clean Inspected" },
-    { value: "occupiedDirty", label: "Occupied Dirty" },
-    { value: "outOfOrder", label: "Out of Order" },
-    { value: "outOfService", label: "Out of Service" },
-    { value: "outOfInventory", label: "Out of Inventory" },
+  const statusItems = [
+    {
+      value: "vacant",
+      label: "Vacant",
+      style:
+        "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap  bg-slate-100",
+    },
+    {
+      value: "occupied",
+      label: "Occupied",
+      style:
+        "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-blue-800 whitespace-nowrap bg-indigo-100 rounded",
+    },
+    {
+      value: "assignClean",
+      label: "Assign Clean",
+      style:
+        "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap bg-cyan-50 rounded",
+    },
+    {
+      value: "assignDirty",
+      label: "Assign Dirty",
+      style:
+        "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-red-800 whitespace-nowrap bg-rose-100 rounded",
+    },
+    {
+      value: "vacantClean",
+      label: "Vacant Clean",
+      style:
+        "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap bg-cyan-50 rounded",
+    },
+    {
+      value: "vacantCleanInspected",
+      label: "Vacant Clean Inspected",
+      style:
+        "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-yellow-800 whitespace-nowrap bg-yellow-50 rounded",
+    },
+    {
+      value: "vacantCleanPickUp",
+      label: "Vacant Clean Pick Up",
+      style:
+        "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap bg-cyan-50 rounded",
+    },
+    {
+      value: "occupiedClean",
+      label: "Occupied Clean",
+      style:
+        "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-blue-800 whitespace-nowrap bg-indigo-100 rounded",
+    },
+    {
+      value: "occupiedCleanInspected",
+      label: "Occupied Clean Inspected",
+      style:
+        "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-yellow-800 whitespace-nowrap bg-yellow-50 rounded",
+    },
+    {
+      value: "occupiedDirty",
+      label: "Occupied Dirty",
+      style:
+        "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-red-800 whitespace-nowrap bg-rose-100 rounded",
+    },
+    {
+      value: "outOfOrder",
+      label: "Out of Order",
+      style:
+        "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-gray-500 whitespace-nowrap rounded bg-slate-100",
+    },
+    {
+      value: "outOfService",
+      label: "Out of Service",
+      style:
+        "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-gray-500 whitespace-nowrap rounded bg-slate-100",
+    },
+    {
+      value: "outOfInventory",
+      label: "Out of Inventory",
+      style:
+        "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-gray-500 whitespace-nowrap rounded bg-slate-100",
+    },
   ].filter((item) =>
     item.label.toLowerCase().includes(searchKeyword.toLowerCase()),
   );
@@ -103,15 +166,21 @@ const Dropdown = ({ status, row, onStatusUpdate }) => {
               className="mb-3 cursor-text rounded border p-2 text-sm"
             />
             <ul className="space-y-2 text-sm">
-              {filteredItems.map((item) => (
+              {statusItems.map((item) => (
                 <li
                   key={item.value}
-                  className={`flex cursor-pointer items-center ${
+                  className={`cursor-pointer items-center ${
                     selectedItem === item.value ? "bg-gray-200" : ""
                   }`}
                   onClick={() => handleStatusUpdate(item.label)}
                 >
-                  <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                  <label
+                    className={`ml-2 font-medium ${
+                      item.style
+                        ? item.style
+                        : "text-gray-900 dark:text-gray-100"
+                    }`}
+                  >
                     {item.label}
                   </label>
                 </li>
