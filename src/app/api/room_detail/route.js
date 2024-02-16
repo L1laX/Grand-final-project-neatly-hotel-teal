@@ -69,44 +69,92 @@ export async function GET(req, res) {
 
 
 
-  // checkin.setUTCHours(23, 59, 59, 999); 
-  const allRooms = await prisma.customerBooking.findMany({
-    include: {
-      room: true,
-    },
-  });
+  // const allRooms = await prisma.customerBooking.findMany({
+  //   include: {
+  //     room: true,
+  //   },
+  // });
 
-  allRooms.forEach((item)=>{
+  // allRooms.forEach((item)=>{
+  //   item.checkInDate.setUTCHours(0, 0, 0, 0); 
+  //   item.checkOutDate.setUTCHours(23, 59, 59, 999); 
+  // })
+
+  // const bookedRoomList = allRooms.filter((item)=>{
+  //   return item.checkInDate>new Date().setUTCHours(0, 0, 0, 0) && item.checkInDate <= checkin && item.checkOutDate >= checkout
+  // })
+
+  // const uniqueRoom = allRooms.filter((available, index) => {
+  //   return index === allRooms.findIndex((duplicate) => available.room_id === duplicate.room_id);
+  // });
+
+  // const availableRoom =  uniqueRoom.filter(room => !bookedRoomList.some(bookedRoom => bookedRoom.room_id === room.room_id));//from chat gpt
+
+  //   //max room & max guest โดยการคำนวนห้องที่ว่าง
+  // const maxCapacity = availableRoom.reduce((acc, cur) => {
+  //   if (!acc[cur.room.name]) {
+  //     acc[cur.room.name] = { ...cur, availableRoom: 0, availableGuest: 0, room_id_list:[] };
+  //   }
+  //   acc[cur.room.name].availableRoom+=1;
+  //   acc[cur.room.name].availableGuest+=cur.room.guests;
+  //   acc[cur.room.name].room_id_list=[...acc[cur.room.name].room_id_list,{room_id:cur.room.id}];
+  //   return acc;
+  // }, {});
+
+  //   const arrMaxCapacity = Object.values(maxCapacity);
+
+  // //ห้องที่จะจองต้องน้อยกว่าหรือเท่ากับห้องที่ว่าง คนเข้าพักต้องน้อยกว่า หรือเท่ากับจำนวนห้อง*availableGuest
+  // const data = arrMaxCapacity.filter((item)=>room<=item.availableRoom&&guest<=room*item.room.guests)
+  // //const data = arrMaxCapacity.filter((item)=>room<=item.availableRoom&&guest<=room*(item.availableGuest/item.availableRoom))
+
+
+  
+
+  // checkin.setUTCHours(23, 59, 59, 999);
+  const allRooms = await prisma.room.findMany();
+
+  const allBookingRooms = await prisma.customerBooking.findMany();
+
+  allBookingRooms.forEach((item)=>{
     item.checkInDate.setUTCHours(0, 0, 0, 0); 
     item.checkOutDate.setUTCHours(23, 59, 59, 999); 
   })
 
-  const bookedRoomList = allRooms.filter((item)=>{
+  const bookedRoomList = allBookingRooms.filter((item)=>{
     return item.checkInDate>new Date().setUTCHours(0, 0, 0, 0) && item.checkInDate <= checkin && item.checkOutDate >= checkout
   })
 
-  const uniqueRoom = allRooms.filter((available, index) => {
-    return index === allRooms.findIndex((duplicate) => available.room_id === duplicate.room_id);
-  });
+  // const uniqueRoom = allBookingRooms.filter((available, index) => {
+  //   return index === allBookingRooms.findIndex((duplicate) => available.room_id === duplicate.room_id);
+  // });
 
-  const availableRoom =  uniqueRoom.filter(room => !bookedRoomList.some(bookedRoom => bookedRoom.room_id === room.room_id));//from chat gpt
+  //fillter out booked rooms
+  // const availableRoom =  allRooms.filter((room )=> !bookedRoomList.some((bookedRoom) => bookedRoom.room_id === room.id));//from chat gpt
+  const availableRoom = allRooms.reduce((acc, cur) => {
+    const isBooked = bookedRoomList.filter(bookedRoom => bookedRoom.room_id === cur.id);
+    if (isBooked.length === 0) {
+        acc.push(cur);
+    }
+    return acc;
+}, []);
+
 
     //max room & max guest โดยการคำนวนห้องที่ว่าง
   const maxCapacity = availableRoom.reduce((acc, cur) => {
-    if (!acc[cur.room.name]) {
-      acc[cur.room.name] = { ...cur, availableRoom: 0, availableGuest: 0, room_id_list:[] };
+    if (!acc[cur.name]) {
+      acc[cur.name] = { ...cur, availableRoom: 0, availableGuest: 0, room_id_list:[] };
     }
-    acc[cur.room.name].availableRoom+=1;
-    acc[cur.room.name].availableGuest+=cur.room.guests;
-    acc[cur.room.name].room_id_list=[...acc[cur.room.name].room_id_list,{room_id:cur.room.id}];
+    acc[cur.name].availableRoom+=1;
+    acc[cur.name].availableGuest+=cur.guests;
+    acc[cur.name].room_id_list=[...acc[cur.name].room_id_list,{room_id:cur.id}];
     return acc;
   }, {});
 
-    const arrMaxCapacity = Object.values(maxCapacity);
+  const arrMaxCapacity = Object.values(maxCapacity);
 
   //ห้องที่จะจองต้องน้อยกว่าหรือเท่ากับห้องที่ว่าง คนเข้าพักต้องน้อยกว่า หรือเท่ากับจำนวนห้อง*availableGuest
-  const data = arrMaxCapacity.filter((item)=>room<=item.availableRoom&&guest<=room*item.room.guests)
-  //const data = arrMaxCapacity.filter((item)=>room<=item.availableRoom&&guest<=room*(item.availableGuest/item.availableRoom))
+  const data = arrMaxCapacity.filter((item)=>room<=item.availableRoom&&guest<=room*item.guests)
+
 
 
   // //เช่นroom id 1 อาจจะออกหลายรอบเลยต้องการให้เหลือแค่อันเดียว
@@ -213,9 +261,9 @@ export async function GET(req, res) {
   // console.log(req)
   console.log(checkin);
   console.log(checkout);
-  console.log(allRooms[1].checkInDate);
-  console.log(allRooms[1].checkOutDate);
-  console.log(allRooms[1].checkInDate<checkin);
+  // console.log(allRooms[1].checkInDate);
+  // console.log(allRooms[1].checkOutDate);
+  // console.log(allRooms[1].checkInDate<checkin);
 
   console.log("room:",room);
   console.log("guest:",guest);
