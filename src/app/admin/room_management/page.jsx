@@ -12,6 +12,8 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Dropdown from "@/components/navbar/StatusDropdown";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const RoomTableRow = ({ row, columns, onStatusUpdate }) => (
   <TableRow
@@ -52,12 +54,22 @@ const RoomManagement = () => {
 
   const fetchData = async () => {
     try {
+      toast.info("Fetching Room Data...", {
+        position: "top-center",
+        autoClose: false,
+      });
+
       const response = await axios.get("/api/admin/room_management");
       const data = response.data;
       setRows(data.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
+      toast.error("Failed to fetch Room Data. Please try again later.", {
+        position: "top-center",
+      });
+    } finally {
+      toast.dismiss();
     }
   };
 
@@ -67,11 +79,21 @@ const RoomManagement = () => {
 
   const handleStatusUpdate = async (roomId, newStatus) => {
     try {
+      toast.info("Updating Room Status...", {
+        position: "top-center",
+        autoClose: false,
+      });
+
       console.log("Room status updated successfully");
 
       window.location.reload();
     } catch (error) {
       console.error("Error updating room status:", error);
+      toast.error("Failed to update Room Status. Please try again later.", {
+        position: "top-center",
+      });
+    } finally {
+      toast.dismiss();
     }
   };
 
@@ -180,6 +202,7 @@ const RoomManagement = () => {
                           key={row.id}
                           row={row}
                           columns={columns}
+                          onStatusUpdate={handleStatusUpdate}
                         />
                       ))
                   )}
@@ -198,6 +221,7 @@ const RoomManagement = () => {
           </Paper>
         </div>
       </div>
+      <ToastContainer position="top-center" />
     </div>
   );
 };

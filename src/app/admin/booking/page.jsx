@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios"; // Import Axios
+import axios from "axios";
 import Sidebar from "@/components/navbar/SidebarAdmin.jsx";
 import NavBarAdmin from "@/components/navbar/NavbarAdmin.jsx";
 import Paper from "@mui/material/Paper";
@@ -12,6 +12,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function CustomerBooking() {
   const [search, setSearch] = useState("");
@@ -19,23 +21,30 @@ function CustomerBooking() {
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [loading, setLoading] = useState(true);
+
+  const fetchData = async () => {
+    try {
+      toast.info("Fetching data...", {
+        position: "top-center",
+        autoClose: false,
+      });
+
+      const response = await axios.get(
+        `/api/admin/customer_booking?keywords=${search}`,
+      );
+
+      const data = response.data;
+      setRows(data.data);
+      toast.dismiss();
+    } catch (error) {
+      console.error("Error fetching data from API:", error.message);
+      toast.error("Failed to fetch data. Please try again later.", {
+        position: "bottom-center",
+      });
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `/api/admin/customer_booking?keywords=${search}`,
-        );
-        const data = response.data;
-
-        setRows(data.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data from API:", error.message);
-      }
-    };
-
     fetchData();
   }, [search]);
 
@@ -98,10 +107,10 @@ function CustomerBooking() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {loading ? (
+                  {rows.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={columns.length} align="center">
-                        Loading...
+                        No data available
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -148,6 +157,7 @@ function CustomerBooking() {
           </Paper>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }
