@@ -70,8 +70,8 @@ export const RoomCard = ({
                 </AlertDialogTitle>
               </AlertDialogHeader>
               <AlertDialogDescription>
-                <div className="content mt-5 p-4 md:mx-20">
-                  <Image src={BG} width={1080} height={920} />
+                <div className="content mt-5 h-full w-full p-4 md:mx-20">
+                  <Image src={roomimage} width={1080} height={920} />
                 </div>
               </AlertDialogDescription>
             </AlertDialogContent>

@@ -1,21 +1,16 @@
 "use client";
 import React, { useState } from "react";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
+import Modal from "@/components/common/PopupModal";
 
 const Page = () => {
   const [showModal, setShowModal] = useState(false);
-  console.log(showModal);
 
   const handleConfirmChangeDate = () => {
-    console.log(handleConfirmChangeDate);
     setShowModal(true);
   };
 
   const handleCancel = () => {
-    setShowModal(false);
-  };
-
-  const handleCancel1 = () => {
     setShowModal(false);
   };
 
@@ -39,7 +34,7 @@ const Page = () => {
                 <div className="h-[42px] w-[314px] text-[24px]">
                   Superrior Graden View
                 </div>
-                <div className="h-[24px] w-[229px] text-[16px]">
+                <div className="h-[24px] w-[229px] text-right text-[16px]">
                   Booking date: Tue, 16 Oct
                 </div>
               </div>
@@ -72,30 +67,25 @@ const Page = () => {
             cancel
           </button>
           {/* Add onClick event handler */}
-          <PrimaryBtn
-            btnName="Confirm Change Date"
+
+          <button
+            className="  btn-primary mr-4"
             onClick={handleConfirmChangeDate}
-            value={showModal}
-          />
+          >
+            Confirm Change Date
+          </button>
         </div>
       </div>
       {/* Popup */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="rounded-md bg-white p-8">
-            <p className="mb-4 text-xl">
-              Are you sure you want to change the date?
-            </p>
-            <div className="flex justify-end">
-              <button className="btn-secondary mr-4" onClick={handleCancel}>
-                Cancel
-              </button>
-              {/* Use handleCancel for both buttons */}
-              <PrimaryBtn btnName="Confirm" onClick={handleCancel1} />
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal
+        showModal={showModal}
+        handleCancel={handleCancel}
+        handleConfirm={handleCancel}
+        modalTitle="Change Date "
+        modalContent="Are you sure you want to change your check-in and check-out date?"
+        cancelButtonText="Cancle"
+        confirmButtonText="Confirm"
+      />
     </div>
   );
 };
