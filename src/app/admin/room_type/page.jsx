@@ -81,9 +81,7 @@ const RoomType = () => {
         position: "top-center",
         autoClose: false,
       });
-      const res = await axios.get(
-        `/api/admin/room_prop?keywords=${search}`,
-      );
+      const res = await axios.get(`/api/admin/room_prop?keywords=${search}`);
       const data = res.data;
       setRows(data.data);
     } catch (e) {

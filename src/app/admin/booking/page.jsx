@@ -132,7 +132,7 @@ function CustomerBooking() {
                             <TableCell key={column.id} align={column.align}>
                               {column.id === "checkInDate" ||
                               column.id === "checkOutDate"
-                                ? new Date(row[column.id]).toLocaleString()
+                                ? new Date(row[column.id]).toLocaleDateString() // Display date without time
                                 : column.id === "room.name" ||
                                     column.id === "room.bedType"
                                   ? row.room[column.id.split(".")[1]]

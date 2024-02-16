@@ -39,11 +39,105 @@ const RoomTableRow = ({ row, columns, onStatusUpdate }) => (
   </TableRow>
 );
 
-const StatusDropdownCell = ({ status, row, onStatusUpdate }) => (
-  <TableCell align="center">
-    <Dropdown status={status} row={row} onStatusUpdate={onStatusUpdate} />
-  </TableCell>
-);
+const statusItems = [
+  {
+    value: "vacant",
+    label: "Vacant",
+    style:
+      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap  bg-slate-100",
+  },
+  {
+    value: "occupied",
+    label: "Occupied",
+    style:
+      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-blue-800 whitespace-nowrap bg-indigo-100 rounded",
+  },
+  {
+    value: "assignClean",
+    label: "Assign Clean",
+    style:
+      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap bg-cyan-50 rounded",
+  },
+  {
+    value: "assignDirty",
+    label: "Assign Dirty",
+    style:
+      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-red-800 whitespace-nowrap bg-rose-100 rounded",
+  },
+  {
+    value: "vacantClean",
+    label: "Vacant Clean",
+    style:
+      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap bg-cyan-50 rounded",
+  },
+  {
+    value: "vacantCleanInspected",
+    label: "Vacant Clean Inspected",
+    style:
+      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-yellow-800 whitespace-nowrap bg-yellow-50 rounded",
+  },
+  {
+    value: "vacantCleanPickUp",
+    label: "Vacant Clean Pick Up",
+    style:
+      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap bg-cyan-50 rounded",
+  },
+  {
+    value: "occupiedClean",
+    label: "Occupied Clean",
+    style:
+      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-blue-800 whitespace-nowrap bg-indigo-100 rounded",
+  },
+  {
+    value: "occupiedCleanInspected",
+    label: "Occupied Clean Inspected",
+    style:
+      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-yellow-800 whitespace-nowrap bg-yellow-50 rounded",
+  },
+  {
+    value: "occupiedDirty",
+    label: "Occupied Dirty",
+    style:
+      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-red-800 whitespace-nowrap bg-rose-100 rounded",
+  },
+  {
+    value: "outOfOrder",
+    label: "Out of Order",
+    style:
+      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-gray-500 whitespace-nowrap rounded bg-slate-100",
+  },
+  {
+    value: "outOfService",
+    label: "Out of Service",
+    style:
+      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-gray-500 whitespace-nowrap rounded bg-slate-100",
+  },
+  {
+    value: "outOfInventory",
+    label: "Out of Inventory",
+    style:
+      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-gray-500 whitespace-nowrap rounded bg-slate-100",
+  },
+];
+
+const StatusDropdownCell = ({ status, row, onStatusUpdate }) => {
+  const statusItem = statusItems.find((item) => item.label === status);
+
+  return (
+    <TableCell align="center">
+      {statusItem && (
+        <div className={statusItem.style}>
+          <Dropdown
+            status={status}
+            row={row}
+            onStatusUpdate={onStatusUpdate}
+            className="text-center "
+          />
+        </div>
+      )}
+    </TableCell>
+  );
+};
 
 const RoomManagement = () => {
   const [loading, setLoading] = useState(true);
@@ -61,7 +155,13 @@ const RoomManagement = () => {
 
       const response = await axios.get("/api/admin/room_management");
       const data = response.data;
-      setRows(data.data);
+
+      const roomsWithNumbers = data.data.map((room, index) => ({
+        ...room,
+        roomNumber: index + 1,
+      }));
+
+      setRows(roomsWithNumbers);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -116,7 +216,7 @@ const RoomManagement = () => {
 
   const columns = [
     {
-      id: "id",
+      id: "roomNumber",
       label: "Room no.",
       minWidth: 100,
       align: "center",
