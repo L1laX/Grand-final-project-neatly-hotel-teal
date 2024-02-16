@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import FormInformation from "@/components/common/FormInformation";
 import FormSpecialReq from "@/components/common/FormSpecialReq";
 import FormPayment from "@/components/common/FormPayment";
+import axios from "axios";
 
 export default function StepperController() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -69,8 +70,25 @@ export default function StepperController() {
 
     setValues({ ...values, [name]: value });
   };
+  // fetching room_id from search page : use customer_booking_id to get room_id
+  const getReserveRoom = async () => {
+    try {
+      const res = await axios.get(`/api/room_detail/${room_id}`);
+    } catch (error) {
+      console.log("Cannot fetching room_id", error);
+    }
+  };
+  // create customer_booking_id : POST /api/user/customer_booking
+  const reservedRoom = async () => {
+    try {
+      const res = await axios.post("/api/user/customer_booking");
+      console.log(res);
+    } catch (error) {}
+  };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getReserveRoom();
+  }, []);
 
   return (
     <section className="booking-area mx-5 my-10 md:mx-40">
@@ -161,7 +179,7 @@ export default function StepperController() {
         {/* Booking Result mapping from /api/room_detail/room_id*/}
         <div className=" flex flex-col md:w-1/2">
           <div className=" rounded bg-[#5d7b6a]">
-            <h5 className="rounded rounded-b-none bg-[#2f3e35] p-4 text-white">
+            <h5 className=" rounded rounded-b-none bg-[#2f3e35] p-4 text-white">
               Booking Detail
             </h5>
             <div className=" p-6 text-white">

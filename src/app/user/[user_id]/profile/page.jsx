@@ -1,5 +1,5 @@
 "use client";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/legacy/image";
 import UploadPic from "@/asset/input/photo.svg";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
@@ -62,7 +62,6 @@ export default function UserProfile({ params: { user_id } }) {
         image,
       });
       setOldAvatar(image);
-
     } catch (error) {
       console.log("Fetching API failed...", error);
     }
@@ -121,7 +120,6 @@ export default function UserProfile({ params: { user_id } }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
 
     const lastedEmail = userProfiles.email.length - 1;
     const errors = {

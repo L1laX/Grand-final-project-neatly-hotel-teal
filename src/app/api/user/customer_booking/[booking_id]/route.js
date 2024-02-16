@@ -8,10 +8,29 @@ export async function GET(request, { params: { booking_id } }) {
         id: +booking_id,
       },
     });
-
+    console.log(customerBooking);
     return NextResponse.json({
-      message: "fetching complete",
+      message: "Fetching booking_id data complete!",
       data: customerBooking,
+      status: 200,
+    });
+  } catch (error) {
+    return NextResponse.json({ message: "error" }, { status: 400 });
+  }
+}
+
+export async function POST(request, { params: { booking_id } }) {
+  try {
+    const customerBooking = await prisma.customerBooking.create({
+      data: {
+        ...request.body,
+      },
+    });
+    console.log(customerBooking);
+    return NextResponse.json({
+      message: "Creating booking_id data complete!",
+      data: customerBooking,
+      status: 200,
     });
   } catch (error) {
     return NextResponse.json({ message: "error" }, { status: 400 });
