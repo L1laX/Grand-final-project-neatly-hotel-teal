@@ -4,12 +4,17 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import PrimaryBtn from "@/components/common/PrimaryBtn";
+import { Input } from "../ui/input";
 
-export default function CheckoutForm() {
+export default function CheckoutForm({
+  prevStep,
+  promotionCode,
+  setPromotionCode,
+  isPromotion,
+}) {
   const stripe = useStripe();
   const elements = useElements();
-
-  const [message, setMessage] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
@@ -41,7 +46,7 @@ export default function CheckoutForm() {
           break;
       }
     });
-  }, [stripe]);
+  }, [stripe, isPromotion]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,47 +59,75 @@ export default function CheckoutForm() {
 
     setIsLoading(true);
 
-    const { error } = await stripe.confirmPayment({
+    const data = await stripe.confirmPayment({
       elements,
+      redirect: "if_required",
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3000",
+        return_url: "http://localhost:3000/booking/success",
       },
     });
-
+    console.log(data);
     // This point will only be reached if there is an immediate error when
     // confirming the payment. Otherwise, your customer will be redirected to
     // your `return_url`. For some payment methods like iDEAL, your customer will
     // be redirected to an intermediate site first to authorize the payment, then
     // redirected to the `return_url`.
-    if (error.type === "card_error" || error.type === "validation_error") {
-      setMessage(error.message);
-    } else {
-      setMessage("An unexpected error occurred.");
-    }
+    // if (error.type === "card_error" || error.type === "validation_error") {
+    //   setMessage(error.message);
+    // } else {
+    //   setMessage("An unexpected error occurred.");
+    // }
 
     setIsLoading(false);
   };
 
   const paymentElementOptions = {
-    layout: "tabs",
+    layout: {
+      type: "accordion",
+      defaultCollapsed: false,
+      radios: false,
+      spacedAccordionItems: true,
+    },
   };
 
   return (
     <section className="ml-20 flex flex-col justify-center">
-      <form id="payment-form" onSubmit={handleSubmit} className="w-2/6">
+      <form id="payment-form" onSubmit={handleSubmit} className=" w-full">
         <PaymentElement id="payment-element" options={paymentElementOptions} />
-        <button disabled={isLoading || !stripe || !elements} id="submit">
-          <span id="button-text">
-            {isLoading ? (
-              <div className="spinner" id="spinner"></div>
-            ) : (
-              "Pay now"
-            )}
+
+        <div className="promotion-code-container pb-10">
+          <label htmlFor="Promotion Code">
+            Promotion Code
+            <Input
+              className="grid outline-none"
+              type="text"
+              name="Promotion Code"
+              onChange={(e) => {
+                setPromotionCode(e.target.value);
+              }}
+              value={promotionCode}
+              placeholder="NEATLYNEW400"
+            />
+          </label>
+        </div>
+
+        <div className=" flex flex-row justify-between">
+          <button className="visitlink" onClick={prevStep}>
+            Back
+          </button>
+          <span disabled={isLoading || !stripe || !elements} id="submit">
+            <span id="button-text">
+              {isLoading ? (
+                <div className="spinner" id="spinner">
+                  Waiting
+                </div>
+              ) : (
+                <PrimaryBtn btnName="Confirm Booking"></PrimaryBtn>
+              )}
+            </span>
           </span>
-        </button>
-        {/* Show any error or success messages */}
-        {message && <div id="payment-message">{message}</div>}
+        </div>
       </form>
     </section>
   );

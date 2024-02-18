@@ -13,9 +13,11 @@ export default function StepperController() {
     email: "",
     id_number: "",
     country: "",
+    payment_id: "",
+    order_id: "",
   });
   const [request, setRequest] = useState({});
-  console.log(request);
+  const [promotionCode, setPromotionCode] = useState("");
   const getRequest = (e) => {
     const { name, checked } = e.target;
     let value =
@@ -170,8 +172,10 @@ export default function StepperController() {
           {currentStep === 3 && (
             <FormPayment
               prevStep={prevStep}
-              handleInputChange={handleInputChange}
               values={values}
+              setValues={setValues}
+              promotionCode={promotionCode}
+              setPromotionCode={setPromotionCode}
             />
           )}
         </div>

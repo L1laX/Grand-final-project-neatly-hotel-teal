@@ -112,21 +112,21 @@
 //             </label>
 //           </div>
 
-//           <div className="promotion-code-container pb-10">
-//             <label htmlFor="Promotion Code">
-//               Promotion Code
-//               <Input
-//                 className="grid outline-none"
-//                 type="text"
-//                 name="Promotion Code"
-//                 onChange={(e) => {
-//                   e.target.value;
-//                 }}
-//                 value=""
-//                 placeholder="NEATLYNEW400"
-//               />
-//             </label>
-//           </div>
+// <div className="promotion-code-container pb-10">
+//   <label htmlFor="Promotion Code">
+//     Promotion Code
+//     <Input
+//       className="grid outline-none"
+//       type="text"
+//       name="Promotion Code"
+//       onChange={(e) => {
+//         e.target.value;
+//       }}
+//       value=""
+//       placeholder="NEATLYNEW400"
+//     />
+//   </label>
+// </div>
 //         </>
 //       )}
 
@@ -162,19 +162,52 @@ import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import React from "react";
 import CheckoutForm from "@/components/stripe/CheckoutForm";
-
+import { v4 as uuidv4 } from "uuid";
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 );
 
-export default function TestPage() {
+export default function FormPayment({
+  prevStep,
+  values,
+  setValues,
+  promotionCode,
+  setPromotionCode,
+}) {
   const [clientSecret, setClientSecret] = React.useState("");
-  const getClientSecret = async () => {
-    const response = await axios.post("/api/user/payment_method", {
-      amount: 1000,
-    });
+  const [isPromotion, setIsPromotion] = React.useState(false);
+  const [paymentIntent_id, setPaymentIntent_id] = React.useState("");
+  const [unique_key_number, setUnique_key_number] = React.useState(0);
+  const getClientSecret = async (amount, istrue) => {
+    console.log(paymentIntent_id, "paymentIntent_id");
+    const unique_key = uuidv4();
+    const response = await axios.post(
+      "/api/user/payment_method/payment_intent",
+      {
+        amount: +amount || 1000,
+        isPromotion: istrue || false,
+        intent_id: paymentIntent_id || null,
+        customer_id: values.payment_id || null,
+      },
+    );
     setClientSecret(response.data.clientSecret);
+    setPaymentIntent_id(response.data.paymentIntent_id);
+    setValues({
+      ...values,
+      payment_id: response.data.customer,
+      order_id: response.data.paymentIntent_id,
+    });
+    setUnique_key_number(unique_key);
   };
+  const checkPromotion = (promotion) => {
+    if (promotion === "NEATLYNEW400") {
+      return 400;
+    }
+    if (promotion === "NEATLYNEW500") {
+      return 500;
+    }
+  };
+  checkPromotion(promotionCode);
   const appearance = {
     theme: "stripe",
     variables: {
@@ -188,13 +221,31 @@ export default function TestPage() {
   };
   React.useEffect(() => {
     // Create PaymentIntent as soon as the page loads
-    getClientSecret();
-  }, []);
+    if (promotionCode) {
+      const newAmount = checkPromotion(promotionCode);
+      setIsPromotion(true);
+      console.log(newAmount, "newAmount");
+      if (newAmount) {
+        getClientSecret(newAmount, true);
+      }
+    } else {
+      getClientSecret();
+    }
+  }, [promotionCode]);
   return (
-    <div className="main">
+    <div className="main mr-6 rounded bg-white p-10">
       {clientSecret && (
-        <Elements options={options} stripe={stripePromise}>
-          <CheckoutForm />
+        <Elements
+          key={unique_key_number}
+          options={options}
+          stripe={stripePromise}
+        >
+          <CheckoutForm
+            prevStep={prevStep}
+            promotionCode={promotionCode}
+            setPromotionCode={setPromotionCode}
+            isPromotion={isPromotion}
+          />
         </Elements>
       )}
     </div>
