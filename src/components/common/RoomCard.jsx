@@ -36,10 +36,13 @@ export const RoomCard = ({
   roombedtype,
   roomsize,
   handleBooking,
-  roomAvailable
+  roomAvailable,
 }) => {
-  // const handleBooking = () => {
-  //   alert("rediect to Booking Page: /booking/id");
+  // const handleBooking = (item) => {
+  //   const path = `/booking/${item.roomName}${item.checkIn}${item.checkOut}${item.roomReserve}${item.guestReserve}${item.roomId}`;
+  //   const queryString = urlSearchParams.toString();
+  //   const url = String(path) + "?" + queryString;
+  //   Router.push(url);
   // };
 
   return (
@@ -79,7 +82,7 @@ export const RoomCard = ({
           </AlertDialog>
 
           <section className="room-detail flex flex-col lg:justify-between">
-            <div className="lg:flex flex-col">
+            <div className="flex-col lg:flex">
               <div className="lg:w-1/2">
                 <Link href={{ pathname: `/room_detail/${roomitem}` }}>
                   <h1 className=" cursor-pointer">{roomName}</h1>
@@ -191,7 +194,15 @@ export const RoomCard = ({
                 </AlertDialogContent>
               </AlertDialog>
 
-              <PrimaryBtn btnName="Book Now" handleClick={handleBooking} />
+              <PrimaryBtn
+                btnName="Book Now"
+                handleClick={(item) => {
+                  const path = `/booking/${item.roomName}${item.checkIn}${item.checkOut}${item.roomReserve}${item.guestReserve}${item.roomitem}`;
+                  const queryString = urlSearchParams.toString();
+                  const url = String(path) + "?" + queryString;
+                  Router.push(url);
+                }}
+              />
             </div>
           </section>
           <hr />

@@ -1,7 +1,10 @@
 import { Inter } from "next/font/google";
-
+import LoadingPage from "@/components/common/LoadingPage";
 import UserNavbar from "@/components/UserNavbar";
 import UserFooter from "@/components/UserFooter";
+import dynamic from "next/dynamic";
+import TransitionPage from "@/components/common/TransitionPage";
+import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -10,7 +13,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <UserNavbar />
-        {children}
+        <Suspense fallback={<LoadingPage />}>
+          <TransitionPage children={children} />
+        </Suspense>
         <UserFooter />
       </body>
     </html>
