@@ -45,14 +45,14 @@ export default function RoomDetail({ searchParams }) {
   const getRoomList = async () => {
     if (!date?.from && !date?.to) {
       setDate({ from: new Date(), to: addDays(new Date(), 2) });
-    }else if(date?.from && !date?.to){
-      setDate(prev => ({
+    } else if (date?.from && !date?.to) {
+      setDate((prev) => ({
         ...prev,
-        to: addDays(prev.from, 2)
-      }));      
+        to: addDays(prev.from, 2),
+      }));
     }
-    const checkIn = date?.from || new Date;
-    const checkOut = date?.to || addDays(checkIn, 2)
+    const checkIn = date?.from || new Date();
+    const checkOut = date?.to || addDays(checkIn, 2);
     //console.log("ccccciiiii",checkIn,"cccccoooo",checkOut)
     //ถ้าไม่เปลี่ยน format เมื่อส่ง query ไป +จะหาย จาก 2024-03-30T00:00:00.000+07:00 กลายเป็น 2024-03-30T00:00:00.000 07:00
     const checkInDate = format(new Date(checkIn), "yyyy-MM-dd");
@@ -118,18 +118,20 @@ export default function RoomDetail({ searchParams }) {
         </div>
       </div>
       <div className="divide-y-2 divide-gray-300 lg:m-20">
-        {rooms.length ? (rooms?.map((item, index) => (
-          <RoomCard
-            key={index}
-            roomitem={item.id}
-
-            roomName={item.name}
-
-            handleBooking={item.id}
-            roomAvailable={item.availableRoom}
-            roomGuests={item.guests}
-          />
-        ))):(<p>No Room</p>)}
+        {rooms.length ? (
+          rooms?.map((item, index) => (
+            <RoomCard
+              key={index}
+              roomitem={item.id}
+              roomName={item.name}
+              handleBooking={item.id}
+              roomAvailable={item.availableRoom}
+              roomGuests={item.guests}
+            />
+          ))
+        ) : (
+          <p>No Room</p>
+        )}
       </div>
     </main>
   );

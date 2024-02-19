@@ -200,7 +200,7 @@ export default function StepperController() {
           </div>
         </div>
       </div>
-      <button>Reserve</button>
+   
     </section>
   );
 }
