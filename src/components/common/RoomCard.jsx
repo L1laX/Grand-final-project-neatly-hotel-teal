@@ -1,5 +1,6 @@
 "use client";
 
+
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import Image from "next/legacy/image";
 import CloseIcon from "@/asset/icons/close-outline.svg";
@@ -38,14 +39,20 @@ export const RoomCard = ({
   roomsize,
   // handleBooking,
   roomAvailable,
+
+  dateRoomGuest,
+  allRoomId
 }) => {
   const router = useRouter();
   const handleBooking = () => {
-    alert("rediect to Booking Page: /booking/id");
-    router.push(`/room_detail/${roomitem}`);
+    const queryString = new URLSearchParams(dateRoomGuest).toString();
+    const path = `/booking`;
+    allRoomId = allRoomId.slice(0, dateRoomGuest.room);
+    const url = String(path) + "?" + queryString + "&roomName=" + roomName + "&allRoomId=" + allRoomId;
+
+
+    router.push(url);
   };
-
-
   return (
     <div>
       {/* room card : map ตรงนี้ */}
