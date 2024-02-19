@@ -1,11 +1,13 @@
 "use client";
 
+
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import Image from "next/legacy/image";
 import CloseIcon from "@/asset/icons/close-outline.svg";
 import BG from "@/asset/background/login-page/bg.png";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,13 +37,22 @@ export const RoomCard = ({
   roomdisc,
   roombedtype,
   roomsize,
-  handleBooking,
-  roomAvailable
-}) => {
-  // const handleBooking = () => {
-  //   alert("rediect to Booking Page: /booking/id");
-  // };
+  // handleBooking,
+  roomAvailable,
 
+  dateRoomGuest,
+  allRoomId
+}) => {
+  const router = useRouter();
+  const handleBooking = () => {
+    const queryString = new URLSearchParams(dateRoomGuest).toString();
+    const path = `/booking`;
+    allRoomId = allRoomId.slice(0, dateRoomGuest.room);
+    const url = String(path) + "?" + queryString + "&roomName=" + roomName + "&allRoomId=" + allRoomId;
+
+
+    router.push(url);
+  };
   return (
     <div>
       {/* room card : map ตรงนี้ */}
@@ -79,7 +90,7 @@ export const RoomCard = ({
           </AlertDialog>
 
           <section className="room-detail flex flex-col lg:justify-between">
-            <div className="lg:flex flex-col">
+            <div className="flex-col lg:flex">
               <div className="lg:w-1/2">
                 <Link href={{ pathname: `/room_detail/${roomitem}` }}>
                   <h1 className=" cursor-pointer">{roomName}</h1>
@@ -113,7 +124,7 @@ export const RoomCard = ({
                   <AlertDialogHeader>
                     <AlertDialogTitle>
                       <div className=" flex flex-row justify-between gap-5 p-4 md:ml-20">
-                        <h5>Superior Garden View</h5>
+                        <h5>{roomName}</h5>
                         <AlertDialogCancel>
                           <Image
                             className=" cursor-pointer"
@@ -191,7 +202,15 @@ export const RoomCard = ({
                 </AlertDialogContent>
               </AlertDialog>
 
-              <PrimaryBtn btnName="Book Now" handleClick={handleBooking} />
+              <PrimaryBtn
+                btnName="Book Now"
+                handleClick={(item) => {
+                  const path = `/booking/${item.roomName}${item.checkIn}${item.checkOut}${item.roomReserve}${item.guestReserve}${item.roomitem}`;
+                  const queryString = urlSearchParams.toString();
+                  const url = String(path) + "?" + queryString;
+                  Router.push(url);
+                }}
+              />
             </div>
           </section>
           <hr />

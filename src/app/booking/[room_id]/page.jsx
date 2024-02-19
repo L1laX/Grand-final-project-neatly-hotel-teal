@@ -5,20 +5,7 @@ import FormSpecialReq from "@/components/common/FormSpecialReq";
 import FormPayment from "@/components/common/FormPayment";
 import axios from "axios";
 
-export default function StepperController({ searchParams }) {
-
-
-  const testtest = {
-    nameOfRoom:searchParams.roomName,
-    checkinDate:searchParams.from,
-    checkOutDate:searchParams.to,
-    roomReserve:searchParams.room,
-    guestReserve:searchParams.guest,
-    allRoomId:searchParams.allRoomId
-  }
-  // console.log(new Date(searchParams.from))
-
-
+export default function StepperController() {
   const [currentStep, setCurrentStep] = useState(1);
   const [values, setValues] = useState({
     fullName: "",
@@ -26,11 +13,9 @@ export default function StepperController({ searchParams }) {
     email: "",
     id_number: "",
     country: "",
-    payment_id: "",
-    order_id: "",
   });
   const [request, setRequest] = useState({});
-  const [promotionCode, setPromotionCode] = useState("");
+  console.log(request);
   const getRequest = (e) => {
     const { name, checked } = e.target;
     let value =
@@ -89,8 +74,6 @@ export default function StepperController({ searchParams }) {
   const getReserveRoom = async () => {
     try {
       const res = await axios.get(`/api/room_detail/${room_id}`);
-      setValues(res.data);
-      console.log(values);
     } catch (error) {
       console.log("Cannot fetching room_id", error);
     }
@@ -110,14 +93,6 @@ export default function StepperController({ searchParams }) {
   return (
     <section className="booking-area mx-5 my-10 md:mx-40">
       <div>
-        <h1>ขอเทสครับ</h1>
-        <p>ชื่อห้อง: {testtest.nameOfRoom}</p>
-        <p>ห้องที่จะจอง: {testtest.roomReserve}</p>
-        <p>แขกที่จะเข้าพัก: {testtest.guestReserve}</p>
-        <p>วันที่จะเข้าพัก: {testtest.checkinDate}</p>
-        <p>วันที่จะออก: {testtest.checkOutDate}</p>
-        <p>id ห้องทั้งหมด: {testtest.allRoomId}</p>
-
         <h1 className="">Booking Room</h1>
         {/* Step indicators */}
         <div className="step-indicators my-10 flex flex-col gap-10 md:flex-row">
@@ -172,7 +147,7 @@ export default function StepperController({ searchParams }) {
       {/* Conditional rendering Form Stepper */}
       <div className="flex flex-col justify-between md:flex-row">
         {/* Form Information*/}
-        <div className=" border-2 border-red-500 md:w-full">
+        <div className=" md:w-full">
           {currentStep === 1 && (
             <FormInformation
               nextStep={nextStep}
@@ -195,10 +170,8 @@ export default function StepperController({ searchParams }) {
           {currentStep === 3 && (
             <FormPayment
               prevStep={prevStep}
+              handleInputChange={handleInputChange}
               values={values}
-              setValues={setValues}
-              promotionCode={promotionCode}
-              setPromotionCode={setPromotionCode}
             />
           )}
         </div>
@@ -213,7 +186,6 @@ export default function StepperController({ searchParams }) {
               <p>Total 2500 THB</p>
             </div>
           </div>
-          {/* ไม่มีการเปลี่ยนแปลงข้อมูล */}
           <div className="description-before-purchase mt-4 rounded bg-slate-300">
             <ol className="m-7 list-disc text-[#5d7b6a]">
               <li>
@@ -228,7 +200,7 @@ export default function StepperController({ searchParams }) {
           </div>
         </div>
       </div>
-      <button>Reserve</button>
+   
     </section>
   );
 }

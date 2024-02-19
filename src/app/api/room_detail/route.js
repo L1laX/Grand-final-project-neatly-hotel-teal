@@ -109,21 +109,51 @@ export async function GET(req, res) {
   // //const data = arrMaxCapacity.filter((item)=>room<=item.availableRoom&&guest<=room*(item.availableGuest/item.availableRoom))
 
 
-  
+  const checkBookingStatus = await prisma.room.updateMany({
+    where: {
+      status: "Booking",
+      last_updated_at: {
+        lte: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+      },
+    },
+    data: { status: "Vacant" },
+  });
 
-  // checkin.setUTCHours(23, 59, 59, 999);
   const allRooms = await prisma.room.findMany();
 
   const allBookingRooms = await prisma.customerBooking.findMany();
 
   allBookingRooms.forEach((item)=>{
     item.checkInDate.setUTCHours(0, 0, 0, 0); 
-    item.checkOutDate.setUTCHours(23, 59, 59, 999); 
+    item.checkOutDate.setUTCHours(0, 0, 0, 0); 
   })
 
-  const bookedRoomList = allBookingRooms.filter((item)=>{
-    return item.checkInDate>new Date().setUTCHours(0, 0, 0, 0) && item.checkInDate <= checkin && item.checkOutDate >= checkout
-  })
+  const bookedRoomList = allBookingRooms.filter((item) => {
+    return (
+      item.checkInDate > new Date().setUTCHours(0, 0, 0, 0) &&
+      item.checkInDate <= checkin &&
+      checkin < item.checkOutDate &&
+      item.checkOutDate >= checkout &&
+      checkout > item.checkInDate ||
+      item.checkInDate > new Date().setUTCHours(0, 0, 0, 0) &&
+      checkin <= item.checkInDate &&
+      checkout >= item.checkOutDate ||
+      item.checkInDate > new Date().setUTCHours(0, 0, 0, 0) &&
+      checkin < item.checkInDate &&
+      checkout <= item.checkOutDate &&
+      checkout > item.checkInDate ||
+      item.checkInDate > new Date().setUTCHours(0, 0, 0, 0) &&
+      checkout > item.checkOutDate&&
+      checkin >= item.checkInDate &&
+      checkin < item.checkOutDate
+
+      // ||item.checkInDate > new Date().setUTCHours(0, 0, 0, 0) &&
+      // checkin === checkout &&
+      // checkin >= item.checkInDate && checkin < item.checkOutDate
+    );
+  });
+
+
 
   // const uniqueRoom = allBookingRooms.filter((available, index) => {
   //   return index === allBookingRooms.findIndex((duplicate) => available.room_id === duplicate.room_id);
@@ -147,13 +177,14 @@ export async function GET(req, res) {
     }
     acc[cur.name].availableRoom+=1;
     acc[cur.name].availableGuest+=cur.guests;
-    acc[cur.name].room_id_list=[...acc[cur.name].room_id_list,{room_id:cur.id}];
+    acc[cur.name].room_id_list=[...acc[cur.name].room_id_list,cur.id];
+    // acc[cur.name].room_id_list=[...acc[cur.name].room_id_list,{room_id:cur.id}];// แบบเก็บเป็น arrobj
     return acc;
   }, {});
 
   const arrMaxCapacity = Object.values(maxCapacity);
 
-  //ห้องที่จะจองต้องน้อยกว่าหรือเท่ากับห้องที่ว่าง คนเข้าพักต้องน้อยกว่า หรือเท่ากับจำนวนห้อง*availableGuest
+  //ห้องที่จะจองต้องน้อยกว่าหรือเท่ากับห้องที่ว่าง
   const data = arrMaxCapacity.filter((item)=>room<=item.availableRoom&&guest<=room*item.guests)
 
 
@@ -276,8 +307,11 @@ export async function GET(req, res) {
   // console.log(availableRoom);
   // console.log(allRooms)
   // console.log(uniqueRoom);
-  console.log(maxCapacity);
-  // console.log(data);
+  // console.log(maxCapacity);
+  console.log(data);
+  console.log(new Date(Date.now()).toISOString())
+  console.log(new Date(Date.now() - 15 * 60 * 1000).toISOString())
+  console.log(new Date(Date.now() - 15 * 60 * 1000))
   return NextResponse.json(data);
 
 }
