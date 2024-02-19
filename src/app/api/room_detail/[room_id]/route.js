@@ -7,7 +7,7 @@ export async function GET(req, { params: { room_id } }) {
     where: {
       // id: +room_id,
       //can use (num)
-      id:Number(room_id)
+      id: String(room_id),
     },
     include: {
       // เอาอีกส่วน
@@ -17,10 +17,9 @@ export async function GET(req, { params: { room_id } }) {
     },
   });
   console.log(result);
-  
+
   return NextResponse.json(
     { message: "Success", data: result },
     { status: 200 },
   );
 }
-
