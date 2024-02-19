@@ -85,7 +85,7 @@ export async function DELETE(request, { params: { room_id } }) {
   try {
     const result = await prisma.room.delete({
       where: {
-        id: +room_id,
+        id: room_id,
       },
     });
     return NextResponse.json(

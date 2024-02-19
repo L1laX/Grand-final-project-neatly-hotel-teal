@@ -42,4 +42,3 @@ export async function POST(request, response) {
     console.log(e);
   }
 }
-1;

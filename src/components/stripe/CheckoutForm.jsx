@@ -12,6 +12,7 @@ export default function CheckoutForm({
   promotionCode,
   setPromotionCode,
   isPromotion,
+  displayCode,
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -110,6 +111,11 @@ export default function CheckoutForm({
               placeholder="NEATLYNEW400"
             />
           </label>
+          {displayCode && (
+            <div>
+              Promotion code applied !: <span>{displayCode}</span>
+            </div>
+          )}
         </div>
 
         <div className=" flex flex-row justify-between">

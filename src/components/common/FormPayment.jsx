@@ -163,6 +163,7 @@ import axios from "axios";
 import React from "react";
 import CheckoutForm from "@/components/stripe/CheckoutForm";
 import { v4 as uuidv4 } from "uuid";
+import { set } from "date-fns";
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 );
@@ -176,6 +177,7 @@ export default function FormPayment({
 }) {
   const [clientSecret, setClientSecret] = React.useState("");
   const [isPromotion, setIsPromotion] = React.useState(false);
+  const [displayCode, setDisplayCode] = React.useState("");
   const [paymentIntent_id, setPaymentIntent_id] = React.useState("");
   const [unique_key_number, setUnique_key_number] = React.useState(0);
   const getClientSecret = async (amount, istrue) => {
@@ -201,13 +203,19 @@ export default function FormPayment({
   };
   const checkPromotion = (promotion) => {
     if (promotion === "NEATLYNEW400") {
+      setDisplayCode(promotion);
+      setIsPromotion(true);
       return 400;
     }
     if (promotion === "NEATLYNEW500") {
+      setDisplayCode(promotion);
+      setIsPromotion(true);
       return 500;
     }
+    setIsPromotion(false);
+    setDisplayCode("");
+    return values.amount;
   };
-  checkPromotion(promotionCode);
   const appearance = {
     theme: "stripe",
     variables: {
@@ -221,15 +229,16 @@ export default function FormPayment({
   };
   React.useEffect(() => {
     // Create PaymentIntent as soon as the page loads
+    checkPromotion(promotionCode);
     if (promotionCode) {
       const newAmount = checkPromotion(promotionCode);
       setIsPromotion(true);
-      console.log(newAmount, "newAmount");
       if (newAmount) {
         getClientSecret(newAmount, true);
       }
     } else {
       getClientSecret();
+      setIsPromotion(false);
     }
   }, [promotionCode]);
   return (
@@ -245,6 +254,7 @@ export default function FormPayment({
             promotionCode={promotionCode}
             setPromotionCode={setPromotionCode}
             isPromotion={isPromotion}
+            displayCode={displayCode}
           />
         </Elements>
       )}

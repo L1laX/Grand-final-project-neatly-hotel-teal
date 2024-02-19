@@ -115,17 +115,18 @@ function CustomerBooking() {
                           onClick={() => handleRowClick(row.id)}
                           style={{ cursor: "pointer" }}
                         >
-                          {columns.map((column) => (
-                            <TableCell key={column.id} align={column.align}>
-                              {column.id === "checkInDate" ||
-                              column.id === "checkOutDate"
-                                ? new Date(row[column.id]).toLocaleString()
-                                : column.id === "room.name" ||
-                                    column.id === "room.bedType"
-                                  ? row.room[column.id.split(".")[1]]
-                                  : row[column.id]}
-                            </TableCell>
-                          ))}
+                          {rows &&
+                            columns.map((column) => (
+                              <TableCell key={column.id} align={column.align}>
+                                {column.id === "checkInDate" ||
+                                column.id === "checkOutDate"
+                                  ? new Date(row[column.id]).toLocaleString()
+                                  : column.id === "room.name" ||
+                                      column.id === "room.bedType"
+                                    ? row.room[column.id.split(".")[1]]
+                                    : row[column.id]}
+                              </TableCell>
+                            ))}
                         </TableRow>
                       ))
                   )}

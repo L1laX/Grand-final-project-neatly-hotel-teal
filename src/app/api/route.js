@@ -6,7 +6,7 @@ export function GET(request) {
 }
 
 export async function PUT(request) {
-  const room_id = "4412afd0-c38a-448b-9145-fad0cbda05a8";
+  const room_id = "83d83e16-c63a-49df-a546-e56a06416238";
   const result = await prisma.room.update({
     where: {
       id: room_id,
