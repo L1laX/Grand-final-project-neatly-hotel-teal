@@ -145,7 +145,6 @@ const RoomManagement = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchInput, setSearchInput] = useState("");
   const [rows, setRows] = useState([]);
-
   const fetchData = async () => {
     try {
       toast.info("Fetching Room Data...", {
@@ -158,7 +157,7 @@ const RoomManagement = () => {
 
       const roomsWithNumbers = data.data.map((room, index) => ({
         ...room,
-        roomNumber: index + 1,
+        roomNumber: (index + 1).toString().padStart(3, "0"), // Adding leading zeros
       }));
 
       setRows(roomsWithNumbers);
