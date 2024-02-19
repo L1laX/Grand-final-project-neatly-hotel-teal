@@ -154,7 +154,7 @@ const FormInformation = ({
       {/* Booking Button */}
       <div className=" flex flex-row justify-between">
         <button className=""></button>
-        <PrimaryBtn btnName="Next" handleClick={handleSubmit}></PrimaryBtn>
+        <PrimaryBtn btnName="Next" handleClick={nextStep}></PrimaryBtn>
       </div>
     </form>
   );

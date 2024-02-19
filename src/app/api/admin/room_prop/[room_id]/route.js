@@ -41,17 +41,17 @@ export async function PUT(request, { params: { room_id } }) {
   try {
     const deleteRoomAmenity = await prisma.roomAmenity.deleteMany({
       where: {
-        room_id: +room_id,
+        room_id: room_id,
       },
     });
     const deleteRoomGallery = await prisma.roomGallery.deleteMany({
       where: {
-        room_id: +room_id,
+        room_id: room_id,
       },
     });
     const result = await prisma.room.update({
       where: {
-        id: +room_id,
+        id: room_id,
       },
       data: {
         name: data.name,
@@ -85,7 +85,7 @@ export async function DELETE(request, { params: { room_id } }) {
   try {
     const result = await prisma.room.delete({
       where: {
-        id: +room_id,
+        id: room_id,
       },
     });
     return NextResponse.json(

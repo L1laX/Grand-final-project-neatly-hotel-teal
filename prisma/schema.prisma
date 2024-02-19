@@ -43,6 +43,8 @@ model room {
   description     String
   roomMainImage   String
   pricePerNight   Int
+  created_at      DateTime          @default(now()) @db.Timestamptz(3)
+  last_updated_at DateTime          @updatedAt @db.Timestamptz(3)
   promotionPrice  Int?
   id              String            @id @unique @default(uuid())
   created_at      DateTime          @default(now()) @db.Timestamptz(3)
@@ -60,7 +62,7 @@ model roomAmenity {
 }
 
 model roomGallery {
-  id      String @id @unique
+  id      String @id @unique @default(uuid())
   room_id String
   image   String
   room    room   @relation(fields: [room_id], references: [id], onDelete: Cascade)
@@ -83,10 +85,10 @@ model customerBooking {
   room_id             String?
   checkInDate         DateTime?        @db.Timestamptz(3)
   checkOutDate        DateTime?        @db.Timestamptz(3)
-  created_at          DateTime         @default(now()) @db.Timestamptz(3)
-  last_updated_at     DateTime         @updatedAt @db.Timestamptz(3)
   promotionCode       String?
   order_id            String?
+  created_at          DateTime         @default(now()) @db.Timestamptz(3)
+  last_updated_at     DateTime         @updatedAt @db.Timestamptz(3)
   bookingRequest      bookingRequest[]
   room                room?            @relation(fields: [room_id], references: [id])
   user                user             @relation(fields: [user_id], references: [id])

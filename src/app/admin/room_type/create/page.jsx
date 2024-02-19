@@ -23,7 +23,7 @@ const crateRoomType = () => {
     size: "",
     description: "",
     roomAmenity: [""],
-    status: "vacant",
+    status: "Vacant",
   });
   const [errors, setErrors] = useState({
     roomMainImage: false,
@@ -44,18 +44,19 @@ const crateRoomType = () => {
   );
   const uploadImage = async (data) => {
     const uploadImage = [];
-    const fileName = uuidv4();
+    const folderName = uuidv4();
     if (Array.isArray(data)) {
       const newImage = [...data];
       for (let i = 0; i < newImage.length; i++) {
         if (typeof newImage[i] === "object") {
+          const fileName = uuidv4();
           try {
             const { data, error } = await supabase.storage
               .from("roomGallery")
               .upload(
-                `roomGallery/${fileName}/${i}`,
+                `roomGallery/${folderName}/${fileName}`,
                 newImage[i][Object.keys(newImage[i])[0]],
-                { upsert: true },
+                { cacheControl: "0", upsert: true },
               );
             if (error) {
               return console.error(error);
@@ -73,10 +74,11 @@ const crateRoomType = () => {
       }
       return uploadImage;
     } else {
+      const fileName = uuidv4();
       try {
         const image = await supabase.storage
           .from("mainImage")
-          .upload(`mainImage/${fileName}/mainImage`, data, { upsert: true });
+          .upload(`mainImage/${folderName}/${fileName}`, data);
         if (image?.error) {
           return console.error(image.error);
         }

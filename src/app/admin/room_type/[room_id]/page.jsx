@@ -11,11 +11,12 @@ import { v4 as uuidv4 } from "uuid";
 const page = ({ params: { room_id } }) => {
   const router = useRouter();
   const [values, setValues] = useState({});
-  const [oldGallery, setOldGallery] = useState([]);
-  const [oldMainImage, setOldMainImage] = useState({});
+  const [deletedImage, setDeletedImage] = useState([]);
   const [isPromotion, setIsPromotion] = useState(
     values.promotionPrice ? true : false,
   );
+  const [oldMainImage, setOldMainImage] = useState("");
+  const [oldGallery, setOldGallery] = useState([]);
   const [errors, setErrors] = useState({
     roomMainImage: false,
     name: false,
@@ -31,7 +32,7 @@ const page = ({ params: { room_id } }) => {
   });
 
   const fileNames = (i) => {
-    const item = i ? oldGallery[i] + "" : oldMainImage + "";
+    const item = i + "";
     const publicIndex = item.split("/").findIndex((el) => el === "public");
     const data = item
       .split("/")
@@ -43,24 +44,26 @@ const page = ({ params: { room_id } }) => {
       .join("/");
     return data;
   };
-
+  const findFolder = (item) => {
+    const arr = fileNames(item).split("/");
+    arr.pop();
+    return arr.join("/");
+  };
   const checkpicture = async (data) => {
     const uploadImage = [];
     if (Array.isArray(data)) {
+      const galleryfolder = findFolder(oldGallery[0]);
       const newImage = [...data];
       for (let i = 0; i < newImage.length; i++) {
         if (typeof newImage[i] === "object") {
-          const fileName = oldGallery[i] ? fileNames(i) : uuidv4();
+          const fileName = uuidv4();
           try {
-            oldGallery[i]
-              ? await supabase.storage.from("roomGallery").remove([fileName])
-              : null;
             const { data, error } = await supabase.storage
               .from("roomGallery")
-              .upload(fileName, newImage[i][Object.keys(newImage[i])[0]], {
-                cacheControl: "3600",
-                upsert: true,
-              });
+              .upload(
+                `${galleryfolder}/${fileName}`,
+                newImage[i][Object.keys(newImage[i])[0]],
+              );
             if (error) {
               return console.error(error);
             }
@@ -79,21 +82,23 @@ const page = ({ params: { room_id } }) => {
     } else {
       //main image
       if (typeof data === "object") {
-        const fileName = fileNames();
+        const fileName = fileNames(oldMainImage);
+        const folderName = findFolder(oldMainImage);
+        const newFileName = uuidv4();
         try {
           const deleteImage = await supabase.storage
             .from("mainImage")
-            .remove([fileName]);
+            .remove(fileName);
+          console.log(deleteImage, "deleteImage");
           const image = await supabase.storage
             .from("mainImage")
-            .upload(fileName, data, { cacheControl: "3600", upsert: true });
+            .upload(`${folderName}/${newFileName}`, data);
           if (image?.error) {
             return console.error(image.error);
           }
           const url = supabase.storage
             .from("mainImage")
             .getPublicUrl(image.data.path);
-
           uploadImage.push(url.data.publicUrl);
         } catch (error) {
           console.error(error);
@@ -101,6 +106,7 @@ const page = ({ params: { room_id } }) => {
       } else {
         uploadImage.push(data);
       }
+      console.log(uploadImage);
       return uploadImage;
     }
   };
@@ -120,13 +126,18 @@ const page = ({ params: { room_id } }) => {
     setErrors({ ...newErrors });
     if (Object.values(newErrors).includes(true)) return alert("Form Error");
     alert("Form Submitted");
-    console.log(1);
+    const roomMainImage = await checkpicture(values.roomMainImage);
     const sendData = {
       ...values,
       roomGallery: await checkpicture(values.roomGallery),
-      roomMainImage: await checkpicture(values.roomMainImage)[0],
+      roomMainImage: roomMainImage[0],
     };
-    console.log(sendData);
+    console.log(deletedImage);
+    if (deletedImage.length > 0) {
+      deletedImage.map(async (item) => {
+        await supabase.storage.from("roomGallery").remove(fileNames(item));
+      });
+    }
     const result = await axios.put(`/api/admin/room_prop/${room_id}`, sendData);
     if (result.status === 200) {
       alert("Data Updated");
@@ -152,8 +163,8 @@ const page = ({ params: { room_id } }) => {
       const result = await axios.get(`/api/admin/room_prop/${room_id}`);
       const data = result.data;
       setValues(data.data);
-      setOldGallery(data.data.roomGallery);
       setOldMainImage(data.data.roomMainImage);
+      setOldGallery(data.data.roomGallery);
     } catch (e) {
       console.log(e);
     }
@@ -184,6 +195,8 @@ const page = ({ params: { room_id } }) => {
               errors={errors}
               isPromotion={isPromotion}
               setIsPromotion={setIsPromotion}
+              setDeletedImage={setDeletedImage}
+              deletedImage={deletedImage}
             />
           </section>
           <button

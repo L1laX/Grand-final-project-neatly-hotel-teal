@@ -10,13 +10,19 @@ import { orange } from "@mui/material/colors";
 import Checkbox from "@mui/material/Checkbox";
 import { Input } from "@/components/ui/input";
 
-const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
+const TypeRoomAdminForm = ({
+  values,
+  setValues,
+  handleSubmit,
+  errors,
+  setDeletedImage,
+  deletedImage,
+}) => {
   const dragItem = useRef();
   const dragOverItem = useRef();
   const getValue = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
-  const [isPromotion, setIsPromotion] = useState();
   const handleMainImage = (e) => {
     e.preventDefault();
     const file = e.target.files[0];
@@ -50,6 +56,9 @@ const TypeRoomAdminForm = ({ values, setValues, handleSubmit, errors }) => {
       }
       const newImage = [...values.roomGallery];
       newImage.splice(i, 1);
+      deletedImage
+        ? setDeletedImage([...deletedImage, values.roomGallery[i]])
+        : null;
       return setValues({ ...values, roomGallery: [...newImage] });
     }
   };
