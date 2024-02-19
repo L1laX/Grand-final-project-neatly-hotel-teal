@@ -1,26 +1,13 @@
 "use client";
 
 import SecondaryBtn from "@/components/common/SecondaryBtn";
-import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { RoomCard } from "@/components/common/RoomCard";
 import { useEffect, useState } from "react";
 import { addDays, format } from "date-fns";
 import { DateRangeRoomGuest } from "@/components/ui/DateRangeRoomGuest";
 import axios from "axios";
 
-// const [data, setData] = useState({});
-// const [searchRoom, setSearchRoom] = useState(null);
-
 export default function RoomDetail({ searchParams }) {
-  const roomsType = ["1", "2", "3"];
-
   const initialDate = searchParams.dateString
     ? JSON.parse(searchParams.dateString)
     : {
@@ -45,14 +32,14 @@ export default function RoomDetail({ searchParams }) {
   const getRoomList = async () => {
     if (!date?.from && !date?.to) {
       setDate({ from: new Date(), to: addDays(new Date(), 2) });
-    }else if(date?.from && !date?.to){
-      setDate(prev => ({
+    } else if (date?.from && !date?.to) {
+      setDate((prev) => ({
         ...prev,
-        to: addDays(prev.from, 2)
-      }));      
+        to: addDays(prev.from, 2),
+      }));
     }
-    const checkIn = date?.from || new Date;
-    const checkOut = date?.to || addDays(checkIn, 2)
+    const checkIn = date?.from || new Date();
+    const checkOut = date?.to || addDays(checkIn, 2);
     //console.log("ccccciiiii",checkIn,"cccccoooo",checkOut)
     //ถ้าไม่เปลี่ยน format เมื่อส่ง query ไป +จะหาย จาก 2024-03-30T00:00:00.000+07:00 กลายเป็น 2024-03-30T00:00:00.000 07:00
     const checkInDate = format(new Date(checkIn), "yyyy-MM-dd");
@@ -120,10 +107,12 @@ export default function RoomDetail({ searchParams }) {
         </div>
       </div>
       <div className="divide-y-2 divide-gray-300 lg:m-20">
-        {rooms.length ? (rooms?.map((item, index) => (
-          <RoomCard
-            key={index}
-            roomitem={item.id}
+        {rooms.length ? (
+          rooms?.map((item, index) => (
+            <RoomCard
+              key={index}
+              roomitem={item.id}
+              roomName={item.name}
 
             roomName={item.name}
             dateRoomGuest={dateRoomGuest}
@@ -133,6 +122,7 @@ export default function RoomDetail({ searchParams }) {
             allRoomId={item.room_id_list}
           />
         ))):(<p>No Room</p>)}
+
       </div>
     </main>
   );

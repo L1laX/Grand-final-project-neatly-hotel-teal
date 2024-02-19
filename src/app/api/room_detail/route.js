@@ -1,8 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 
 export async function GET(req, res) {
+
 
   const url = new URL(req.url);
   const searchParams = new URLSearchParams(url.search);
@@ -312,4 +313,5 @@ export async function GET(req, res) {
   console.log(new Date(Date.now() - 15 * 60 * 1000).toISOString())
   console.log(new Date(Date.now() - 15 * 60 * 1000))
   return NextResponse.json(data);
+
 }

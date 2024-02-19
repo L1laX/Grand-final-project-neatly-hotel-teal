@@ -132,9 +132,10 @@ function CustomerBooking() {
                             <TableCell key={column.id} align={column.align}>
                               {column.id === "checkInDate" ||
                               column.id === "checkOutDate"
-                                ? new Date(row[column.id]).toLocaleString()
-                                : column.id === "room.name" ||
-                                    column.id === "room.bedType"
+                                ? new Date(row[column.id]).toLocaleDateString()
+                                : (column.id === "room.name" ||
+                                      column.id === "room.bedType") &&
+                                    row.room
                                   ? row.room[column.id.split(".")[1]]
                                   : row[column.id]}
                             </TableCell>
