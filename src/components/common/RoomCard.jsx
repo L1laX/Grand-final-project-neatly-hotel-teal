@@ -45,6 +45,7 @@ export const RoomCard = ({
     router.push(`/room_detail/${roomitem}`);
   };
 
+
   return (
     <div>
       {/* room card : map ตรงนี้ */}
@@ -194,7 +195,15 @@ export const RoomCard = ({
                 </AlertDialogContent>
               </AlertDialog>
 
-              <PrimaryBtn btnName="Book Now" handleClick={handleBooking} />
+              <PrimaryBtn
+                btnName="Book Now"
+                handleClick={(item) => {
+                  const path = `/booking/${item.roomName}${item.checkIn}${item.checkOut}${item.roomReserve}${item.guestReserve}${item.roomitem}`;
+                  const queryString = urlSearchParams.toString();
+                  const url = String(path) + "?" + queryString;
+                  Router.push(url);
+                }}
+              />
             </div>
           </section>
           <hr />

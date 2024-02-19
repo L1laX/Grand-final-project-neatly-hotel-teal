@@ -5,7 +5,16 @@ import FormSpecialReq from "@/components/common/FormSpecialReq";
 import FormPayment from "@/components/common/FormPayment";
 import axios from "axios";
 
-export default function StepperController() {
+export default function StepperController({ searchParams }) {
+  const test = {
+    roomName: searchParams.roomName,
+    checkIn: searchParams.checkIn,
+    checkOut: searchParams.checkOut,
+    roomReserve: searchParams.room,
+    guestReserve: searchParams.guest,
+    roomId: searchParams.roomId,
+  };
+
   const [currentStep, setCurrentStep] = useState(1);
   const [values, setValues] = useState({
     fullName: "",
@@ -74,6 +83,8 @@ export default function StepperController() {
   const getReserveRoom = async () => {
     try {
       const res = await axios.get(`/api/room_detail/${room_id}`);
+      setValues(res.data);
+      console.log(values);
     } catch (error) {
       console.log("Cannot fetching room_id", error);
     }
@@ -147,7 +158,7 @@ export default function StepperController() {
       {/* Conditional rendering Form Stepper */}
       <div className="flex flex-col justify-between md:flex-row">
         {/* Form Information*/}
-        <div className=" md:w-full">
+        <div className=" border-2 border-red-500 md:w-full">
           {currentStep === 1 && (
             <FormInformation
               nextStep={nextStep}
@@ -186,6 +197,7 @@ export default function StepperController() {
               <p>Total 2500 THB</p>
             </div>
           </div>
+          {/* ไม่มีการเปลี่ยนแปลงข้อมูล */}
           <div className="description-before-purchase mt-4 rounded bg-slate-300">
             <ol className="m-7 list-disc text-[#5d7b6a]">
               <li>

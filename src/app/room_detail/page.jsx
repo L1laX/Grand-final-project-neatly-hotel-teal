@@ -1,26 +1,13 @@
 "use client";
 
 import SecondaryBtn from "@/components/common/SecondaryBtn";
-import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { RoomCard } from "@/components/common/RoomCard";
 import { useEffect, useState } from "react";
 import { addDays, format } from "date-fns";
 import { DateRangeRoomGuest } from "@/components/ui/DateRangeRoomGuest";
 import axios from "axios";
 
-// const [data, setData] = useState({});
-// const [searchRoom, setSearchRoom] = useState(null);
-
 export default function RoomDetail({ searchParams }) {
-  const roomsType = ["1", "2", "3"];
-
   const initialDate = searchParams.dateString
     ? JSON.parse(searchParams.dateString)
     : {
@@ -124,13 +111,17 @@ export default function RoomDetail({ searchParams }) {
               key={index}
               roomitem={item.id}
               roomName={item.name}
+
               handleBooking={item.id}
+
               roomAvailable={item.availableRoom}
               roomGuests={item.guests}
             />
           ))
         ) : (
+
           <p>No Room</p>
+
         )}
       </div>
     </main>
