@@ -5,19 +5,7 @@ import FormSpecialReq from "@/components/common/FormSpecialReq";
 import FormPayment from "@/components/common/FormPayment";
 import axios from "axios";
 
-export default function StepperController({ searchParams }) {
-
-  const testtest = {
-    nameOfRoom:searchParams.roomName,
-    checkinDate:searchParams.from,
-    checkOutDate:searchParams.to,
-    roomReserve:searchParams.room,
-    guestReserve:searchParams.guest,
-    allRoomId:searchParams.allRoomId
-  }
-  // console.log(new Date(searchParams.from))
-
-
+export default function StepperController() {
   const [currentStep, setCurrentStep] = useState(1);
   const [values, setValues] = useState({
     fullName: "",
@@ -105,14 +93,6 @@ export default function StepperController({ searchParams }) {
   return (
     <section className="booking-area mx-5 my-10 md:mx-40">
       <div>
-        <h1>ขอเทสครับ</h1>
-        <p>ชื่อห้อง: {testtest.nameOfRoom}</p>
-        <p>ห้องที่จะจอง: {testtest.roomReserve}</p>
-        <p>แขกที่จะเข้าพัก: {testtest.guestReserve}</p>
-        <p>วันที่จะเข้าพัก: {testtest.checkinDate}</p>
-        <p>วันที่จะออก: {testtest.checkOutDate}</p>
-        <p>id ห้องทั้งหมด: {testtest.allRoomId}</p>
-
         <h1 className="">Booking Room</h1>
         {/* Step indicators */}
         <div className="step-indicators my-10 flex flex-col gap-10 md:flex-row">
@@ -220,6 +200,7 @@ export default function StepperController({ searchParams }) {
           </div>
         </div>
       </div>
+   
     </section>
   );
 }

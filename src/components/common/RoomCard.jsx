@@ -1,11 +1,13 @@
 "use client";
 
+
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import Image from "next/legacy/image";
 import CloseIcon from "@/asset/icons/close-outline.svg";
 import BG from "@/asset/background/login-page/bg.png";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,13 +37,20 @@ export const RoomCard = ({
   roomdisc,
   roombedtype,
   roomsize,
-  handleBooking,
-  roomAvailable
+  // handleBooking,
+  roomAvailable,
+  dateRoomGuest,
+  allRoomId
 }) => {
-  // const handleBooking = () => {
-  //   alert("rediect to Booking Page: /booking/id");
-  // };
+  const router = useRouter();
+  const handleBooking = () => {
+    const queryString = new URLSearchParams(dateRoomGuest).toString();
+    const path = `/booking`;
+    allRoomId = allRoomId.slice(0, dateRoomGuest.room);
+    const url = String(path) + "?" + queryString + "&roomName=" + roomName + "&allRoomId=" + allRoomId;
 
+    router.push(url);
+  };
   return (
     <div>
       {/* room card : map ตรงนี้ */}

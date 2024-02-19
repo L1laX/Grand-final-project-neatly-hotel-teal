@@ -95,6 +95,8 @@ export default function RoomDetail({ searchParams }) {
   //   }
   // };
 
+  const dateRoomGuest = {...date,...roomAndGuest}
+
   return (
     <main>
       {/* search-bar */}
@@ -124,10 +126,11 @@ export default function RoomDetail({ searchParams }) {
             roomitem={item.id}
 
             roomName={item.name}
-
+            dateRoomGuest={dateRoomGuest}
             handleBooking={item.id}
             roomAvailable={item.availableRoom}
             roomGuests={item.guests}
+            allRoomId={item.room_id_list}
           />
         ))):(<p>No Room</p>)}
       </div>
