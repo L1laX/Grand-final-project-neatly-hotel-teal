@@ -48,6 +48,7 @@
     "flowbite-datepicker": "^1.2.6",
     "framer-motion": "^11.0.5",
     "lucide-react": "^0.317.0",
+    "murmur-hash": "^1.0.0",
     "next": "^14.1.0",
     "next-auth": "^4.24.5",
     "react": "^18",

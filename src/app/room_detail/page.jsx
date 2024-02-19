@@ -111,16 +111,17 @@ export default function RoomDetail({ searchParams }) {
               key={index}
               roomitem={item.id}
               roomName={item.name}
-              checkIn={item.checkInDate}
-              checkOut={item.checkOutDate}
-              roomReserve={item.id}
-              guestReserve={item.guest}
+
+              handleBooking={item.id}
+
               roomAvailable={item.availableRoom}
               roomGuests={item.guests}
             />
           ))
         ) : (
-          <p>No Room Available</p>
+
+          <p>No Room</p>
+
         )}
       </div>
     </main>

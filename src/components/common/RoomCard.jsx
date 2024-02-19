@@ -6,6 +6,7 @@ import CloseIcon from "@/asset/icons/close-outline.svg";
 import BG from "@/asset/background/login-page/bg.png";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,15 +36,15 @@ export const RoomCard = ({
   roomdisc,
   roombedtype,
   roomsize,
-  handleBooking,
+  // handleBooking,
   roomAvailable,
 }) => {
-  // const handleBooking = (item) => {
-  //   const path = `/booking/${item.roomName}${item.checkIn}${item.checkOut}${item.roomReserve}${item.guestReserve}${item.roomId}`;
-  //   const queryString = urlSearchParams.toString();
-  //   const url = String(path) + "?" + queryString;
-  //   Router.push(url);
-  // };
+  const router = useRouter();
+  const handleBooking = () => {
+    alert("rediect to Booking Page: /booking/id");
+    router.push(`/room_detail/${roomitem}`);
+  };
+
 
   return (
     <div>
@@ -116,7 +117,7 @@ export const RoomCard = ({
                   <AlertDialogHeader>
                     <AlertDialogTitle>
                       <div className=" flex flex-row justify-between gap-5 p-4 md:ml-20">
-                        <h5>Superior Garden View</h5>
+                        <h5>{roomName}</h5>
                         <AlertDialogCancel>
                           <Image
                             className=" cursor-pointer"

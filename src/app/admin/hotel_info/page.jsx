@@ -7,7 +7,6 @@ import { supabase } from "@/lib/supabase";
 import Paper from "@mui/material/Paper";
 import { useRouter } from "next/navigation";
 import CloseIcon from "@mui/icons-material/Close";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -246,11 +245,8 @@ const HotelInfo = () => {
                           <img
                             src={hotelLogoPreview}
                             alt="Hotel logo preview"
-                            className="mx-auto mb-4 h-[90px] w-[90px]"
+                            className=" mx-auto mb-4 h-[130px] w-[150px] "
                           />
-                          <div>
-                            <p>Click to change logo</p>
-                          </div>
                         </div>
                       )}
                       {!hotelLogoPreview && (
