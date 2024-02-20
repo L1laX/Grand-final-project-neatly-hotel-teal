@@ -28,7 +28,6 @@ model user {
 model userProfile {
   id          String   @id @unique @default(uuid())
   user_id     String   @unique
-  fullName    String
   id_number   String   @unique
   dateOfBirth DateTime @db.Timestamptz(3)
   country     String

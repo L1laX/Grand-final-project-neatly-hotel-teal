@@ -61,11 +61,11 @@ export async function PUT(request, { params: { user_id } }) {
       data: {
         email: email,
         image: image,
+        name: fullName,
         userProfile: {
           update: {
             where: { user_id: user_id },
             data: {
-              fullName,
               idNumber,
               dateOfBirth,
               country,

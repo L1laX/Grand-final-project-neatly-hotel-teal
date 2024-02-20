@@ -6,7 +6,8 @@ import PrimaryBtn from "@/components/common/PrimaryBtn";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import Country from "@/components/common/Country";
-
+import { v4 as uuidv4 } from "uuid";
+import { useSession } from "next-auth/react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import DatePicker from "@/components/common/DatePicker";
@@ -15,7 +16,7 @@ export default function UserProfile({ params: { user_id } }) {
   const router = useRouter();
   const [userProfiles, setUserProfiles] = useState("");
   const [oldAvatar, setOldAvatar] = useState("");
-
+  const { data: session, update } = useSession();
   const [errors, setErrors] = useState({
     fullName: false,
     username: false,
@@ -40,6 +41,11 @@ export default function UserProfile({ params: { user_id } }) {
       .join("/");
     return data;
   };
+  const findFolder = (item) => {
+    const arr = getImagePath(item).split("/");
+    arr.pop();
+    return arr.join("/");
+  };
   // fetching data
   const getUserProfile = async () => {
     try {
@@ -47,14 +53,13 @@ export default function UserProfile({ params: { user_id } }) {
       // console.log(response.data);
 
       const {
-        fullName,
         id_number,
         dateOfBirth,
         country,
-        user: { email, image },
+        user: { email, image, name },
       } = response.data.data;
       setUserProfiles({
-        fullName,
+        fullName: name,
         id_number,
         dateOfBirth,
         country,
@@ -116,7 +121,7 @@ export default function UserProfile({ params: { user_id } }) {
       console.log("Fetching data failed...", error);
     }
   };
-  console.log(userProfiles);
+  console.log(session, "session");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -142,13 +147,21 @@ export default function UserProfile({ params: { user_id } }) {
     //uploadAvatar image
     if (typeof userProfiles.image === "object") {
       const url = await uploadAvatar();
-      console.log(url.data.publicUrl);
       const sendData = { ...userProfiles, image: url.data.publicUrl };
       // sendadata to backend
       const result = await axios.put(
         `/api/user/edit_profile/${user_id}`,
         sendData,
       );
+      update({
+        ...session,
+        user: {
+          ...session.user,
+          image: url.data.publicUrl,
+          email: userProfiles.email,
+        },
+      });
+      alert("Update success");
       return router.refresh();
     }
     //if not update image
@@ -169,13 +182,20 @@ export default function UserProfile({ params: { user_id } }) {
   };
 
   const uploadAvatar = async () => {
-    const fileName = getImagePath(oldAvatar);
+    const oldfilePath = getImagePath(oldAvatar);
+    const path = findFolder(oldAvatar);
+    const newFileName = uuidv4();
     try {
       //upload to storage
+      const removeImage = await supabase.storage
+        .from("avatars")
+        .remove(oldfilePath);
+      if (removeImage.error) {
+        return console.error(removeImage.error);
+      }
       const { data, error } = await supabase.storage
         .from("avatars")
-        .update(fileName, userProfiles.image, {
-          cacheControl: "3600",
+        .upload(`${path}/${newFileName}`, userProfiles.image, {
           upsert: true,
         });
       if (error) {
