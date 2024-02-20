@@ -110,16 +110,15 @@ export default function RoomDetail({ searchParams }) {
         {rooms.length ? (
           rooms?.map((item, index) => (
             <RoomCard
-              key={index}
-              roomitem={item.id}
-              roomName={item.name}
-
+            key={index}
+            roomitem={item.id}
             roomName={item.name}
             dateRoomGuest={dateRoomGuest}
             handleBooking={item.id}
             roomAvailable={item.availableRoom}
             roomGuests={item.guests}
             allRoomId={item.room_id_list}
+            roomPrice={item.pricePerNight}
           />
         ))):(<p>No Room</p>)}
 

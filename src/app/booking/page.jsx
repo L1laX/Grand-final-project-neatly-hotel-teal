@@ -4,6 +4,7 @@ import FormInformation from "@/components/common/FormInformation";
 import FormSpecialReq from "@/components/common/FormSpecialReq";
 import FormPayment from "@/components/common/FormPayment";
 import axios from "axios";
+import { format, addDays, eachDayOfInterval } from "date-fns";
 
 export default function StepperController({ searchParams }) {
 
@@ -14,10 +15,14 @@ export default function StepperController({ searchParams }) {
     checkOutDate:searchParams.to,
     roomReserve:searchParams.room,
     guestReserve:searchParams.guest,
-    allRoomId:searchParams.allRoomId
+    allRoomId:searchParams.allRoomId,
+    roomPrice:searchParams.roomPrice,
+    userId:searchParams.userId,
+    nightReserve:(eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1,
+    totalRoomPrice:((eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1)*searchParams.roomPrice*searchParams.room
   }
   // console.log(new Date(searchParams.from))
-
+  // const datesInRange = eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) });
 
   const [currentStep, setCurrentStep] = useState(1);
   const [values, setValues] = useState({
@@ -29,26 +34,33 @@ export default function StepperController({ searchParams }) {
     payment_id: "",
     order_id: "",
   });
+
+  const getUserData =async()=>{
+    const result = await axios.get(`/api/user/customer_booking/${searchParams.userId}`)
+    setValues(result.data.data)
+    console.log(result)
+  }
+
   const [request, setRequest] = useState({});
   const [promotionCode, setPromotionCode] = useState("");
   const getRequest = (e) => {
     const { name, checked } = e.target;
     let value =
-      name === "earlyCheckIn" ||
-      name === "lateCheckOut" ||
-      name === "nonSmokingRoom" ||
-      name === "aRoomOnTheHighFloor" ||
-      name === "aQuietRoom"
-        ? 0
-        : name === "extraPillows" || name === "phoneChargersAndAdapters"
+      name === "Early check-in" ||
+      name === "Late check-out" ||
+      name === "Non-smoking room" ||
+      name === "A room on the high floor" ||
+      name === "A quiet room"
+        ? "free"
+        : name === "Extra pilloes" || name === "Phone chargers and adapters"
           ? 100
-          : name === "breakfast"
+          : name === "Breakfast"
             ? 150
-            : name === "airportTransfer"
+            : name === "Airport transfer"
               ? 200
-              : name === "babyCot"
+              : name === "Baby cot"
                 ? 400
-                : name === "extraBed"
+                : name === "Extra bed"
                   ? 500
                   : null;
     if (checked) {
@@ -62,6 +74,19 @@ export default function StepperController({ searchParams }) {
     }
   };
   console.log(values);
+
+  // const arrRequest = Object.keys(request).map((key) => ({
+  //   [key]: request[key],
+  // }));
+  // console.log(arrRequest);
+
+  const totalAdditionalPrice = Object.keys(request).reduce((acc,cur) => {
+    if(typeof request[cur] === "number"){
+      acc += request[cur]
+    }
+    return acc
+  },0)
+
   const nextStep = () => {
     setCurrentStep((prevStep) => (prevStep < 3 ? prevStep + 1 : prevStep));
   };
@@ -86,15 +111,15 @@ export default function StepperController({ searchParams }) {
     setValues({ ...values, [name]: value });
   };
   // fetching room_id from search page : use customer_booking_id to get room_id
-  const getReserveRoom = async () => {
-    try {
-      const res = await axios.get(`/api/room_detail/${room_id}`);
-      setValues(res.data);
-      console.log(values);
-    } catch (error) {
-      console.log("Cannot fetching room_id", error);
-    }
-  };
+  // const getReserveRoom = async () => {
+  //   try {
+  //     const res = await axios.get(`/api/room_detail/${room_id}`);
+  //     setValues(res.data);
+  //     console.log(values);
+  //   } catch (error) {
+  //     console.log("Cannot fetching room_id", error);
+  //   }
+  // };
   // create customer_booking_id : POST /api/user/customer_booking
   const reservedRoom = async () => {
     try {
@@ -104,7 +129,8 @@ export default function StepperController({ searchParams }) {
   };
 
   useEffect(() => {
-    getReserveRoom();
+    getUserData()
+    // getReserveRoom();
   }, []);
 
   return (
@@ -116,7 +142,11 @@ export default function StepperController({ searchParams }) {
         <p>แขกที่จะเข้าพัก: {testtest.guestReserve}</p>
         <p>วันที่จะเข้าพัก: {testtest.checkinDate}</p>
         <p>วันที่จะออก: {testtest.checkOutDate}</p>
-        <p>id ห้องทั้งหมด: {testtest.allRoomId}</p>
+        <p>id ห้อง: {testtest.allRoomId}</p>
+        <p>ราคาตต่อคืน: {testtest.roomPrice}</p>
+        <p>จำนวนคืน: {testtest.nightReserve}</p>
+        <p>userId: {testtest.userId}</p>
+        <p>จอง {testtest.roomReserve} ห้อง, {testtest.nightReserve} คืน รวมราคา: {testtest.totalRoomPrice}</p>
 
         <h1 className="">Booking Room</h1>
         {/* Step indicators */}
@@ -211,6 +241,27 @@ export default function StepperController({ searchParams }) {
             </h5>
             <div className=" p-6 text-white">
               <p>Total 2500 THB</p>
+              <p>Check-in: {testtest.checkinDate}</p>
+              <p>Check-Out: {testtest.checkOutDate}</p>
+              <p>แขกที่จะเข้าพัก: {testtest.guestReserve}</p>
+              <p>ชื่อห้อง: {testtest.nameOfRoom}</p>
+              <p>ราคาตต่อคืน: {testtest.roomPrice}</p>
+              {/* {
+                arrRequest?.length?arrRequest.map((item,index)=>(
+                  <p>{Object.keys(item)[0]} : {item[Object.keys(item)[0]]}</p>
+                  //<p>{Object.keys(item)[0]} : {(Object.values(item))}</p>
+                )):null
+              } */}
+
+              {
+                request? Object.keys(request).map((key) => (
+                  <p>{[key]}: {request[key]}</p>
+                )):null
+              }
+
+              <p>จอง {testtest.roomReserve} ห้อง, {testtest.nightReserve} คืน รวมราคา: {testtest.totalRoomPrice}</p>
+              <p>total:{testtest.totalRoomPrice+totalAdditionalPrice}</p>
+
             </div>
           </div>
           {/* ไม่มีการเปลี่ยนแปลงข้อมูล */}
