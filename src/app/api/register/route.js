@@ -65,7 +65,7 @@ export async function POST(req) {
           role: role,
           password: hashedPassword,
           image: image,
-          name: fullName,
+          name:fullName,
           userProfile: {
             create: {
               id_number: id_number,

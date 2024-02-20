@@ -11,7 +11,6 @@ import { use, useEffect } from "react";
 const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
-
   return (
     <section className="flex w-full items-center justify-center bg-white py-5">
       <div className="flex w-11/12 justify-between lg:w-5/6">
@@ -55,7 +54,7 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
 
         <div className="user-menu">
           <div className="none-user flex items-center justify-items-end justify-self-end ">
-            {session?.user?.role === "user" ? (
+            {session?.user ? (
               <div className="dropdown relative flex items-center">
                 <div className="mr-7 cursor-pointer">
                   <Image

@@ -8,6 +8,8 @@ import bg from "/src/asset/background/login-page/bg.png";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
+import SecondaryBtn from "@/components/common/SecondaryBtn";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -41,7 +43,7 @@ const Login = () => {
       <div className="image absolute -z-10 md:static md:block md:w-[100rem]">
         <Image src={bg} alt="background-image" />
       </div>
-      <div className="login-form  m-7 flex w-full flex-col items-center gap-10 rounded-xl bg-[#f7f7fb] md:ml-24 md:mt-32 md:items-start">
+      <div className="login-form  m-7 flex w-full flex-col items-center gap-10 rounded-xl bg-[#f7f7fb] md:ml-24 md:mt-32 md:items-start ">
         <h1 className="mt-5 text-5xl md:text-[68px]">Log In</h1>
         <form onSubmit={handleSubmit} className="flex w-1/2 flex-col">
           <div className="input-content flex flex-col gap-3 ">
@@ -89,6 +91,15 @@ const Login = () => {
             </Link>
           </div>
         </form>
+        <div className="mt-1 w-1/2">
+          <SecondaryBtn
+            secondaryButton="w-full"
+            google={true}
+            handleClick={() => {
+              signIn("google", { callbackUrl: "http://localhost:3000/admin" });
+            }}
+          />
+        </div>
       </div>
     </div>
   );

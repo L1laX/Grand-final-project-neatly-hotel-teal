@@ -14,6 +14,7 @@ const FormSpecialReq = ({
     e.preventDefault();
     nextStep();
   };
+  console.log(request);
   return (
     <form className="mr-6 rounded bg-white p-10" onSubmit={handleSubmit}>
     {/* Checkbox Standard Request */}
