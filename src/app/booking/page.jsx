@@ -82,7 +82,7 @@ export default function StepperController({ searchParams }) {
   // fetching room_id from search page : use customer_booking_id to get room_id
   const getReserveRoom = async () => {
     try {
-      const res = await axios.get(`/api/room_detail/${room_id}`);
+      const res = await axios.get(`/api/user/customer_booking/${user_id}`);
       setValues(res.data);
       console.log(values);
     } catch (error) {

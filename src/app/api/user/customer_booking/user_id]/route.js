@@ -4,10 +4,9 @@ import { NextResponse } from "next/server";
 export async function GET(request, { params: { user_id } }) {
   // console.log(booking_id);
   try {
-    const userBookingProfile = await prisma.userProfile.findMany({
-      where: {
-        user_id: user_id,
-      },
+    const userBookingProfile = await prisma.userProfile.findUnique({
+      where: { id: user_id },
+      include: { user: true },
     });
     console.log(userBookingProfile);
 
