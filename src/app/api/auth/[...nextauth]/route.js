@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import { compare } from "bcrypt";
 import NextAuth from "next-auth/next";
+import GoogleProvider from "next-auth/providers/google";
 
 const handler = NextAuth({
   secret: process.env.AUTH_SECRET,
@@ -86,6 +87,10 @@ const handler = NextAuth({
           return data;
         }
       },
+    }),
+    GoogleProvider({
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
     }),
   ],
   callbacks: {

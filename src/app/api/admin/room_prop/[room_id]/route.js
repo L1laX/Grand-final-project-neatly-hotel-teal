@@ -34,8 +34,6 @@ export async function GET(request, { params: { room_id } }) {
 
 export async function PUT(request, { params: { room_id } }) {
   const body = await request.json();
-
-  console.log(body);
   const { roomAmenity, roomGallery, ...data } = body;
 
   try {

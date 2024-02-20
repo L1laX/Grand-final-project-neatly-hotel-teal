@@ -15,7 +15,7 @@ export default function StepperController() {
     country: "",
   });
   const [request, setRequest] = useState({});
-  console.log(request);
+
   const getRequest = (e) => {
     const { name, checked } = e.target;
     let value =
@@ -24,21 +24,20 @@ export default function StepperController() {
       name === "nonSmokingRoom" ||
       name === "aRoomOnTheHighFloor" ||
       name === "aQuietRoom"
-        ? 0
+        ? "free"
         : name === "extraPillows" || name === "phoneChargersAndAdapters"
           ? 100
           : name === "breakfast"
-            ? 150
+            ? 200
             : name === "airportTransfer"
               ? 200
               : name === "babyCot"
                 ? 400
                 : name === "extraBed"
                   ? 500
-                  : null;
+                  : "free";
     if (checked) {
       const newRequest = { ...request, [name]: value };
-
       setRequest({ ...newRequest });
     } else {
       const newRequest = { ...request };
@@ -46,7 +45,7 @@ export default function StepperController() {
       setRequest({ ...newRequest });
     }
   };
-  console.log(values);
+
   const nextStep = () => {
     setCurrentStep((prevStep) => (prevStep < 3 ? prevStep + 1 : prevStep));
   };
@@ -86,6 +85,7 @@ export default function StepperController() {
     } catch (error) {}
   };
 
+  console.log(request);
   useEffect(() => {
     getReserveRoom();
   }, []);
@@ -162,9 +162,9 @@ export default function StepperController() {
               nextStep={nextStep}
               prevStep={prevStep}
               handleInputChange={handleInputChange}
-              getRequest={getRequest}
               values={values}
               request={request}
+              getRequest={getRequest}
             />
           )}
           {currentStep === 3 && (
@@ -200,7 +200,6 @@ export default function StepperController() {
           </div>
         </div>
       </div>
-   
     </section>
   );
 }

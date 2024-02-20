@@ -26,7 +26,7 @@ export default function UserProfile({ params: { user_id } }) {
     country: false,
     image: false,
   });
-
+  console.log(oldAvatar);
   // get image path
   const getImagePath = (name) => {
     const publicIndex = name.split("/").findIndex((el) => el === "public");

@@ -8,11 +8,13 @@ const FormSpecialReq = ({
   handleInputChange,
   getRequest,
   values,
+  request,
 }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     nextStep();
   };
+  console.log(request);
   return (
     <form className="mr-6 rounded bg-white p-10" onSubmit={handleSubmit}>
       {/* Checkbox Standard Request */}
@@ -32,6 +34,7 @@ const FormSpecialReq = ({
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
               name="earlyCheckIn"
               onChange={getRequest}
+              checked={request.earlyCheckIn ? true : false}
             ></input>
             Early check-in
           </label>
@@ -41,6 +44,7 @@ const FormSpecialReq = ({
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
               name="lateCheckOut"
               onChange={getRequest}
+              checked={request.lateCheckOut ? true : false}
             ></input>
             Late check-out
           </label>
@@ -50,6 +54,7 @@ const FormSpecialReq = ({
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
               name="nonSmokingRoom"
               onChange={getRequest}
+              checked={request.nonSmokingRoom ? true : false}
             ></input>
             Non-smoking room
           </label>
@@ -59,6 +64,7 @@ const FormSpecialReq = ({
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
               name="aRoomOnTheHighFloor"
               onChange={getRequest}
+              checked={request.aRoomOnTheHighFloor ? true : false}
             ></input>
             A room on the high floor
           </label>
@@ -68,6 +74,7 @@ const FormSpecialReq = ({
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
               name="aQuietRoom"
               onChange={getRequest}
+              checked={request.aQuietRoom ? true : false}
             ></input>
             A quiet room
           </label>
@@ -84,6 +91,7 @@ const FormSpecialReq = ({
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
               name="babyCot"
               onChange={getRequest}
+              checked={request.babyCot ? true : false}
             ></input>
             Baby cot (+THB 400)
           </label>
@@ -93,6 +101,7 @@ const FormSpecialReq = ({
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
               name="airportTransfer"
               onChange={getRequest}
+              checked={request.airportTransfer ? true : false}
             ></input>
             Airport transfer (+THB 200)
           </label>
@@ -102,6 +111,7 @@ const FormSpecialReq = ({
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
               name="extraBed"
               onChange={getRequest}
+              checked={request.extraBed ? true : false}
             ></input>
             Extra bed (+THB 500)
           </label>
@@ -111,6 +121,7 @@ const FormSpecialReq = ({
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
               name="extraPillows"
               onChange={getRequest}
+              checked={request.extraPillows ? true : false}
             ></input>
             Extra pilloes (+THB 100)
           </label>
@@ -123,6 +134,7 @@ const FormSpecialReq = ({
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
               name="phoneChargersAndAdapters"
               onChange={getRequest}
+              checked={request.phoneChargersAndAdapters ? true : false}
             ></input>
             Phone chargers and adapters (+THB 100)
           </label>
@@ -132,6 +144,7 @@ const FormSpecialReq = ({
               className=" mr-2 h-6 w-6 align-middle accent-[#e76b39] checked:text-[#2a2e3f]"
               name="breakfast"
               onChange={getRequest}
+              checked={request.breakfast ? true : false}
             ></input>
             Breakfast (+THB 150)
           </label>

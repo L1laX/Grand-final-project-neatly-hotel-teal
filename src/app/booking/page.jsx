@@ -39,7 +39,7 @@ export default function StepperController({ searchParams }) {
       name === "nonSmokingRoom" ||
       name === "aRoomOnTheHighFloor" ||
       name === "aQuietRoom"
-        ? 0
+        ? "free"
         : name === "extraPillows" || name === "phoneChargersAndAdapters"
           ? 100
           : name === "breakfast"
