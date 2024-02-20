@@ -236,8 +236,14 @@ function BookingDetail({ params: { booking_id } }) {
                     Total{" "}
                   </div>
                   <span className="flex-auto text-right text-xl font-semibold stacked-fractions tracking-tight">
-                    {room.pricePerNight * stayDuration + 200 + promotionPrice ||
-                      "N/A"}
+                    {(
+                      room.pricePerNight * stayDuration +
+                      200 +
+                      (promotionPrice ?? 0)
+                    ).toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "THB",
+                    })}
                   </span>
                 </div>
               </form>
