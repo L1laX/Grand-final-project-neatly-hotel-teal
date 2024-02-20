@@ -44,8 +44,6 @@ function BookingDetail({ params: { booking_id } }) {
     fetchData();
   }, [booking_id]);
 
-  console.log(booking);
-
   if (loading) {
     toast.info("Loading...", {
       position: "top-center",
@@ -70,13 +68,14 @@ function BookingDetail({ params: { booking_id } }) {
 
   const {
     customerName,
+    discount,
     guestCount,
     room_id,
     checkInDate,
     checkOutDate,
     paymentType,
     totalPrice,
-    promotionCode,
+    promotionPrice,
     additionalRequest,
     created_at,
     room,
@@ -90,24 +89,26 @@ function BookingDetail({ params: { booking_id } }) {
   const checkOutDateObj = new Date(checkOutDate);
   const bookingDateObj = new Date(created_at);
 
-  const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+  const optionsFullDate = {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  };
 
   const formattedCheckInDate = checkInDateObj.toLocaleDateString(
     "en-US",
-    options,
+    optionsFullDate,
   );
   const formattedCheckOutDate = checkOutDateObj.toLocaleDateString(
     "en-US",
-    options,
+    optionsFullDate,
   );
 
   const formattedBookingDate = bookingDateObj.toLocaleDateString(
     "en-US",
-    options,
+    optionsFullDate,
   );
-
-  console.log("checkInDate:", formattedCheckInDate);
-  console.log("checkOutDate:", formattedCheckOutDate);
 
   return (
     <>
@@ -225,7 +226,7 @@ function BookingDetail({ params: { booking_id } }) {
                 <div className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap">
                   <span>Promotion Code</span>
                   <span className="grow text-right font-semibold max-md:max-w-full">
-                    {promotionCode || "N/A"}
+                    {promotionPrice || "N/A"}
                   </span>
                 </div>
 
@@ -235,8 +236,14 @@ function BookingDetail({ params: { booking_id } }) {
                     Total{" "}
                   </div>
                   <span className="flex-auto text-right text-xl font-semibold stacked-fractions tracking-tight">
-                    {room.pricePerNight * stayDuration + 200 + promotionCode ||
-                      "N/A"}
+                    {(
+                      room.pricePerNight * stayDuration +
+                      200 +
+                      (promotionPrice ?? 0)
+                    ).toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "THB",
+                    })}
                   </span>
                 </div>
               </form>

@@ -331,3 +331,7 @@ html {
   align-items: center;
   justify-content: center;
 }
+
+.svg-white {
+  filter: brightness(0) invert(1) grayscale(1) brightness(100%) contrast(100%);
+}

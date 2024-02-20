@@ -8,62 +8,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-
-  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-
-model session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
 model user {
-  id              String            @id @default(cuid())
-  name            String?
+  email           String?           @unique
   username        String?           @unique
   password        String?
-  email           String?           @unique
-  emailVerified   DateTime?
-  image           String?
   role            String?
+  image           String?
   created_at      DateTime          @default(now()) @db.Timestamptz(3)
   updated_at      DateTime          @updatedAt @db.Timestamptz(3)
-  accounts        account[]
-  sessions        session[]
+  id              String            @id @default(uuid())
+  emailVerified   DateTime?
+  name            String?
+  account         account[]
   customerBooking customerBooking[]
+  session         session[]
   userProfile     userProfile?
-}
-
-model verificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
 }
 
 model userProfile {
   id          String   @id @unique @default(uuid())
   user_id     String   @unique
-  fullName    String
   id_number   String   @unique
   dateOfBirth DateTime @db.Timestamptz(3)
   country     String
@@ -82,10 +46,10 @@ model room {
   description     String
   roomMainImage   String
   pricePerNight   Int
-  created_at      DateTime          @default(now()) @db.Timestamptz(3)
-  last_updated_at DateTime          @updatedAt @db.Timestamptz(3)
   promotionPrice  Int?
   id              String            @id @unique @default(uuid())
+  created_at      DateTime          @default(now()) @db.Timestamptz(3)
+  last_updated_at DateTime          @updatedAt @db.Timestamptz(3)
   customerBooking customerBooking[]
   roomAmenity     roomAmenity[]
   roomGallery     roomGallery[]
@@ -122,10 +86,10 @@ model customerBooking {
   room_id             String?
   checkInDate         DateTime?        @db.Timestamptz(3)
   checkOutDate        DateTime?        @db.Timestamptz(3)
-  promotionCode       String?
-  order_id            String?
   created_at          DateTime         @default(now()) @db.Timestamptz(3)
   last_updated_at     DateTime         @updatedAt @db.Timestamptz(3)
+  promotionCode       String?
+  order_id            String?
   bookingRequest      bookingRequest[]
   room                room?            @relation(fields: [room_id], references: [id])
   user                user             @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -150,4 +114,38 @@ model promotion {
   promotionCode String
   discount      Int
   id            String @id @unique @default(uuid())
+}
+
+model account {
+  id                String  @id
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              user    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model session {
+  id           String   @id
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model verificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }

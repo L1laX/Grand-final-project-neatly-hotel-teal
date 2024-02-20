@@ -7,10 +7,10 @@ import Link from "next/link";
 import PrimaryBtn from "./common/PrimaryBtn";
 import AvatarDropdown from "./common/AvatarDropdown";
 import { useSession, signIn } from "next-auth/react";
+import { use, useEffect } from "react";
 const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
-  console.log(session);
   return (
     <section className="flex w-full items-center justify-center bg-white py-5">
       <div className="flex w-11/12 justify-between lg:w-5/6">

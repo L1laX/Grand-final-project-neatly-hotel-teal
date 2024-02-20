@@ -22,6 +22,16 @@ function CustomerBooking() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const formatDate = (dateString) => {
+    const options = {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    };
+    return new Date(dateString).toLocaleDateString("en-GB", options);
+  };
+
   const fetchData = async () => {
     try {
       toast.info("Fetching data...", {
@@ -74,7 +84,12 @@ function CustomerBooking() {
     },
     { id: "guestCount", label: "Guest(s)", minWidth: 100, align: "center" },
     { id: "room.name", label: "Room type", minWidth: 100, align: "center" },
-    { id: "totalPrice", label: "Amount", minWidth: 100, align: "center" },
+    {
+      id: "totalPrice",
+      label: "Amount",
+      minWidth: 100,
+      align: "center",
+    },
     { id: "room.bedType", label: "Bed type", minWidth: 100, align: "center" },
     { id: "checkInDate", label: "Check-in", minWidth: 100, align: "center" },
     { id: "checkOutDate", label: "Check-out", minWidth: 100, align: "center" },
@@ -132,7 +147,7 @@ function CustomerBooking() {
                             <TableCell key={column.id} align={column.align}>
                               {column.id === "checkInDate" ||
                               column.id === "checkOutDate"
-                                ? new Date(row[column.id]).toLocaleDateString()
+                                ? formatDate(row[column.id])
                                 : (column.id === "room.name" ||
                                       column.id === "room.bedType") &&
                                     row.room

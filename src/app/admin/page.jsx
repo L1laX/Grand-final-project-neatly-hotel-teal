@@ -1,7 +1,7 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 import Sidebar from "@/components/navbar/SidebarAdmin.jsx";
 import NavBarAdmin from "@/components/navbar/NavbarAdmin.jsx";
 import Paper from "@mui/material/Paper";
@@ -12,32 +12,55 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function CustomerBooking() {
+function Admin() {
   const [search, setSearch] = useState("");
   const router = useRouter();
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [loading, setLoading] = useState(true);
+
+  const formatDate = (dateString) => {
+    const options = {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    };
+    return new Date(dateString).toLocaleDateString("en-GB", options);
+  };
+
+  const fetchData = async () => {
+    try {
+      toast.info("Fetching data...", {
+        position: "top-center",
+        autoClose: false,
+      });
+
+      const response = await axios.get(
+        `/api/admin/customer_booking?keywords=${search}`,
+      );
+
+      const data = response.data;
+      setRows(data.data);
+      toast.dismiss();
+    } catch (error) {
+      console.error("Error fetching data from API:", error.message);
+      toast.error("Failed to fetch data. Please try again later.", {
+        position: "bottom-center",
+      });
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `/api/admin/customer_booking?keywords=${search}`,
-        );
-        const data = await response.json();
-
-        setRows(data.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data from API:", error.message);
-      }
-    };
-
     fetchData();
   }, [search]);
+
+  useEffect(() => {
+    console.log("Fetched Data:", rows);
+  }, [rows]);
 
   const handleChangePage = (_event, newPage) => {
     setPage(newPage);
@@ -94,10 +117,10 @@ function CustomerBooking() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {loading ? (
+                  {rows.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={columns.length} align="center">
-                        Loading...
+                        No data available
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -115,18 +138,18 @@ function CustomerBooking() {
                           onClick={() => handleRowClick(row.id)}
                           style={{ cursor: "pointer" }}
                         >
-                          {rows &&
-                            columns.map((column) => (
-                              <TableCell key={column.id} align={column.align}>
-                                {column.id === "checkInDate" ||
-                                column.id === "checkOutDate"
-                                  ? new Date(row[column.id]).toLocaleString()
-                                  : column.id === "room.name" ||
-                                      column.id === "room.bedType"
-                                    ? row.room[column.id.split(".")[1]]
-                                    : row[column.id]}
-                              </TableCell>
-                            ))}
+                          {columns.map((column) => (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.id === "checkInDate" ||
+                              column.id === "checkOutDate"
+                                ? formatDate(row[column.id])
+                                : (column.id === "room.name" ||
+                                      column.id === "room.bedType") &&
+                                    row.room
+                                  ? row.room[column.id.split(".")[1]]
+                                  : row[column.id]}
+                            </TableCell>
+                          ))}
                         </TableRow>
                       ))
                   )}
@@ -145,8 +168,9 @@ function CustomerBooking() {
           </Paper>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }
 
-export default CustomerBooking;
+export default Admin;
