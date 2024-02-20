@@ -26,6 +26,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useSession, signIn } from "next-auth/react";
+
 
 export const RoomCard = ({
   roomitem,
@@ -39,17 +41,19 @@ export const RoomCard = ({
   roomsize,
   // handleBooking,
   roomAvailable,
-
   dateRoomGuest,
-  allRoomId
+  allRoomId,
+  roomPrice
 }) => {
   const router = useRouter();
+  const { data: session, status } = useSession();
+  console.log("asfasfjiosajfiojaf",session)
+
   const handleBooking = () => {
     const queryString = new URLSearchParams(dateRoomGuest).toString();
     const path = `/booking`;
     allRoomId = allRoomId.slice(0, dateRoomGuest.room);
-    const url = String(path) + "?" + queryString + "&roomName=" + roomName + "&allRoomId=" + allRoomId;
-
+    const url = String(path) + "?" + queryString + "&roomName=" + roomName + "&allRoomId=" + allRoomId + "&roomPrice=" + roomPrice + "&userId=" + session?.user?.id;
 
     router.push(url);
   };
@@ -90,7 +94,7 @@ export const RoomCard = ({
           </AlertDialog>
 
           <section className="room-detail flex flex-col lg:justify-between">
-            <div className="flex-col lg:flex">
+            <div className="lg:flex flex-col">
               <div className="lg:w-1/2">
                 <Link href={{ pathname: `/room_detail/${roomitem}` }}>
                   <h1 className=" cursor-pointer">{roomName}</h1>
@@ -124,7 +128,7 @@ export const RoomCard = ({
                   <AlertDialogHeader>
                     <AlertDialogTitle>
                       <div className=" flex flex-row justify-between gap-5 p-4 md:ml-20">
-                        <h5>{roomName}</h5>
+                        <h5>Superior Garden View</h5>
                         <AlertDialogCancel>
                           <Image
                             className=" cursor-pointer"
@@ -202,15 +206,7 @@ export const RoomCard = ({
                 </AlertDialogContent>
               </AlertDialog>
 
-              <PrimaryBtn
-                btnName="Book Now"
-                handleClick={(item) => {
-                  const path = `/booking/${item.roomName}${item.checkIn}${item.checkOut}${item.roomReserve}${item.guestReserve}${item.roomitem}`;
-                  const queryString = urlSearchParams.toString();
-                  const url = String(path) + "?" + queryString;
-                  Router.push(url);
-                }}
-              />
+              <PrimaryBtn btnName="Book Now" handleClick={handleBooking} />
             </div>
           </section>
           <hr />
