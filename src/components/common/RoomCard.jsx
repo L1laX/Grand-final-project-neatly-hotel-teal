@@ -27,7 +27,6 @@ import {
 } from "@/components/ui/carousel";
 import { useSession, signIn } from "next-auth/react";
 
-
 export const RoomCard = ({
   roomitem,
   roomName,
@@ -43,20 +42,31 @@ export const RoomCard = ({
   dateRoomGuest,
   allRoomId,
 
-  roomPrice
+  roomPrice,
 }) => {
   const router = useRouter();
   const { data: session, status } = useSession();
-  console.log("asfasfjiosajfiojaf",session)
-
+  console.log("asfasfjiosajfiojaf", session);
 
   const handleBooking = () => {
     const urlSearchParams = new URLSearchParams(dateRoomGuest).toString();
     const path = "/booking";
+    const queryString = urlSearchParams;
+
     allRoomId = allRoomId.slice(0, dateRoomGuest.room);
 
-    const url = String(path) + "?" + queryString + "&roomName=" + roomName + "&allRoomId=" + allRoomId + "&roomPrice=" + roomPrice + "&userId=" + session?.user?.id;
-
+    const url =
+      String(path) +
+      "?" +
+      queryString +
+      "&roomName=" +
+      roomName +
+      "&allRoomId=" +
+      allRoomId +
+      "&roomPrice=" +
+      roomPrice +
+      "&userId=" +
+      session?.user?.id;
 
     router.push(url);
   };
@@ -96,7 +106,7 @@ export const RoomCard = ({
           </AlertDialog>
 
           <section className="room-detail flex flex-col lg:justify-between">
-            <div className="lg:flex flex-col">
+            <div className="flex-col lg:flex">
               <div className="lg:w-1/2">
                 <Link href={{ pathname: `/room_detail/${roomitem}` }}>
                   <h1 className="cursor-pointer">{roomName}</h1>
@@ -127,7 +137,6 @@ export const RoomCard = ({
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>
-
                       <div className=" flex flex-row justify-between gap-5 p-4 md:ml-20">
                         <h5>Superior Garden View</h5>
 
