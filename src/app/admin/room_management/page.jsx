@@ -118,6 +118,12 @@ const statusItems = [
     style:
       "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-gray-500 whitespace-nowrap rounded bg-slate-100",
   },
+  {
+    value: "Booking",
+    label: "Booking",
+    style:
+      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-yellow-500 whitespace-nowrap rounded bg-slate-100",
+  },
 ];
 
 const StatusDropdownCell = ({ status, row, onStatusUpdate }) => {
