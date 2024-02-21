@@ -122,6 +122,7 @@ model promotion {
   discount      Int
   name          String
   id            String @id @unique @default(uuid())
+  name          String
 }
 
 model account {
@@ -156,4 +157,12 @@ model verificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model customerBooking_room {
+  id                 String          @id @unique
+  customerBooking_id String
+  room_id            String
+  customerBooking    customerBooking @relation(fields: [customerBooking_id], references: [id])
+  room               room            @relation(fields: [room_id], references: [id])
 }

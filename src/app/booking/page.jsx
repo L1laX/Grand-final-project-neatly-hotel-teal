@@ -9,29 +9,17 @@ import SubmitTotal from "@/components/common/SubmitTotal";
 import { useRouter } from "next/navigation";
 export default function StepperController({ searchParams }) {
   const testtest = {
-    nameOfRoom: searchParams.roomName,
-    checkinDate: searchParams.from,
-    checkOutDate: searchParams.to,
-    roomReserve: searchParams.room,
-    guestReserve: searchParams.guest,
-    allRoomId: searchParams.allRoomId,
-    roomPrice: searchParams.roomPrice,
-    userId: searchParams.userId,
-    nightReserve:
-      eachDayOfInterval({
-        start: new Date(searchParams.from),
-        end: new Date(searchParams.to),
-      }).length - 1,
-    totalRoomPrice:
-      (eachDayOfInterval({
-        start: new Date(searchParams.from),
-        end: new Date(searchParams.to),
-      }).length -
-        1) *
-      searchParams.roomPrice *
-      searchParams.room,
-  };
-  const [totalAdditionalPrice, setTotalAdditionalPrice] = useState(0);
+    nameOfRoom:searchParams.roomName,
+    checkinDate:format(new Date(searchParams.from).setUTCHours(0,0,0,0), "eee',' dd MMM yyyy"),
+    checkOutDate:format(new Date(searchParams.to).setUTCHours(0,0,0,0), "eee',' dd MMM yyyy"),
+    roomReserve:searchParams.room,
+    guestReserve:searchParams.guest,
+    allRoomId:searchParams.allRoomId,
+    roomPrice:searchParams.roomPrice,
+    userId:searchParams.userId,
+    nightReserve:(eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1,
+    totalRoomPrice:((eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1)*searchParams.roomPrice*searchParams.room
+  }
   // console.log(new Date(searchParams.from))
   // const datesInRange = eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) });
   const [currentStep, setCurrentStep] = useState(1);
@@ -43,8 +31,28 @@ export default function StepperController({ searchParams }) {
     country: "",
     payment_id: "",
     order_id: "",
-    additionalRequest: "",
+    roomName: searchParams.roomName,
+    checkinDate: new Date(searchParams.from).setUTCHours(0,0,0,0),
+    checkOutDate: new Date(searchParams.to).setUTCHours(0,0,0,0),
+    roomReserve:searchParams.room,
+    guestReserve:searchParams.guest,
+    allRoomId:searchParams.allRoomId,
+    roomPrice:searchParams.roomPrice,
+    userId:searchParams.userId,
+    nightReserve:(eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1,
+    totalRoomPrice:((eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1)*searchParams.roomPrice*searchParams.room
   });
+
+  console.log(values)
+
+  const getUserData =async()=>{
+    const result = await axios.get(`/api/user/customer_booking/${searchParams.userId}`)
+    setValues({...values,...result.data.data})
+    console.log(result)
+  }
+
+  const [request, setRequest] = useState({});
+
   const [promotionCode, setPromotionCode] = useState("");
   const [ourCode, setOurCode] = useState("");
   const getUserData = async () => {
@@ -285,12 +293,11 @@ export default function StepperController({ searchParams }) {
               Booking Detail
             </h5>
             <div className=" p-6 text-white">
-              <p>Total 2500 THB</p>
-              <p>Check-in: {testtest.checkinDate}</p>
-              <p>Check-Out: {testtest.checkOutDate}</p>
-              <p>แขกที่จะเข้าพัก: {testtest.guestReserve}</p>
-              <p>ชื่อห้อง: {testtest.nameOfRoom}</p>
-              <p>ราคาตต่อคืน: {testtest.roomPrice}</p>
+              <p>Check-in: {format(values.checkinDate, "eee, dd MMM yyyy")}</p>
+              <p>Check-Out: {format(values.checkOutDate, "eee, dd MMM yyyy")}</p>
+              <p>แขกที่จะเข้าพัก: {values.guestReserve}</p>
+              <p>ชื่อห้อง: {values.roomName}</p>
+              <p>ราคาตต่อคืน: {values.roomPrice}</p>
               {/* {
                 arrRequest?.length?arrRequest.map((item,index)=>(
                   <p>{Object.keys(item)[0]} : {item[Object.keys(item)[0]]}</p>

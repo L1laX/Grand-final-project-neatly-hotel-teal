@@ -37,7 +37,7 @@ const FormInformation = ({
     const validEmailRegex =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const error = {
-      fullName: !values?.userProfile?.fullName,
+      fullName: !values?.name,
       dateOfBirth: validateDateofBirth(values?.userProfile?.dateOfBirth),
       email:
         !values?.email.length ||
@@ -74,7 +74,7 @@ const FormInformation = ({
             type="text"
             name="fullName"
             onChange={handleInputChange}
-            value={values?.fullName}
+            value={values?.name}
             placeholder="fullname"
           />
         </label>
