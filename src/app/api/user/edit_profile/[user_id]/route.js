@@ -67,7 +67,7 @@ export async function PUT(request, { params: { user_id } }) {
             where: { user_id: user_id },
             data: {
               idNumber,
-              dateOfBirth,
+              dateOfBirth: new Date(dateOfBirth),
               country,
             },
           },

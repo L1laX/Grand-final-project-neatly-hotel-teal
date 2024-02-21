@@ -209,7 +209,7 @@ export default function UserProfile({ params: { user_id } }) {
     }
   };
   const getdateOfBirth = (date) => {
-    const value = new Date(date?.$d).toISOString();
+    const value = new Date(date?.$d).toLocaleString();
     setUserProfiles({ ...userProfiles, dateOfBirth: value });
   };
   useEffect(() => {

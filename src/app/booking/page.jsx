@@ -6,7 +6,7 @@ import FormPayment from "@/components/common/FormPayment";
 import axios from "axios";
 import { eachDayOfInterval } from "date-fns";
 import SubmitTotal from "@/components/common/SubmitTotal";
-
+import { useRouter } from "next/navigation";
 export default function StepperController({ searchParams }) {
   const testtest = {
     nameOfRoom: searchParams.roomName,

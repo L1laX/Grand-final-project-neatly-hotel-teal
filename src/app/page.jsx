@@ -18,7 +18,6 @@ import Lounge from "/src/asset/icons/iconoir_two-seater-sofa";
 import Wifi from "/src/asset/icons/ant-design_wifi-outlined";
 import Car from "/src/asset/icons/carbon_car";
 import Phone from "/src/asset/icons/bx_phone-call";
-import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 import ScrollToTopButton from "@/components/ui/scrollToTop";
 import NextPrevBtn from "@/asset/icons/next_button";
 import {
