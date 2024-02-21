@@ -54,6 +54,26 @@ export default function DatePickerComponent({ getdateOfBirth, value }) {
                 },
               },
             },
+            desktopPaper: {
+              sx: {
+                ".MuiPickersYear-yearButton.Mui-selected": {
+                  backgroundColor: "#e76b39",
+                  color: "white",
+                  borderRadius: 5,
+                  borderWidth: 1,
+                },
+              },
+            },
+            mobilePaper: {
+              sx: {
+                ".MuiPickersYear-yearButton.Mui-selected": {
+                  backgroundColor: "#e76b39",
+                  color: "white",
+                  borderRadius: 5,
+                  borderWidth: 1,
+                },
+              },
+            },
             day: {
               sx: {
                 "&.MuiPickersDay-root.Mui-selected": {

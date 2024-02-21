@@ -163,7 +163,6 @@ import axios from "axios";
 import React from "react";
 import CheckoutForm from "@/components/stripe/CheckoutForm";
 import { v4 as uuidv4 } from "uuid";
-import { set } from "date-fns";
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 );
@@ -174,6 +173,8 @@ export default function FormPayment({
   setValues,
   promotionCode,
   setPromotionCode,
+  testtest,
+  totalAdditionalPrice,
 }) {
   const [clientSecret, setClientSecret] = React.useState("");
   const [isPromotion, setIsPromotion] = React.useState(false);
@@ -181,8 +182,8 @@ export default function FormPayment({
   const [paymentIntent_id, setPaymentIntent_id] = React.useState("");
   const [unique_key_number, setUnique_key_number] = React.useState(0);
   const getClientSecret = async (amount, istrue) => {
-    console.log(paymentIntent_id, "paymentIntent_id");
     const unique_key = uuidv4();
+    console.log(amount);
     const response = await axios.post(
       "/api/user/payment_method/payment_intent",
       {
@@ -234,10 +235,11 @@ export default function FormPayment({
       const newAmount = checkPromotion(promotionCode);
       setIsPromotion(true);
       if (newAmount) {
-        getClientSecret(newAmount, true);
+        getClientSecret(testtest.totalRoomPrice + totalAdditionalPrice, true);
       }
     } else {
-      getClientSecret();
+      console.log("test");
+      getClientSecret(testtest.totalRoomPrice + totalAdditionalPrice);
       setIsPromotion(false);
     }
   }, [promotionCode]);

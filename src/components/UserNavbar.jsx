@@ -7,7 +7,6 @@ import Link from "next/link";
 import PrimaryBtn from "./common/PrimaryBtn";
 import AvatarDropdown from "./common/AvatarDropdown";
 import { useSession, signIn } from "next-auth/react";
-import { use, useEffect } from "react";
 const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
