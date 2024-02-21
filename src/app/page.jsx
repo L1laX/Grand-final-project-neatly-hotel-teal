@@ -100,21 +100,12 @@ export default function Home() {
     slidesToScroll: 1,
   };
 
-  // const dateString = JSON.stringify({
-  //   from: date?.from
-  //     ? format(date?.from, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
-  //     : null,
-  //   to: date?.to ? format(date?.to, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
-  // });
-
   const dateString = JSON.stringify({
     from: date?.from
-      ? format(date?.from.setUTCHours(0, 0, 0, 0), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
+      ? format(date?.from, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
       : null,
-    to: date?.to
-      ? format(date?.to.setUTCHours(0, 0, 0, 0), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
-      : null,
-  });  
+    to: date?.to ? format(date?.to, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
+  });
 
   const roomAndGuestString = JSON.stringify({
     room: roomAndGuest?.room ? roomAndGuest?.room : null,
