@@ -57,9 +57,27 @@ export default function DatePickerComponent({ getdateOfBirth, value }) {
             desktopPaper: {
               sx: {
                 ".MuiPickersYear-yearButton.Mui-selected": {
+                  "&:hover": {
+                    borderColor: "#e76b39",
+                  },
+                  "&.Mui-focused ": {
+                    borderColor: "#e76b39",
+                  },
                   backgroundColor: "#e76b39",
                   color: "white",
-                  borderRadius: 5,
+                  borderRadius: 0,
+                  borderWidth: 1,
+                },
+                ".MuiPickersMonth-monthButton.Mui-selected": {
+                  "&:hover": {
+                    borderColor: "#e76b39",
+                  },
+                  "&.Mui-focused ": {
+                    borderColor: "#e76b39",
+                  },
+                  backgroundColor: "#e76b39",
+                  color: "white",
+                  borderRadius: 0,
                   borderWidth: 1,
                 },
               },
@@ -69,7 +87,7 @@ export default function DatePickerComponent({ getdateOfBirth, value }) {
                 ".MuiPickersYear-yearButton.Mui-selected": {
                   backgroundColor: "#e76b39",
                   color: "white",
-                  borderRadius: 5,
+                  borderRadius: 0,
                   borderWidth: 1,
                 },
               },

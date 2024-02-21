@@ -4,7 +4,8 @@ import FormInformation from "@/components/common/FormInformation";
 import FormSpecialReq from "@/components/common/FormSpecialReq";
 import FormPayment from "@/components/common/FormPayment";
 import axios from "axios";
-import { format, addDays, eachDayOfInterval, set } from "date-fns";
+import { eachDayOfInterval } from "date-fns";
+import SubmitTotal from "@/components/common/SubmitTotal";
 
 export default function StepperController({ searchParams }) {
   const testtest = {
@@ -254,6 +255,18 @@ export default function StepperController({ searchParams }) {
           )}
           {currentStep === 3 && (
             <FormPayment
+              prevStep={prevStep}
+              values={values}
+              setValues={setValues}
+              promotionCode={promotionCode}
+              setPromotionCode={setPromotionCode}
+              testtest={testtest}
+              totalAdditionalPrice={totalAdditionalPrice}
+              setCurrentStep={setCurrentStep}
+            />
+          )}
+          {currentStep === 4 && (
+            <SubmitTotal
               prevStep={prevStep}
               values={values}
               setValues={setValues}

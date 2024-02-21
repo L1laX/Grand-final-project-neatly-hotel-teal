@@ -6,13 +6,14 @@ import {
 } from "@stripe/react-stripe-js";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import { Input } from "../ui/input";
-
+import LoadingPage from "../common/LoadingPage";
 export default function CheckoutForm({
   prevStep,
   promotionCode,
   setPromotionCode,
   isPromotion,
   displayCode,
+  setCurrentStep,
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -61,8 +62,9 @@ export default function CheckoutForm({
       },
     });
     console.log(data);
-    if (data.paymentIntent.status === "succeeded") {
+    if (data.paymentIntent?.status === "succeeded") {
       alert("Payment succeeded!");
+      setCurrentStep(4);
     }
     setIsLoading(false);
   };
@@ -109,11 +111,14 @@ export default function CheckoutForm({
           <span disabled={isLoading || !stripe || !elements} id="submit">
             <span id="button-text">
               {isLoading ? (
-                <div className="spinner" id="spinner">
-                  Waiting
-                </div>
+                <PrimaryBtn
+                  btnName="Confirm Booking"
+                  isLoading={true}
+                ></PrimaryBtn>
               ) : (
-                <PrimaryBtn btnName="Confirm Booking"></PrimaryBtn>
+                <>
+                  <PrimaryBtn btnName="Confirm Booking"></PrimaryBtn>
+                </>
               )}
             </span>
           </span>
