@@ -21,13 +21,22 @@ export async function POST(request) {
       },
     });
     if (isId_NumberDuplicate) {
-      return NextResponse.json({ message: "Id Number already exists" });
+      return NextResponse.json(
+        { error: "Id Number already exists" },
+        { status: 400 },
+      );
     }
     if (isUserDuplicate) {
-      return NextResponse.json({ message: "Username already exists" });
+      return NextResponse.json(
+        { error: "Username already exists" },
+        { status: 400 },
+      );
     }
     if (isEmailDuplicate) {
-      return NextResponse.json({ message: "Email already exists" });
+      return NextResponse.json(
+        { error: "Email already exists" },
+        { status: 400 },
+      );
     }
     return NextResponse.json({ message: "success" });
   } catch (error) {
