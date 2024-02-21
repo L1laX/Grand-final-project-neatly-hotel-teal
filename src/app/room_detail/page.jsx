@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { addDays, format } from "date-fns";
 import { DateRangeRoomGuest } from "@/components/ui/DateRangeRoomGuest";
 import axios from "axios";
+import LoadingPage from "@/components/common/LoadingPage";
+import LinearLoading from "@/components/common/LinearLoading";
+import LoadingRoom from "@/components/common/LoadingRoom";
 
 export default function RoomDetail({ searchParams }) {
   const initialDate = searchParams.dateString
@@ -111,17 +114,16 @@ export default function RoomDetail({ searchParams }) {
               key={index}
               roomitem={item.id}
               roomName={item.name}
-
               handleBooking={item.id}
-
               roomAvailable={item.availableRoom}
               roomGuests={item.guests}
             />
           ))
         ) : (
-
-          <p>No Room</p>
-
+          <section className="skeleton-roomcard divide-none ">
+            <p>No Room Available</p>
+            <LoadingRoom />
+          </section>
         )}
       </div>
     </main>

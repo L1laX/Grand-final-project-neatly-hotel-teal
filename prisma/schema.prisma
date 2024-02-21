@@ -28,7 +28,6 @@ model user {
 model userProfile {
   id          String   @id @unique @default(uuid())
   user_id     String   @unique
-  fullName    String
   id_number   String   @unique
   dateOfBirth DateTime @db.Timestamptz(3)
   country     String
@@ -37,23 +36,23 @@ model userProfile {
 }
 
 model room {
-  name            String
-  size            String
-  bedType         String
-  status          String
-  checkInDate     DateTime?         @db.Timestamptz(3)
-  checkOutDate    DateTime?         @db.Timestamptz(3)
-  guests          Int
-  description     String
-  roomMainImage   String
-  pricePerNight   Int
-  promotionPrice  Int?
-  id              String            @id @unique @default(uuid())
-  created_at      DateTime          @default(now()) @db.Timestamptz(3)
-  last_updated_at DateTime          @db.Timestamptz(3)
-  customerBooking customerBooking[]
-  roomAmenity     roomAmenity[]
-  roomGallery     roomGallery[]
+  name                 String
+  size                 String
+  bedType              String
+  status               String
+  checkInDate          DateTime?              @db.Timestamptz(3)
+  checkOutDate         DateTime?              @db.Timestamptz(3)
+  guests               Int
+  description          String
+  roomMainImage        String
+  pricePerNight        Int
+  promotionPrice       Int?
+  id                   String                 @id @unique @default(uuid())
+  created_at           DateTime               @default(now()) @db.Timestamptz(3)
+  last_updated_at      DateTime               @db.Timestamptz(3)
+  customerBooking_room customerBooking_room[]
+  roomAmenity          roomAmenity[]
+  roomGallery          roomGallery[]
 }
 
 model roomAmenity {
@@ -71,29 +70,28 @@ model roomGallery {
 }
 
 model customerBooking {
-  id                  String           @id @unique @default(uuid())
-  user_id             String
-  customerName        String
-  customerEmail       String
-  customer_id_number  String
-  customerCountry     String
-  customerDateOfBirth DateTime         @db.Timestamptz(3)
-  paymentType         String
-  paymentStatus       String
-  discount            Int?
-  guestCount          Int?
-  totalPrice          Int?
-  additionalRequest   String?
-  room_id             String?
-  checkInDate         DateTime?        @db.Timestamptz(3)
-  checkOutDate        DateTime?        @db.Timestamptz(3)
-  created_at          DateTime         @default(now()) @db.Timestamptz(3)
-  last_updated_at     DateTime         @updatedAt @db.Timestamptz(3)
-  promotionCode       String?
-  order_id            String?
-  bookingRequest      bookingRequest[]
-  room                room?            @relation(fields: [room_id], references: [id])
-  user                user             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id                   String                 @id @unique @default(uuid())
+  user_id              String
+  customerName         String
+  customerEmail        String
+  customer_id_number   String
+  customerCountry      String
+  customerDateOfBirth  DateTime               @db.Timestamptz(3)
+  paymentType          String
+  paymentStatus        String
+  discount             Int?
+  guestCount           Int?
+  totalPrice           Int?
+  additionalRequest    String?
+  checkInDate          DateTime?              @db.Timestamptz(3)
+  checkOutDate         DateTime?              @db.Timestamptz(3)
+  created_at           DateTime               @default(now()) @db.Timestamptz(3)
+  last_updated_at      DateTime               @updatedAt @db.Timestamptz(3)
+  promotionCode        String?
+  order_id             String?
+  bookingRequest       bookingRequest[]
+  user                 user                   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  customerBooking_room customerBooking_room[]
 }
 
 model bookingRequest {
@@ -115,6 +113,7 @@ model promotion {
   promotionCode String
   discount      Int
   id            String @id @unique @default(uuid())
+  name          String
 }
 
 model account {
@@ -149,4 +148,12 @@ model verificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model customerBooking_room {
+  id                 String          @id @unique
+  customerBooking_id String
+  room_id            String
+  customerBooking    customerBooking @relation(fields: [customerBooking_id], references: [id])
+  room               room            @relation(fields: [room_id], references: [id])
 }
