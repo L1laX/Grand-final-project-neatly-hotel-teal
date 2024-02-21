@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { stripe } from "@/lib/stripe";
 
-export function GET(request) {
-  return NextResponse.json({ message: "Hello world" });
+export async function GET(request) {
+  const paymentMethod = await stripe.paymentMethods.retrieve(
+    "pm_1Om7PBEHGnk23K7Fs0ffw2fx",
+  );
+  return NextResponse.json({ message: paymentMethod }, { status: 200 });
 }
 
 export async function PUT(request) {

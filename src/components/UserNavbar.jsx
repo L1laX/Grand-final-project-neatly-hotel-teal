@@ -53,7 +53,7 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
 
         <div className="user-menu">
           <div className="none-user flex items-center justify-items-end justify-self-end ">
-            {session?.user?.role === "user" ? (
+            {session?.user ? (
               <div className="dropdown relative flex items-center">
                 <div className="mr-7 cursor-pointer">
                   <Image

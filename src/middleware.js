@@ -9,7 +9,7 @@ export async function middleware(request) {
     secret: process.env.NEXTAUTH_SECRET,
   });
   const { pathname } = request.nextUrl;
-  if (token && token.role === "user" && pathname.startsWith("/user")) {
+  if (token && pathname.startsWith("/user")) {
     return res;
   }
   if (token && token.role === "admin" && pathname.startsWith("/admin")) {

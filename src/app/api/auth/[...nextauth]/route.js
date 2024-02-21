@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import { compare } from "bcrypt";
 import NextAuth from "next-auth/next";
+import GoogleProvider from "next-auth/providers/google";
 
 const handler = NextAuth({
   secret: process.env.AUTH_SECRET,
@@ -87,9 +88,16 @@ const handler = NextAuth({
         }
       },
     }),
+    GoogleProvider({
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
+    }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, trigger, user, session }) {
+      if (trigger === "update") {
+        return { ...token, ...session.user };
+      }
       if (user) {
         token.id = user.id;
         token.role = user.role;
