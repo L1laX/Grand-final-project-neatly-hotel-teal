@@ -48,8 +48,8 @@ export default function RoomDetailById({ params: { room_id } }) {
     centerMode: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 2,
-    slidesToScroll: 2,
+    slidesToShow: 1,
+    slidesToScroll: 1,
     autoplay: true,
     arrows: false,
     autoplaySpeed: 4000,
@@ -58,12 +58,12 @@ export default function RoomDetailById({ params: { room_id } }) {
   };
 
   return (
-    <main className="flex w-full flex-col items-center border-4 border-double border-indigo-600">
+    <main className="flex w-full flex-col items-center ">
       <div className="w-full">
         <Slider {...settings}>
           {carouselImages.roomGallery?.length > 0 &&
             carouselImages.roomGallery.map((item, index) => (
-              <div className="relative h-[16rem] md:h-[20rem] lg:h-[24rem] xl:h-[60rem]">
+              <div className="relative h-[16rem] md:h-[20rem] lg:h-[24rem] xl:h-[40rem]">
                 <Image
                   className="cursor-grab active:cursor-grabbing"
                   layout="fill"
@@ -77,32 +77,38 @@ export default function RoomDetailById({ params: { room_id } }) {
         </Slider>
       </div>
 
-      <div className="flex w-4/6 flex-col border-4 border-indigo-600">
-        <h1 className="mt-4 border-4 border-double border-indigo-600">
-          Superior Garden View
-        </h1>
-        <div className="flex w-full justify-between border-4 border-indigo-600">
-          <div className="flex h-36 w-full flex-col items-start justify-between">
-            <div className="break-all">
-              kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.
+      <div className="flex w-4/6 flex-col ">
+        <h1 className="mt-4 text-[#2F3E35] ">{carouselImages.name}</h1>
+        <div className="flex w-full justify-between ">
+          <div className="flex h-36 w-full flex-col items-start justify-between text-[#646D89]">
+            <div className="break-all">{carouselImages.description} </div>
+            <div className="">
+              {carouselImages.guests} person|{carouselImages.bedType}|
+              {carouselImages.size} sqm
             </div>
-            <div className="">2 person|1kipoki|sdpkio</div>
           </div>
           <div className="flex w-full flex-col items-end justify-between">
             <div>
-              <p className="text-right line-through">3000</p>
-              <p className="text-right">3000</p>
+              <p className="text-right text-[#646D89] line-through">
+                THB {carouselImages.pricePerNight}
+              </p>
+              <p className="text-right text-[#2A2E3F]">
+                THB {carouselImages.promotionPrice}
+              </p>
             </div>
             <div>
-              <PrimaryBtn btnName="Book Now" />
+              <Link href="/booking/">
+                <PrimaryBtn btnName="Book Now" />
+                {/* edit link to new destination */}
+              </Link>
             </div>
           </div>
         </div>
-        
-        <hr className="w-full my-10 border-[1.75px]" />
-        <h3>Room Amenities</h3>
-        <div className="flex-start flex w-full border-4 border-double border-indigo-600">
-          <div className="w-full border-4 border-indigo-600">
+
+        <hr className="my-10 w-full border-[1.75px]" />
+        <h3 className=" text-[#000000]">Room Amenities</h3>
+        <div className="flex-start flex w-full ">
+          <div className="w-full ">
             <ul className="amenities-1 list-disc ">
               {carouselImages?.roomAmenity?.length &&
                 carouselImages?.roomAmenity?.map((item, index, arr) => {
@@ -118,61 +124,55 @@ export default function RoomDetailById({ params: { room_id } }) {
                 })}
             </ul>
           </div>
-          <div className="w-full border-4 border-indigo-600">
-             <ul className="amenities-2 list-disc">
-            {carouselImages?.roomAmenity?.length &&
-              carouselImages?.roomAmenity?.map((item, index, arr) => {
-                if (index >= arr.length / 2) {
-                  return (
-                    <li key={index} className="bullet-text">
-                      {item.name}
-                    </li>
-                  );
-                } else {
-                  return null;
-                }
-              })}
-          </ul>
+          <div className="w-full ">
+            <ul className="amenities-2 list-disc">
+              {carouselImages?.roomAmenity?.length &&
+                carouselImages?.roomAmenity?.map((item, index, arr) => {
+                  if (index >= arr.length / 2) {
+                    return (
+                      <li key={index} className="bullet-text">
+                        {item.name}
+                      </li>
+                    );
+                  } else {
+                    return null;
+                  }
+                })}
+            </ul>
           </div>
-         
         </div>
       </div>
-      <h4 className="text-center mt-10">Other Rooms</h4>
+      <h4 className="mt-10 text-center">Other Rooms</h4>
       <div className="random-room  flex justify-center  ">
-              <div className="slide-randon m-20 flex items-center justify-center">
-                <Carousel>
-                  <CarouselContent className="flex items-center justify-center">
-                    <CarouselItem className="  relative basis-1/3">
-                      <Image
-                        className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-                        src={BG}
-                      />
-                      <div className="absolute left-10 top-60 flex h-full w-full flex-col items-start ">
-                        <h5 className="text-2xl font-bold text-white">
-                          Deluxe
-                        </h5>
-                        <h6 className="text-base text-white">Explore Room</h6>
-                      </div>
-                    </CarouselItem>
-                    <CarouselItem className=" relative basis-1/3">
-                      <Image
-                        className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-                        src={BG}
-                      />
-                      <div className="absolute left-10 top-60 flex h-full w-full flex-col items-start ">
-                        <h5 className="text-2xl font-bold text-white">
-                          Superior
-                        </h5>
-                        <h6 className="text-base  text-white">Explore Room</h6>
-                      </div>
-                    </CarouselItem>
-                  </CarouselContent>
-                  <CarouselNext />
-                  <CarouselPrevious />
-                </Carousel>
-              </div>
-            </div>
-
+        <div className="slide-randon m-20 flex items-center justify-center">
+          <Carousel>
+            <CarouselContent className="flex items-center justify-center">
+              <CarouselItem className="  relative basis-1/3">
+                <Image
+                  className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                  src={BG}
+                />
+                <div className="absolute left-10 top-60 flex h-full w-full flex-col items-start ">
+                  <h5 className="text-2xl font-bold text-white">Deluxe</h5>
+                  <h6 className="text-base text-white">Explore Room</h6>
+                </div>
+              </CarouselItem>
+              <CarouselItem className=" relative basis-1/3">
+                <Image
+                  className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                  src={BG}
+                />
+                <div className="absolute left-10 top-60 flex h-full w-full flex-col items-start ">
+                  <h5 className="text-2xl font-bold text-white">Superior</h5>
+                  <h6 className="text-base  text-white">Explore Room</h6>
+                </div>
+              </CarouselItem>
+            </CarouselContent>
+            <CarouselNext />
+            <CarouselPrevious />
+          </Carousel>
+        </div>
+      </div>
     </main>
   );
 }

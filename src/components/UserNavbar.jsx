@@ -53,7 +53,15 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
 
         <div className="user-menu">
           <div className="none-user flex items-center justify-items-end justify-self-end ">
-            {session?.user?.role === "user" ? (
+            {session?.user?.role === "admin" ? (
+              <PrimaryBtn
+                primaryButton={"bg-green-500 hover:bg-green-600"}
+                btnName="To Admin Panel"
+                handleClick={() => {
+                  router.push("/admin");
+                }}
+              />
+            ) : session?.user ? (
               <div className="dropdown relative flex items-center">
                 <div className="mr-7 cursor-pointer">
                   <Image
@@ -68,14 +76,6 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
                   session_id={session?.user.id}
                 />
               </div>
-            ) : session?.user?.role === "admin" ? (
-              <PrimaryBtn
-                primaryButton={"bg-green-500 hover:bg-green-600"}
-                btnName="To Admin Panel"
-                handleClick={() => {
-                  router.push("/admin");
-                }}
-              />
             ) : status === "loading" ? (
               "hello"
             ) : (

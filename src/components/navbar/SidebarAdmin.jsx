@@ -4,30 +4,67 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "@/asset/logo/logo-light.svg";
-import { CheckboxIcon } from "@radix-ui/react-icons";
+
 import { signOut } from "next-auth/react";
+import bookingIcon from "@/asset/icons/booking.svg";
+import roomManagementIcon from "@/asset/icons/manage.svg";
+import hotelInfoIcon from "@/asset/icons/hotel.svg";
+import roomTypeIcon from "@/asset/icons/room.svg";
+import LogOutIcon from "@/asset/icons/logout.svg";
 
 const Sidebar = ({ setActive }) => {
   const sidebarItem = [
     {
       name: "Customer Booking",
       href: "/admin/booking",
-      svg: "",
+      svg: (
+        <Image
+          src={bookingIcon}
+          alt="Booking"
+          height={16}
+          width={16}
+          className="svg-white"
+        />
+      ),
     },
     {
       name: "Room Management",
       href: "/admin/room_management",
-      svg: "",
+      svg: (
+        <Image
+          src={roomManagementIcon}
+          alt="Room Management"
+          height={16}
+          width={16}
+          className="svg-white"
+        />
+      ),
     },
     {
       name: "Hotel Information",
       href: "/admin/hotel_info",
-      svg: "",
+      svg: (
+        <Image
+          src={hotelInfoIcon}
+          alt="Hotel Information"
+          height={16}
+          width={16}
+          className="svg-white"
+        />
+      ),
     },
     {
       name: "Room & Property",
       href: "/admin/room_type",
-      svg: "",
+      svg: (
+        <Image
+          src={roomTypeIcon}
+          alt="Room & Property"
+          height={16}
+          width={16}
+          className="svg-white"
+        />
+      ),
     },
   ];
 
@@ -53,30 +90,25 @@ const Sidebar = ({ setActive }) => {
                 key={index}
               >
                 <li>
-                  <a
-                    href={item.href}
-                    className="flex items-center gap-4 rounded-md px-4 py-2 hover:text-white"
-                  >
-                    <svg
-                      className="h-4 w-4 text-gray-400"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      {/* Icon for the menu item */}
-                    </svg>
-                    <span className="text-sm">{item.name}</span>
-                  </a>
+                  <Link href={item.href}>
+                    <p className="flex items-center gap-4 rounded-md px-4 py-2 hover:text-white">
+                      {item.svg}
+                      <span className="text-sm">{item.name}</span>
+                    </p>
+                  </Link>
                 </li>
               </div>
             ))}
           </ul>
           <hr />
           <div className="flex w-full justify-center gap-4 whitespace-nowrap p-6 text-base font-medium leading-6 tracking-tight text-gray-300 hover:bg-green-600">
-            <div className="flex items-center">
-              <CheckboxIcon
-                className="h-4 w-4 text-gray-400"
-                fill="currentColor"
-                aria-hidden="true"
+            <div className="flex items-center ">
+              <Image
+                src={LogOutIcon}
+                alt="Logout"
+                height={16}
+                width={16}
+                className="svg-white "
               />
               <div
                 className="cursor-pointer pr-[45px]"

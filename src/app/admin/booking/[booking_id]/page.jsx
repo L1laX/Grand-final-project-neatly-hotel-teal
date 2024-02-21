@@ -25,7 +25,7 @@ function BookingDetail({ params: { booking_id } }) {
         );
         const data = response.data;
 
-        setBooking(data.data);
+        setBooking(data.data[0]);
         setLoading(false);
         toast.success("Booking Details Fetched Successfully!", {
           position: "top-center",
@@ -43,8 +43,6 @@ function BookingDetail({ params: { booking_id } }) {
 
     fetchData();
   }, [booking_id]);
-
-  console.log(booking);
 
   if (loading) {
     toast.info("Loading...", {
@@ -67,19 +65,22 @@ function BookingDetail({ params: { booking_id } }) {
     });
     return null;
   }
+  const { room } = booking.customerBooking_room[0];
+
+  const { name, size, bedType, pricePerNight, roomAmenity, roomGallery } = room;
 
   const {
     customerName,
+    discount,
     guestCount,
-    room_id,
     checkInDate,
     checkOutDate,
     paymentType,
     totalPrice,
-    promotionCode,
     additionalRequest,
     created_at,
-    room,
+
+    user: { email: customerEmail },
   } = booking;
 
   const stayDuration = Math.floor(
@@ -90,24 +91,26 @@ function BookingDetail({ params: { booking_id } }) {
   const checkOutDateObj = new Date(checkOutDate);
   const bookingDateObj = new Date(created_at);
 
-  const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+  const optionsFullDate = {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  };
 
   const formattedCheckInDate = checkInDateObj.toLocaleDateString(
     "en-US",
-    options,
+    optionsFullDate,
   );
   const formattedCheckOutDate = checkOutDateObj.toLocaleDateString(
     "en-US",
-    options,
+    optionsFullDate,
   );
 
   const formattedBookingDate = bookingDateObj.toLocaleDateString(
     "en-US",
-    options,
+    optionsFullDate,
   );
-
-  console.log("checkInDate:", formattedCheckInDate);
-  console.log("checkOutDate:", formattedCheckOutDate);
 
   return (
     <>
@@ -215,28 +218,19 @@ function BookingDetail({ params: { booking_id } }) {
                   </span>
                 </div>
 
-                <div className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap">
-                  <span>Airport transfer</span>
-                  <span className="grow text-right font-semibold max-md:max-w-full">
-                    200THB
-                  </span>
-                </div>
-
-                <div className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap">
-                  <span>Promotion Code</span>
-                  <span className="grow text-right font-semibold max-md:max-w-full">
-                    {promotionCode || "N/A"}
-                  </span>
-                </div>
-
                 <div className="mt-2 flex justify-between gap-5 border-t border-solid border-t-[color:var(--gray-300,#E4E6ED)] pt-6 max-md:max-w-full max-md:flex-wrap">
                   <div className="mt-1.5 flex-auto self-start text-base tracking-tight">
                     {" "}
                     Total{" "}
                   </div>
                   <span className="flex-auto text-right text-xl font-semibold stacked-fractions tracking-tight">
-                    {room.pricePerNight * stayDuration + 200 + promotionCode ||
-                      "N/A"}
+                    {(
+                      room.pricePerNight * stayDuration -
+                      (discount ?? 0)
+                    ).toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "THB",
+                    })}
                   </span>
                 </div>
               </form>

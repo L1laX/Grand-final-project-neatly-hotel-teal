@@ -118,6 +118,12 @@ const statusItems = [
     style:
       "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-gray-500 whitespace-nowrap rounded bg-slate-100",
   },
+  {
+    value: "Booking",
+    label: "Booking",
+    style:
+      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-yellow-500 whitespace-nowrap rounded bg-slate-100",
+  },
 ];
 
 const StatusDropdownCell = ({ status, row, onStatusUpdate }) => {
@@ -145,7 +151,6 @@ const RoomManagement = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchInput, setSearchInput] = useState("");
   const [rows, setRows] = useState([]);
-
   const fetchData = async () => {
     try {
       toast.info("Fetching Room Data...", {
@@ -158,7 +163,7 @@ const RoomManagement = () => {
 
       const roomsWithNumbers = data.data.map((room, index) => ({
         ...room,
-        roomNumber: index + 1,
+        roomNumber: (index + 1).toString().padStart(3, "0"), // Adding leading zeros
       }));
 
       setRows(roomsWithNumbers);

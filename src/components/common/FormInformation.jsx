@@ -110,7 +110,7 @@ const FormInformation = ({
             type="text"
             name="id_number"
             onChange={handleInputChange}
-            value={values?.userProfile?.id_number}
+            value={values?.id_number}
             placeholder="id_number"
           />
         </label>
@@ -126,7 +126,7 @@ const FormInformation = ({
             <DatePicker
               selected=""
               getdateOfBirth={getdateOfBirth}
-              value={values?.userProfile?.dateOfBirth}
+              value={values?.dateOfBirth}
             />
           </div>
         </label>
@@ -141,7 +141,7 @@ const FormInformation = ({
           Country
           <Country
             setCountry={getCountry}
-            value={values?.userProfile?.country}
+            value={values?.country}
             className={`h-[60px] outline-none hover:border-orange-500 focus:border-orange-500 ${errors.country && "border-red-600"}`}
           />
         </label>

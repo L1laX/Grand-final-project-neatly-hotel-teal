@@ -4,11 +4,10 @@ import FormInformation from "@/components/common/FormInformation";
 import FormSpecialReq from "@/components/common/FormSpecialReq";
 import FormPayment from "@/components/common/FormPayment";
 import axios from "axios";
-import { format, addDays, eachDayOfInterval } from "date-fns";
-
+import { eachDayOfInterval } from "date-fns";
+import SubmitTotal from "@/components/common/SubmitTotal";
+import { useRouter } from "next/navigation";
 export default function StepperController({ searchParams }) {
-
-
   const testtest = {
     nameOfRoom:searchParams.roomName,
     checkinDate:format(new Date(searchParams.from).setUTCHours(0,0,0,0), "eee',' dd MMM yyyy"),
@@ -23,7 +22,6 @@ export default function StepperController({ searchParams }) {
   }
   // console.log(new Date(searchParams.from))
   // const datesInRange = eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) });
-
   const [currentStep, setCurrentStep] = useState(1);
   const [values, setValues] = useState({
     fullName: "",
@@ -54,7 +52,26 @@ export default function StepperController({ searchParams }) {
   }
 
   const [request, setRequest] = useState({});
+
   const [promotionCode, setPromotionCode] = useState("");
+  const [ourCode, setOurCode] = useState("");
+  const getUserData = async () => {
+    const result = await axios.get(
+      `/api/booking/${searchParams.userId}?rooms_id=${searchParams.allRoomId}&name=${searchParams.roomName}`,
+    );
+    console.log(result);
+    setValues({
+      ...values,
+      fullName: result.data.data.customerBooking.name,
+      email: result.data.data.customerBooking.email,
+      id_number: result.data.data.customerBooking.userProfile.id_number,
+      country: result.data.data.customerBooking.userProfile.country,
+      dateOfBirth: result.data.data.customerBooking.userProfile.dateOfBirth,
+      payment_id: result.data.data.customerBooking.userProfile.payment_id,
+    });
+    setOurCode(result.data.data.promotionCode);
+  };
+  const [request, setRequest] = useState({});
   const getRequest = (e) => {
     const { name, checked } = e.target;
     let value =
@@ -77,27 +94,34 @@ export default function StepperController({ searchParams }) {
                   : null;
     if (checked) {
       const newRequest = { ...request, [name]: value };
-
       setRequest({ ...newRequest });
+      setTotalAdditionalPrice(
+        Object.keys(newRequest).reduce((acc, cur) => {
+          if (typeof newRequest[cur] === "number") {
+            acc += newRequest[cur];
+          }
+          return acc;
+        }, 0),
+      );
     } else {
       const newRequest = { ...request };
       delete newRequest[name];
+      setTotalAdditionalPrice(
+        Object.keys(newRequest).reduce((acc, cur) => {
+          if (typeof newRequest[cur] === "number") {
+            acc += newRequest[cur];
+          }
+          return acc;
+        }, 0),
+      );
       setRequest({ ...newRequest });
     }
   };
-  console.log(values);
 
   // const arrRequest = Object.keys(request).map((key) => ({
   //   [key]: request[key],
   // }));
   // console.log(arrRequest);
-
-  const totalAdditionalPrice = Object.keys(request).reduce((acc,cur) => {
-    if(typeof request[cur] === "number"){
-      acc += request[cur]
-    }
-    return acc
-  },0)
 
   const nextStep = () => {
     setCurrentStep((prevStep) => (prevStep < 3 ? prevStep + 1 : prevStep));
@@ -141,10 +165,10 @@ export default function StepperController({ searchParams }) {
   };
 
   useEffect(() => {
-    getUserData()
+    getUserData();
     // getReserveRoom();
   }, []);
-
+  console.log(values);
   return (
     <section className="booking-area mx-5 my-10 md:mx-40">
       <div>
@@ -158,7 +182,10 @@ export default function StepperController({ searchParams }) {
         <p>ราคาตต่อคืน: {testtest.roomPrice}</p>
         <p>จำนวนคืน: {testtest.nightReserve}</p>
         <p>userId: {testtest.userId}</p>
-        <p>จอง {testtest.roomReserve} ห้อง, {testtest.nightReserve} คืน รวมราคา: {testtest.totalRoomPrice}</p>
+        <p>
+          จอง {testtest.roomReserve} ห้อง, {testtest.nightReserve} คืน รวมราคา:{" "}
+          {testtest.totalRoomPrice}
+        </p>
 
         <h1 className="">Booking Room</h1>
         {/* Step indicators */}
@@ -241,6 +268,20 @@ export default function StepperController({ searchParams }) {
               setValues={setValues}
               promotionCode={promotionCode}
               setPromotionCode={setPromotionCode}
+              testtest={testtest}
+              totalAdditionalPrice={totalAdditionalPrice}
+              setCurrentStep={setCurrentStep}
+            />
+          )}
+          {currentStep === 4 && (
+            <SubmitTotal
+              prevStep={prevStep}
+              values={values}
+              setValues={setValues}
+              promotionCode={promotionCode}
+              setPromotionCode={setPromotionCode}
+              testtest={testtest}
+              totalAdditionalPrice={totalAdditionalPrice}
             />
           )}
         </div>
@@ -264,15 +305,19 @@ export default function StepperController({ searchParams }) {
                 )):null
               } */}
 
-              {
-                request? Object.keys(request).map((key) => (
-                  <p>{[key]}: {request[key]}</p>
-                )):null
-              }
+              {request
+                ? Object.keys(request).map((key) => (
+                    <p>
+                      {[key]}: {request[key]}
+                    </p>
+                  ))
+                : null}
 
-              <p>จอง {testtest.roomReserve} ห้อง, {testtest.nightReserve} คืน รวมราคา: {testtest.totalRoomPrice}</p>
-              <p>total:{testtest.totalRoomPrice+totalAdditionalPrice}</p>
-
+              <p>
+                จอง {testtest.roomReserve} ห้อง, {testtest.nightReserve} คืน
+                รวมราคา: {testtest.totalRoomPrice}
+              </p>
+              <p>total:{testtest.totalRoomPrice + totalAdditionalPrice}</p>
             </div>
           </div>
           {/* ไม่มีการเปลี่ยนแปลงข้อมูล */}
