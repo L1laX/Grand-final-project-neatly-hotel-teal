@@ -18,7 +18,7 @@ export default function CheckoutForm({
   const stripe = useStripe();
   const elements = useElements();
   const [isLoading, setIsLoading] = React.useState(false);
-
+  const [message, setMessage] = React.useState("");
   React.useEffect(() => {
     if (!stripe) {
       return;
@@ -29,22 +29,6 @@ export default function CheckoutForm({
     if (!clientSecret) {
       return;
     }
-    stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-      switch (paymentIntent.status) {
-        case "succeeded":
-          setMessage("Payment succeeded!");
-          break;
-        case "processing":
-          setMessage("Your payment is processing.");
-          break;
-        case "requires_payment_method":
-          setMessage("Your payment was not successful, please try again.");
-          break;
-        default:
-          setMessage("Something went wrong.");
-          break;
-      }
-    });
   }, [stripe, isPromotion]);
 
   const handleSubmit = async (e) => {
@@ -62,6 +46,10 @@ export default function CheckoutForm({
       },
     });
     console.log(data);
+    if (data.error) {
+      alert(data.error.message);
+    }
+
     if (data.paymentIntent?.status === "succeeded") {
       alert("Payment succeeded!");
       setCurrentStep(4);
