@@ -47,10 +47,13 @@ export const RoomCard = ({
   const router = useRouter();
   const { data: session, status } = useSession();
 
+
   const handleBooking = () => {
     const queryString = new URLSearchParams(dateRoomGuest).toString();
     const path = "/booking";
-    allRoomId = allRoomId.slice(0, dateRoomGuest.room);
+    const queryString = urlSearchParams;
+
+
 
     const url =
       String(path) +
