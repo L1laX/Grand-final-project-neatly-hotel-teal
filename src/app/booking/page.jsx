@@ -10,17 +10,34 @@ export default function StepperController({ searchParams }) {
 
 
   const testtest = {
-    nameOfRoom:searchParams.roomName,
-    checkinDate:format(new Date(searchParams.from).setUTCHours(0,0,0,0), "eee',' dd MMM yyyy"),
-    checkOutDate:format(new Date(searchParams.to).setUTCHours(0,0,0,0), "eee',' dd MMM yyyy"),
-    roomReserve:searchParams.room,
-    guestReserve:searchParams.guest,
-    allRoomId:searchParams.allRoomId,
-    roomPrice:searchParams.roomPrice,
-    userId:searchParams.userId,
-    nightReserve:(eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1,
-    totalRoomPrice:((eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1)*searchParams.roomPrice*searchParams.room
-  }
+    nameOfRoom: searchParams.roomName,
+    checkinDate: format(
+      new Date(searchParams.from).setUTCHours(0, 0, 0, 0),
+      "eee',' dd MMM yyyy",
+    ),
+    checkOutDate: format(
+      new Date(searchParams.to).setUTCHours(0, 0, 0, 0),
+      "eee',' dd MMM yyyy",
+    ),
+    roomReserve: searchParams.room,
+    guestReserve: searchParams.guest,
+    allRoomId: searchParams.allRoomId,
+    roomPrice: searchParams.roomPrice,
+    userId: searchParams.userId,
+    nightReserve:
+      eachDayOfInterval({
+        start: new Date(searchParams.from),
+        end: new Date(searchParams.to),
+      }).length - 1,
+    totalRoomPrice:
+      (eachDayOfInterval({
+        start: new Date(searchParams.from),
+        end: new Date(searchParams.to),
+      }).length -
+        1) *
+      searchParams.roomPrice *
+      searchParams.room,
+  };
   // console.log(new Date(searchParams.from))
   // const datesInRange = eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) });
 
@@ -296,7 +313,6 @@ export default function StepperController({ searchParams }) {
           </div>
         </div>
       </div>
-      <button>Reserve</button>
     </section>
   );
 }
