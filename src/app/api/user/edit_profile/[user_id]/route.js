@@ -33,9 +33,16 @@ export async function GET(request, { params: { user_id } }) {
 
 export async function PUT(request, { params: { user_id } }) {
   try {
-    const { fullName, idNumber, dateOfBirth, country, email, image } =
+    const { fullName, id_number, dateOfBirth, country, email, image } =
       await request.json();
-    const userData = { fullName, idNumber, dateOfBirth, country, email, image };
+    const userData = {
+      fullName,
+      id_number,
+      dateOfBirth,
+      country,
+      email,
+      image,
+    };
 
     if (!userData) {
       return NextResponse.json(
@@ -66,9 +73,9 @@ export async function PUT(request, { params: { user_id } }) {
           update: {
             where: { user_id: user_id },
             data: {
-              idNumber,
+              id_number: id_number,
               dateOfBirth: new Date(dateOfBirth),
-              country,
+              country: country,
             },
           },
         },
