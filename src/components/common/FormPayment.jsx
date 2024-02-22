@@ -236,11 +236,11 @@ export default function FormPayment({
       const newAmount = checkPromotion(promotionCode);
       setIsPromotion(true);
       if (newAmount) {
-        getClientSecret(testtest.totalRoomPrice + totalAdditionalPrice, true);
+        getClientSecret(values.totalPrice + totalAdditionalPrice, true);
       }
     } else {
       console.log("test");
-      getClientSecret(testtest.totalRoomPrice + totalAdditionalPrice);
+      getClientSecret(values.totalPrice + totalAdditionalPrice);
       setIsPromotion(false);
     }
   }, [promotionCode]);
