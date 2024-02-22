@@ -12,6 +12,7 @@ import axios from "axios";
 import { supabase } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import DatePicker from "@/components/common/DatePicker";
+import { set } from "date-fns";
 //import Validation from "./registervalidation.js";
 const Register = () => {
   const router = useRouter();
@@ -43,16 +44,39 @@ const Register = () => {
     e.preventDefault();
     const value = e.target.value;
     if (e.target.name === "id_number") {
-      if (value.length > 13) {
+      if (value.length > 17) {
         return;
       }
+
       const newValue = value.replace(/\D/g, "");
-      setValues({ ...values, [e.target.name]: newValue });
-      return setIdNumber(newValue);
+      newValue.length < 3
+        ? setIdNumber(newValue.replace(/(\d{1})(\d{1})/, "$1-$2"))
+        : newValue.length < 6
+          ? setIdNumber(newValue.replace(/(\d{1})(\d{1,4})/, "$1-$2-"))
+          : newValue.length < 10
+            ? setIdNumber(
+                newValue.replace(/(\d{1})(\d{1,4})(\d{1,5})/, "$1 $2 $3 "),
+              )
+            : newValue.length < 13
+              ? setIdNumber(
+                  newValue.replace(
+                    /(\d{1})(\d{1,4})(\d{1,5})(\d{1,3})/,
+                    "$1 $2 $3 $4 ",
+                  ),
+                )
+              : newValue.length < 17
+                ? setIdNumber(
+                    newValue.replace(
+                      /(\d{1})(\d{1,4})(\d{1,5})(\d{1,3})(\d{0,1})/,
+                      "$1 $2 $3 $4 $5 ",
+                    ),
+                  )
+                : setIdNumber(newValue);
+      return setValues({ ...values, [e.target.name]: newValue });
     }
     setValues({ ...values, [e.target.name]: value });
   };
-
+  console.log(values);
   const handleAvatar = (e) => {
     const file = e.target.files[0];
     if (file.size <= 10 * 1024 * 1024) {

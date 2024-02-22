@@ -9,17 +9,34 @@ import SubmitTotal from "@/components/common/SubmitTotal";
 import { useRouter } from "next/navigation";
 export default function StepperController({ searchParams }) {
   const testtest = {
-    nameOfRoom:searchParams.roomName,
-    checkinDate:format(new Date(searchParams.from).setUTCHours(0,0,0,0), "eee',' dd MMM yyyy"),
-    checkOutDate:format(new Date(searchParams.to).setUTCHours(0,0,0,0), "eee',' dd MMM yyyy"),
-    roomReserve:searchParams.room,
-    guestReserve:searchParams.guest,
-    allRoomId:searchParams.allRoomId,
-    roomPrice:searchParams.roomPrice,
-    userId:searchParams.userId,
-    nightReserve:(eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1,
-    totalRoomPrice:((eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1)*searchParams.roomPrice*searchParams.room
-  }
+    nameOfRoom: searchParams.roomName,
+    checkinDate: format(
+      new Date(searchParams.from).setUTCHours(0, 0, 0, 0),
+      "eee',' dd MMM yyyy",
+    ),
+    checkOutDate: format(
+      new Date(searchParams.to).setUTCHours(0, 0, 0, 0),
+      "eee',' dd MMM yyyy",
+    ),
+    roomReserve: searchParams.room,
+    guestReserve: searchParams.guest,
+    allRoomId: searchParams.allRoomId,
+    roomPrice: searchParams.roomPrice,
+    userId: searchParams.userId,
+    nightReserve:
+      eachDayOfInterval({
+        start: new Date(searchParams.from),
+        end: new Date(searchParams.to),
+      }).length - 1,
+    totalRoomPrice:
+      (eachDayOfInterval({
+        start: new Date(searchParams.from),
+        end: new Date(searchParams.to),
+      }).length -
+        1) *
+      searchParams.roomPrice *
+      searchParams.room,
+  };
   // console.log(new Date(searchParams.from))
   // const datesInRange = eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) });
   const [currentStep, setCurrentStep] = useState(1);
@@ -32,26 +49,27 @@ export default function StepperController({ searchParams }) {
     payment_id: "",
     order_id: "",
     roomName: searchParams.roomName,
-    checkinDate: new Date(searchParams.from).setUTCHours(0,0,0,0),
-    checkOutDate: new Date(searchParams.to).setUTCHours(0,0,0,0),
-    roomReserve:searchParams.room,
-    guestReserve:searchParams.guest,
-    allRoomId:searchParams.allRoomId,
-    roomPrice:searchParams.roomPrice,
-    userId:searchParams.userId,
-    nightReserve:(eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1,
-    totalRoomPrice:((eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1)*searchParams.roomPrice*searchParams.room
+    checkinDate: new Date(searchParams.from).setUTCHours(0, 0, 0, 0),
+    checkOutDate: new Date(searchParams.to).setUTCHours(0, 0, 0, 0),
+    roomReserve: searchParams.room,
+    guestReserve: searchParams.guest,
+    allRoomId: searchParams.allRoomId,
+    roomPrice: searchParams.roomPrice,
+    userId: searchParams.userId,
+    nightReserve:
+      eachDayOfInterval({
+        start: new Date(searchParams.from),
+        end: new Date(searchParams.to),
+      }).length - 1,
+    totalRoomPrice:
+      (eachDayOfInterval({
+        start: new Date(searchParams.from),
+        end: new Date(searchParams.to),
+      }).length -
+        1) *
+      searchParams.roomPrice *
+      searchParams.room,
   });
-
-  console.log(values)
-
-  const getUserData =async()=>{
-    const result = await axios.get(`/api/user/customer_booking/${searchParams.userId}`)
-    setValues({...values,...result.data.data})
-    console.log(result)
-  }
-
-  const [request, setRequest] = useState({});
 
   const [promotionCode, setPromotionCode] = useState("");
   const [ourCode, setOurCode] = useState("");
@@ -294,7 +312,9 @@ export default function StepperController({ searchParams }) {
             </h5>
             <div className=" p-6 text-white">
               <p>Check-in: {format(values.checkinDate, "eee, dd MMM yyyy")}</p>
-              <p>Check-Out: {format(values.checkOutDate, "eee, dd MMM yyyy")}</p>
+              <p>
+                Check-Out: {format(values.checkOutDate, "eee, dd MMM yyyy")}
+              </p>
               <p>แขกที่จะเข้าพัก: {values.guestReserve}</p>
               <p>ชื่อห้อง: {values.roomName}</p>
               <p>ราคาตต่อคืน: {values.roomPrice}</p>
@@ -335,7 +355,6 @@ export default function StepperController({ searchParams }) {
           </div>
         </div>
       </div>
-      <button>Reserve</button>
     </section>
   );
 }
