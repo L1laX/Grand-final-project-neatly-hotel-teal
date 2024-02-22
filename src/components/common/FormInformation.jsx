@@ -37,7 +37,7 @@ const FormInformation = ({
     const validEmailRegex =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const error = {
-      fullName: !values?.userProfile?.fullName,
+      fullName: !values?.name,
       dateOfBirth: validateDateofBirth(values?.userProfile?.dateOfBirth),
       email:
         !values?.email.length ||
@@ -74,7 +74,7 @@ const FormInformation = ({
             type="text"
             name="fullName"
             onChange={handleInputChange}
-            value={values?.fullName}
+            value={values?.name}
             placeholder="fullname"
           />
         </label>
@@ -110,7 +110,7 @@ const FormInformation = ({
             type="text"
             name="id_number"
             onChange={handleInputChange}
-            value={values?.id_number}
+            value={values?.userProfile?.id_number}
             placeholder="id_number"
           />
         </label>
@@ -126,7 +126,7 @@ const FormInformation = ({
             <DatePicker
               selected=""
               getdateOfBirth={getdateOfBirth}
-              value={values?.dateOfBirth}
+              value={values?.userProfile?.dateOfBirth}
             />
           </div>
         </label>
@@ -141,7 +141,7 @@ const FormInformation = ({
           Country
           <Country
             setCountry={getCountry}
-            value={values?.country}
+            value={values?.userProfile?.country}
             className={`h-[60px] outline-none hover:border-orange-500 focus:border-orange-500 ${errors.country && "border-red-600"}`}
           />
         </label>

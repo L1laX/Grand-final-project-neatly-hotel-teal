@@ -68,7 +68,8 @@ const Register = () => {
     setValues({ ...values, country: value });
   };
   const getdateOfBirth = (date) => {
-    const value = new Date(date?.$d).toISOString();
+    const value = new Date(date?.$d);
+    console.log(value);
     setValues({ ...values, dateOfBirth: value });
   };
 
@@ -151,11 +152,8 @@ const Register = () => {
         email: values.email,
         id_number: values.id_number,
       });
-      if (checkUser.data.message === "Username already exists") {
-        return alert("Username already exists");
-      }
-      if (checkUser.data.message === "Email already exists") {
-        return alert("Email already exists");
+      if (checkUser.data.error) {
+        return alert(checkUser.data.message);
       }
 
       const data = await uploadAvatar(e);
@@ -273,7 +271,10 @@ const Register = () => {
                     className="text-sm font-medium text-gray-600"
                   ></lable>
                   <div className="date-picker  ml-2 mt-4 h-[56px] rounded-md p-2 md:w-[480px]">
-                    <DatePicker getdateOfBirth={getdateOfBirth} />
+                    <DatePicker
+                      getdateOfBirth={getdateOfBirth}
+                      value={values.dateOfBirth}
+                    />
                   </div>
                   {errors.dateOfBirth && (
                     <div className=" absolute -bottom-10 left-7  text-red-600">
