@@ -20,6 +20,7 @@ const NamTestPage = async () => {
       <Suspense fallback={<LoadingPage />}>
         <SubmitTotal />
       </Suspense> */}
+      +
       <TestContent />
     </div>
   );

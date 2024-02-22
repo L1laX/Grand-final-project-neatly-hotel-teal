@@ -8,6 +8,9 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import Modal from "@/components/common/PopupModal";
+import { set } from "date-fns";
+
 const page = ({ params: { room_id } }) => {
   const router = useRouter();
   const [values, setValues] = useState({});
@@ -145,12 +148,21 @@ const page = ({ params: { room_id } }) => {
     }
   };
 
+  // Modal Popup
+  const [showModal, setShowModal] = useState(false);
+
+  const handleConfirmCancle = () => {
+    setShowModal(true);
+  };
+
+  const handleCancel = () => {
+    setShowModal(false);
+  };
+
   const deleteRoom = async (id) => {
     try {
-      alert("Are you sure you want to delete this room?");
       const result = await axios.delete(`/api/admin/room_prop/${id}`);
       if (result.status === 200) {
-        alert("Room Deleted");
         router.push("/admin/room_type");
       }
     } catch (e) {
@@ -201,14 +213,23 @@ const page = ({ params: { room_id } }) => {
           </section>
           <button
             className="mr-28 w-fit self-end "
-            onClick={() => {
-              deleteRoom(room_id);
-            }}
+            onClick={handleConfirmCancle}
           >
             Delete Room
           </button>
         </div>
       </div>
+
+      {/* Popup */}
+      <Modal
+        showModal={showModal}
+        handleCancel={handleCancel}
+        handleConfirm={() => deleteRoom(room_id)}
+        modalTitle="Cancle and Refund this Booking"
+        modalContent="Are you sure you want to cancle this booking and refund?"
+        cancelButton="Cancle"
+        confirmButton="Confirm Cancle and Refund"
+      />
     </div>
   );
 };
