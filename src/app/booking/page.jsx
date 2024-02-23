@@ -66,7 +66,9 @@ export default function StepperController({ searchParams }) {
       searchParams.room,
   });
 
+
   console.log(values,"value");
+
 
   const getUserData = async () => {
     const result = await axios.get(
@@ -189,6 +191,7 @@ export default function StepperController({ searchParams }) {
         // customerDateOfBirth: values.dateOfBirth
         //   ? new Date(values.dateOfBirth).toISOString()
         //   : "1900-01-01T00:00:00.000Z",
+
         customerDateOfBirth: new Date(values?.dateOfBirth),
         paymentType: values.payment_id,
         paymentStatus: values.paymentStatus || "Pending",
@@ -196,6 +199,7 @@ export default function StepperController({ searchParams }) {
         checkInDate:new Date(new Date(values.checkinDate).toISOString()),
         checkOutDate:new Date(new Date(values.checkOutDate).toISOString()),
         totalPrice:values.totalPrice
+
       };
 
       // Create customer booking in the database

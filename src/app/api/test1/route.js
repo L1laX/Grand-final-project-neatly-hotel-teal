@@ -51,12 +51,15 @@ export async function POST(request, response) {
     paymentType,
     paymentStatus,
     user_id,
+
+
     checkInDate,
     checkOutDate
   } = await request.json();
   console.log(customerDateOfBirth,"1");
   console.log(checkInDate,"2")
   console.log(checkOutDate,"3")
+
 
   // await prisma.customerBooking.create({
   //   data: {
@@ -79,6 +82,7 @@ export async function POST(request, response) {
   //     },
   //   },
   // });
+
 
   // await prisma.customerBooking.create({
   //   data: {
@@ -113,6 +117,7 @@ export async function POST(request, response) {
   //     },
   //   },
   // });
+
 
   return NextResponse.json({
     message: "success",
