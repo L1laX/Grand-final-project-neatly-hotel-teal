@@ -66,7 +66,9 @@ export default function StepperController({ searchParams }) {
       searchParams.room,
   });
 
-  console.log(values);
+
+  console.log(values,"value");
+
 
   const getUserData = async () => {
     const result = await axios.get(
@@ -159,8 +161,6 @@ export default function StepperController({ searchParams }) {
     setValues({ ...values, [name]: value });
   };
 
-  console.log("values:", values);
-
   // fetching room_id from search page : use customer_booking_id to get room_id
   // const getReserveRoom = async () => {
   //   try {
@@ -173,6 +173,8 @@ export default function StepperController({ searchParams }) {
   // };
   // create customer_booking_id : POST /api/user/customer_booking
   const reservedRoom = async () => {
+    
+
     try {
       // Check if all required fields are provided
       // if (!values.customerName) throw new Error("Customer name is required");
@@ -189,13 +191,15 @@ export default function StepperController({ searchParams }) {
         // customerDateOfBirth: values.dateOfBirth
         //   ? new Date(values.dateOfBirth).toISOString()
         //   : "1900-01-01T00:00:00.000Z",
-        customerDateOfBirth: values?.userProfile?.dateOfBirth,
+
+        customerDateOfBirth: new Date(values?.dateOfBirth),
         paymentType: values.payment_id,
         paymentStatus: values.paymentStatus || "Pending",
-        user_id: values.user_id,
-        checkInDate: new Date(values.checkinDate),
-        checkOutDate: new Date(values.checkOutDate),
-        totalPrice: values.totalPrice,
+        user_id:values.user_id,
+        checkInDate:new Date(new Date(values.checkinDate).toISOString()),
+        checkOutDate:new Date(new Date(values.checkOutDate).toISOString()),
+        totalPrice:values.totalPrice
+
       };
 
       // Create customer booking in the database
