@@ -66,6 +66,19 @@ const Sidebar = ({ setActive }) => {
         />
       ),
     },
+    {
+      name: "Promotion",
+      href: "/admin/promotion",
+      svg: (
+        <Image
+          src={roomTypeIcon}
+          alt="Promotion"
+          height={16}
+          width={16}
+          className="svg-white"
+        />
+      ),
+    },
   ];
 
   return (
