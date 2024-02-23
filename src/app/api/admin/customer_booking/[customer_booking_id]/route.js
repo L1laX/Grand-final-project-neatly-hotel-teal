@@ -59,11 +59,17 @@ export async function GET(request, { params: { customer_booking_id } }) {
             ],
           }
         : {},
+
     });
+
+    if (!customerBookings) {
+      return NextResponse.error("Customer booking not found", { status: 404 });
+    }
 
     return NextResponse.json({
       success: true,
       data: customerBookings,
+      status: 200,
     });
   } catch (error) {
     console.error("Error fetching customer bookings:", error);

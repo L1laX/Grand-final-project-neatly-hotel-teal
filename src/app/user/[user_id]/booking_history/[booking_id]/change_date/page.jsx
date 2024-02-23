@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import Modal from "@/components/common/PopupModal";
 
-const Page = () => {
+const ChangeDate = () => {
   const [showModal, setShowModal] = useState(false);
 
-  const handleConfirmChangeDate = () => {
+  const handleConfirmCancle = () => {
     setShowModal(true);
   };
 
@@ -15,67 +15,50 @@ const Page = () => {
   };
 
   return (
-    <div className="background relative flex h-[1028px] w-auto items-center justify-center bg-gray-100">
-      <div className="keywords checkin-checkout absolute left-[162px]  top-[80px] ">
-        <div className="  mb-2 text-[68px]">Change Check-in</div>
-        <div className=" text-[68px] ">and Check-out Date</div>
-      </div>
-      <div className="midle box  left[162px] absolute top-[308px] h-[462px] w-[1120px]   ">
-        <div className="box pic and topic flex  ">
-          <div className="box left picture w-[405px]">
-            <img
-              className=" h-[210px] w-[357px]"
-              src="src\asset\image\profile.png"
-            />
-          </div>
-          <div className="topic  h-[334px] w-[715px] pb-24 pl-0 pr-0 pt-0">
-            <div className="box right flex-col justify-between">
-              <div className="Room rank w[715px] mb-5 flex h-[42px] justify-between">
-                <div className="h-[42px] w-[314px] text-[24px]">
-                  Superrior Graden View
-                </div>
-                <div className="h-[24px] w-[229px] text-right text-[16px]">
-                  Booking date: Tue, 16 Oct
-                </div>
-              </div>
+    <>
+      <section className="canclebooking-container mx-10 my-20 py-10 md:mx-40">
+        <h2 className=" mb-16">
+          Change Check-in
+          <br />
+          and Check-out Date
+        </h2>
+        <div className="booking-history flex flex-col py-10 lg:flex-row lg:justify-start">
+          <div className=" h-[210px] w-[357px] rounded bg-slate-200">image</div>
 
-              <div className="mb-5 h-[56px] w-[468.67px]">
-                Original Date
-                <h6>th,19 oct 2022 - fri,20 oct 2022</h6>
+          <div className="booking-content flex flex-col lg:ml-9 lg:w-4/5">
+            {/* Booking Detail */}
+            <section className="flex flex-col lg:flex-row lg:justify-between">
+              <div className="left">
+                <h3 className=" mb-10">Superior Garden View</h3>
+                <p className=" font-semibold text-[#424C6B]">Booking Date</p>
+                <p className=" body1 mb-10 text-[#9aa1b9]">
+                  Th, 19 Oct 2022 - Fri, 20 Oct 2022 <br />2 Guests
+                </p>
               </div>
-              <div className="mb-5 h-[148px] w-[715px] bg-slate-50 ">
-                Change Date
-                <div className="check date   ml-[16px] mt-[15px] flex h-[76px] w-[683px] justify-between">
-                  <div className="checkin h-[76px] w-[313.5px] ">
-                    checkin
-                    <div>1</div>
-                  </div>
-                  <div className="checkout h-[76px] w-[313.5px] ">
-                    checkout
-                    <div>2</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+              <p className=" body1 text-[#9aa1b9]">
+                Booking date: Tue, 16 Oct 2022
+              </p>
+            </section>
+            {/* Changing Date */}
+            <section className="changedate-container mt-6 rounded-md bg-white p-4">
+              <p className=" font-semibold text-[#424C6B]">Change Date</p>
+              <div className="datepicker mt-4">fff</div>
+            </section>
           </div>
         </div>
-        <div className="botton box flex h-[48px] w-[1120px]  justify-between">
-          <button
-            className="  btn-primary:hover btn-primary:active btn-primary:disabled cursor-pointer text-[16px] text-[#E76B39]"
-            onClick={handleCancel}
-          >
-            cancel
+        <hr />
+        {/* Button */}
+        <div className="button flex flex-row justify-between lg:my-10">
+          <button className="visitlink" onClick={handleCancel}>
+            Cancle
           </button>
-          {/* Add onClick event handler */}
-
-          <button
-            className="  btn-primary mr-4"
-            onClick={handleConfirmChangeDate}
-          >
-            Confirm Change Date
-          </button>
+          <PrimaryBtn
+            btnName="Confirm Change Date"
+            handleClick={handleConfirmCancle}
+          ></PrimaryBtn>
         </div>
-      </div>
+      </section>
+
       {/* Popup */}
       <Modal
         showModal={showModal}
@@ -83,11 +66,11 @@ const Page = () => {
         handleConfirm={handleCancel}
         modalTitle="Change Date "
         modalContent="Are you sure you want to change your check-in and check-out date?"
-        cancelButtonText="Cancle"
-        confirmButtonText="Confirm"
+        cancelButton="No, I don't"
+        confirmButton="Yes, I want to change"
       />
-    </div>
+    </>
   );
 };
 
-export default Page;
+export default ChangeDate;

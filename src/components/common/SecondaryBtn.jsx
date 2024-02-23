@@ -5,10 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 const SecondaryBtn = ({ btnName, handleClick, secondaryButton, google }) => {
   return (
     <button
-      className={cn(
-        secondaryButton,
-        "btn-secondary btn-secondary:hover btn-secondary:active btn-secondary:disabled cursor-pointer",
-      )}
+      className={cn(secondaryButton, "btn-secondary")}
       onClick={handleClick}
     >
       {google ? (
