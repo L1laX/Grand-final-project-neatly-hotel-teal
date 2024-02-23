@@ -59,7 +59,6 @@ export async function GET(request, { params: { customer_booking_id } }) {
             ],
           }
         : {},
-
     });
 
     if (!customerBookings) {
