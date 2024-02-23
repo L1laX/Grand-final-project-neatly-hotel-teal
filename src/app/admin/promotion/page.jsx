@@ -138,13 +138,34 @@ function Promotion() {
       );
     }
   };
+
+  const handleDeletePromotion = async (promotionCode) => {
+    try {
+      const response = await axios.delete(
+        `/api/admin/promotion/${promotionCode}`,
+      );
+      if (response.status === 200) {
+        toast.success("Promotion deleted successfully");
+        setData(data.filter((data) => data.promotionCode !== promotionCode));
+      } else {
+        toast.error("Failed to delete promotion");
+      }
+    } catch (error) {
+      console.error("Error deleting promotion:", error);
+      toast.error(
+        "Failed to delete promotion: " +
+          (error.response?.data?.message || error.message),
+      );
+    }
+  };
   const columns = [
     { id: "name", label: "Room", minWidth: 170 },
     { id: "pricePerNight", label: "Price per night", minWidth: 170 },
     { id: "promotionCode", label: "Promotion code", minWidth: 170 },
     { id: "discount", label: "Discount", minWidth: 100 },
-
     { id: "promotionName", label: "Promotion Name", minWidth: 170 },
+    { id: "delete", label: "Delete", minWidth: 100 },
+    // Removed the render property for delete action
   ];
 
   return (
@@ -191,12 +212,28 @@ function Promotion() {
                           key={row.id}
                         >
                           {columns.map((column) => {
-                            let value = row[column.id];
-                            return (
-                              <TableCell key={column.id} align="center">
-                                {value}
-                              </TableCell>
-                            );
+                            if (column.id !== "delete") {
+                              // For all columns except the 'delete' column, render the cell normally
+                              return (
+                                <TableCell key={column.id} align="center">
+                                  {row[column.id]}
+                                </TableCell>
+                              );
+                            } else {
+                              // For the 'delete' column, render the delete button
+                              return (
+                                <TableCell key={column.id} align="center">
+                                  <Button
+                                    color="error"
+                                    onClick={() =>
+                                      handleDeletePromotion(row.promotionCode)
+                                    }
+                                  >
+                                    Delete
+                                  </Button>
+                                </TableCell>
+                              );
+                            }
                           })}
                         </TableRow>
                       ))}
