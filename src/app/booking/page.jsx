@@ -52,26 +52,25 @@ export default function StepperController({ searchParams }) {
     roomName: searchParams.roomName,
     checkinDate: new Date(searchParams.from).setUTCHours(0,0,0,0),
     checkOutDate: new Date(searchParams.to).setUTCHours(0,0,0,0),
-    //roomReserve:searchParams.room,
-    guestCount:searchParams.guest,
+    roomReserve:searchParams.room,
+    guestReserve:searchParams.guest,
     allRoomId:searchParams.allRoomId,
     roomPrice:searchParams.roomPrice,
-    user_id:searchParams.userId,
-    //nightReserve:(eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1,
-    totalPrice:((eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1)*searchParams.roomPrice*searchParams.room
+    userId:searchParams.userId,
+    nightReserve:(eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1,
+    totalRoomPrice:((eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1)*searchParams.roomPrice*searchParams.room
   });
 
   console.log(values)
 
-
   const getUserData =async()=>{
-    const result = await axios.get(`/api/user/customer_booking/${searchParams.userId}?roomName=${searchParams.roomName}`)
-    //setValues({...values,...result?.data?.data,...result?.data?.data?.userProfile})
-    setValues({...values,...result?.data?.data})
+    const result = await axios.get(`/api/user/customer_booking/${searchParams.userId}`)
+    setValues({...values,...result.data.data})
     console.log(result)
   }
 
   const [request, setRequest] = useState({});
+
   const [promotionCode, setPromotionCode] = useState("");
   const getRequest = (e) => {
     const { name, checked } = e.target;
@@ -277,7 +276,7 @@ export default function StepperController({ searchParams }) {
             <div className=" p-6 text-white">
               <p>Check-in: {format(values.checkinDate, "eee, dd MMM yyyy")}</p>
               <p>Check-Out: {format(values.checkOutDate, "eee, dd MMM yyyy")}</p>
-              <p>แขกที่จะเข้าพัก: {values.guestCount}</p>
+              <p>แขกที่จะเข้าพัก: {values.guestReserve}</p>
               <p>ชื่อห้อง: {values.roomName}</p>
               <p>ราคาตต่อคืน: {values.roomPrice}</p>
               {/* {
