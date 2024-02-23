@@ -7,20 +7,35 @@ import axios from "axios";
 import { format, addDays, eachDayOfInterval } from "date-fns";
 
 export default function StepperController({ searchParams }) {
-
-
   const testtest = {
-    nameOfRoom:searchParams.roomName,
-    checkinDate:format(new Date(searchParams.from).setUTCHours(0,0,0,0), "eee',' dd MMM yyyy"),
-    checkOutDate:format(new Date(searchParams.to).setUTCHours(0,0,0,0), "eee',' dd MMM yyyy"),
-    roomReserve:searchParams.room,
-    guestReserve:searchParams.guest,
-    allRoomId:searchParams.allRoomId,
-    roomPrice:searchParams.roomPrice,
-    userId:searchParams.userId,
-    nightReserve:(eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1,
-    totalRoomPrice:((eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1)*searchParams.roomPrice*searchParams.room
-  }
+    nameOfRoom: searchParams.roomName,
+    checkinDate: format(
+      new Date(searchParams.from).setUTCHours(0, 0, 0, 0),
+      "eee',' dd MMM yyyy",
+    ),
+    checkOutDate: format(
+      new Date(searchParams.to).setUTCHours(0, 0, 0, 0),
+      "eee',' dd MMM yyyy",
+    ),
+    roomReserve: searchParams.room,
+    guestReserve: searchParams.guest,
+    allRoomId: searchParams.allRoomId,
+    roomPrice: searchParams.roomPrice,
+    userId: searchParams.userId,
+    nightReserve:
+      eachDayOfInterval({
+        start: new Date(searchParams.from),
+        end: new Date(searchParams.to),
+      }).length - 1,
+    totalRoomPrice:
+      (eachDayOfInterval({
+        start: new Date(searchParams.from),
+        end: new Date(searchParams.to),
+      }).length -
+        1) *
+      searchParams.roomPrice *
+      searchParams.room,
+  };
   // console.log(new Date(searchParams.from))
   // const datesInRange = eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) });
 
@@ -33,26 +48,34 @@ export default function StepperController({ searchParams }) {
     payment_id: "",
     order_id: "",
     roomName: searchParams.roomName,
-    checkinDate: new Date(searchParams.from).setUTCHours(0,0,0,0),
-    checkOutDate: new Date(searchParams.to).setUTCHours(0,0,0,0),
+    checkinDate: new Date(searchParams.from).setUTCHours(0, 0, 0, 0),
+    checkOutDate: new Date(searchParams.to).setUTCHours(0, 0, 0, 0),
     //roomReserve:searchParams.room,
-    guestCount:searchParams.guest,
-    allRoomId:searchParams.allRoomId,
-    roomPrice:searchParams.roomPrice,
-    user_id:searchParams.userId,
+    guestCount: searchParams.guest,
+    allRoomId: searchParams.allRoomId,
+    roomPrice: searchParams.roomPrice,
+    user_id: searchParams.userId,
     //nightReserve:(eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1,
-    totalPrice:((eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1)*searchParams.roomPrice*searchParams.room
+    totalPrice:
+      (eachDayOfInterval({
+        start: new Date(searchParams.from),
+        end: new Date(searchParams.to),
+      }).length -
+        1) *
+      searchParams.roomPrice *
+      searchParams.room,
   });
 
-  console.log(values)
+  console.log(values,"value");
 
-
-  const getUserData =async()=>{
-    const result = await axios.get(`/api/user/customer_booking/${searchParams.userId}?roomName=${searchParams.roomName}`)
+  const getUserData = async () => {
+    const result = await axios.get(
+      `/api/user/customer_booking/${searchParams.userId}?roomName=${searchParams.roomName}`,
+    );
     //setValues({...values,...result?.data?.data,...result?.data?.data?.userProfile})
-    setValues({...values,...result?.data?.data})
-    console.log(result)
-  }
+    setValues({ ...values, ...result?.data?.data });
+    console.log(result);
+  };
 
   const [request, setRequest] = useState({});
   const [promotionCode, setPromotionCode] = useState("");
@@ -80,13 +103,20 @@ export default function StepperController({ searchParams }) {
       const newRequest = { ...request, [name]: value };
 
       setRequest({ ...newRequest });
-      setValues({...values, totalPrice: value !== "free" ? values.totalPrice + value : values.totalPrice});
-
+      setValues({
+        ...values,
+        totalPrice:
+          value !== "free" ? values.totalPrice + value : values.totalPrice,
+      });
     } else {
       const newRequest = { ...request };
       delete newRequest[name];
       setRequest({ ...newRequest });
-      setValues({...values, totalPrice: value !== "free" ? values.totalPrice - value : values.totalPrice});
+      setValues({
+        ...values,
+        totalPrice:
+          value !== "free" ? values.totalPrice - value : values.totalPrice,
+      });
     }
   };
   console.log(request);
@@ -98,12 +128,12 @@ export default function StepperController({ searchParams }) {
   // }));
   // console.log(arrRequest);
 
-  const totalAdditionalPrice = Object.keys(request).reduce((acc,cur) => {
-    if(typeof request[cur] === "number"){
-      acc += request[cur]
+  const totalAdditionalPrice = Object.keys(request).reduce((acc, cur) => {
+    if (typeof request[cur] === "number") {
+      acc += request[cur];
     }
-    return acc
-  },0)
+    return acc;
+  }, 0);
 
   const nextStep = () => {
     setCurrentStep((prevStep) => (prevStep < 3 ? prevStep + 1 : prevStep));
@@ -128,6 +158,7 @@ export default function StepperController({ searchParams }) {
 
     setValues({ ...values, [name]: value });
   };
+
   // fetching room_id from search page : use customer_booking_id to get room_id
   // const getReserveRoom = async () => {
   //   try {
@@ -140,15 +171,51 @@ export default function StepperController({ searchParams }) {
   // };
   // create customer_booking_id : POST /api/user/customer_booking
   const reservedRoom = async () => {
+    
+
     try {
-      const res = await axios.post("/api/user/customer_booking");
-      console.log(res);
-    } catch (error) {}
+      // Check if all required fields are provided
+      // if (!values.customerName) throw new Error("Customer name is required");
+      // if (!values.email) throw new Error("Customer email is required");
+      // if (!values.id_number) throw new Error("Customer ID number is required");
+      // if (!values.country) throw new Error("Customer country is required");
+      // if (!values.payment_id) throw new Error("Payment type is required");
+
+      const bookingData = {
+        customerName: values.name,
+        customerEmail: values.email,
+        customer_id_number: values?.userProfile?.id_number,
+        customerCountry: values?.userProfile?.country,
+        // customerDateOfBirth: values.dateOfBirth
+        //   ? new Date(values.dateOfBirth).toISOString()
+        //   : "1900-01-01T00:00:00.000Z",
+        customerDateOfBirth: new Date(values?.dateOfBirth),
+        paymentType: values.payment_id,
+        paymentStatus: values.paymentStatus || "Pending",
+        user_id:values.user_id,
+        checkInDate:new Date(new Date(values.checkinDate).toISOString()),
+        checkOutDate:new Date(new Date(values.checkOutDate).toISOString()),
+        totalPrice:values.totalPrice
+      };
+
+      // Create customer booking in the database
+      const response = await axios.post("/api/test1", bookingData);
+
+      console.log("Customer booking created:", response.data);
+
+      // Handle success
+      alert("Booking successful");
+
+      // Redirect or perform any other action as needed
+    } catch (error) {
+      console.error("Error reserving room:", error);
+      // Handle error
+      alert(error.message);
+    }
   };
 
   useEffect(() => {
-    getUserData()
-    // getReserveRoom();
+    getUserData();
   }, []);
 
   return (
@@ -164,7 +231,10 @@ export default function StepperController({ searchParams }) {
         <p>ราคาตต่อคืน: {testtest.roomPrice}</p>
         <p>จำนวนคืน: {testtest.nightReserve}</p>
         <p>userId: {testtest.userId}</p>
-        <p>จอง {testtest.roomReserve} ห้อง, {testtest.nightReserve} คืน รวมราคา: {testtest.totalRoomPrice}</p>
+        <p>
+          จอง {testtest.roomReserve} ห้อง, {testtest.nightReserve} คืน รวมราคา:{" "}
+          {testtest.totalRoomPrice}
+        </p>
 
         <h1 className="">Booking Room</h1>
         {/* Step indicators */}
@@ -259,7 +329,9 @@ export default function StepperController({ searchParams }) {
             </h5>
             <div className=" p-6 text-white">
               <p>Check-in: {format(values.checkinDate, "eee, dd MMM yyyy")}</p>
-              <p>Check-Out: {format(values.checkOutDate, "eee, dd MMM yyyy")}</p>
+              <p>
+                Check-Out: {format(values.checkOutDate, "eee, dd MMM yyyy")}
+              </p>
               <p>แขกที่จะเข้าพัก: {values.guestCount}</p>
               <p>ชื่อห้อง: {values.roomName}</p>
               <p>ราคาตต่อคืน: {values.roomPrice}</p>
@@ -270,15 +342,25 @@ export default function StepperController({ searchParams }) {
                 )):null
               } */}
 
-              {
-                request? Object.keys(request).map((key) => (
-                  <p>{[key]}: {request[key]}</p>
-                )):null
-              }
+              {request
+                ? Object.keys(request).map((key) => (
+                    <p>
+                      {[key]}: {request[key]}
+                    </p>
+                  ))
+                : null}
 
-              <p>จอง {testtest.roomReserve} ห้อง, {testtest.nightReserve} คืน รวมราคา: {values.totalPrice}</p>
+              <p>
+                จอง {testtest.roomReserve} ห้อง, {testtest.nightReserve} คืน
+                รวมราคา: {values.totalPrice}
+              </p>
               <p>total:{values.totalPrice}</p>
-
+              <button
+                className="mt-4 w-full rounded-md bg-[#e76b39] p-2 text-white hover:bg-[#f1f2f6] hover:text-[#e76b39]"
+                onClick={reservedRoom}
+              >
+                Booking
+              </button>
             </div>
           </div>
           {/* ไม่มีการเปลี่ยนแปลงข้อมูล */}
@@ -296,7 +378,6 @@ export default function StepperController({ searchParams }) {
           </div>
         </div>
       </div>
-      <button>Reserve</button>
     </section>
   );
 }

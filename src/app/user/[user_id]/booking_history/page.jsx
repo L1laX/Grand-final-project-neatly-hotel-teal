@@ -1,17 +1,40 @@
+"use client";
 import Image from "next/legacy/image";
 import SuperiorGardenView from "/src/asset/homepage/Superior-Garden-View.jpg";
 import Superior from "/src/asset/homepage/Superior.jpg";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
+import { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import axios from "axios";
 
-const BookingHistory = () => {
+const BookingHistory = ({params}) => {
+  console.log("pppp",params)
+  const {user_id} = params;
+  console.log("params ",user_id )
+  const [customerBooking, setCustomerBooking] = useState([]);
+
+  const getBookingHistory = async () => {
+    try {
+      const res = await axios.get(`/api/test/${user_id}`);
+      setCustomerBooking(res.data.data);
+      console.log(res.data);
+      //console.log(customerBooking);
+    } catch (error) {
+      console.error("Error fetching customer bookings:", error);
+    }
+  };
+
+  useEffect(() => {
+    getBookingHistory();
+  }, []);
   return (
     <div className="flex justify-center">
+      <h1>{customerBooking.id}</h1>
       <div className="flex w-11/12 max-w-[1980px] flex-col border-4 border-double border-indigo-600 lg:w-5/6">
         <h2 className="py-20 lg:text-7xl sm:text-5xl text-4xl">Booking History</h2>
         
