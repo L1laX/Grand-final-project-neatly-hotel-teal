@@ -43,7 +43,6 @@ export default function StepperController({ searchParams }) {
       searchParams.roomPrice *
       searchParams.room,
   });
-  console.log(values);
   const getUserData = async () => {
     const result = await axios.get(
       `/api/user/customer_booking/${searchParams.userId}?roomName=${searchParams.roomName}`,
