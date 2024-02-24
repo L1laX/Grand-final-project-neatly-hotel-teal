@@ -1,6 +1,6 @@
 import React from "react";
-
-const SubmitTotal = () => {
+import { format, addDays, eachDayOfInterval } from "date-fns";
+const SubmitTotal = ({ values }) => {
   return (
     <>
       <div className="result-order mx-10 my-20 flex flex-col items-center rounded-sm bg-[#2F3E35] xl:mx-[351px]">
@@ -17,8 +17,9 @@ const SubmitTotal = () => {
           <div className="date-booking-form mx-10 my-6 flex w-5/6 flex-col rounded-sm">
             <div className="booking-date flex flex-row justify-between rounded bg-[#5D7B6A] p-6">
               <h5 className=" font-medium text-white">
-                Th, 19 Oct 2022 - Fri, 20 Oct 2022
-                <p className=" body1 text-white">2 Guests</p>
+                {format(values?.checkInDate, "eee, dd MMM yyyy")} -{" "}
+                {format(values?.checkOutDate, "eee, dd MMM yyyy")}
+                <p className=" body1 text-white">{values.guestCount}</p>
               </h5>
               <h5 className=" font-medium text-white">
                 Check-in
@@ -34,7 +35,9 @@ const SubmitTotal = () => {
               <div className="payment-success my-10 flex flex-row justify-end gap-5 text-[#D5DFDA]">
                 <p>Payment successs via</p>
                 <p className=" font-medium">
-                  Credit Card-*888 แสดงเลขบัตรเครดิตแค่3ตัวหลัง
+                  {+values.paymentType
+                    ? `Credit Card ${values.paymentType}`
+                    : "QR Code"}
                 </p>
               </div>
               <ol className="body1 text-[#D5DFDA]">
@@ -48,7 +51,7 @@ const SubmitTotal = () => {
 
           <div className="flex w-5/6 items-center justify-between py-6 ">
             <p className=" text-[#D5DFDA]">Total</p>
-            <h5 className=" text-[#FFFFFF]">THB 2,300.00</h5>
+            <h5 className=" text-[#FFFFFF]">{values.totalPrice}</h5>
           </div>
         </div>
       </div>

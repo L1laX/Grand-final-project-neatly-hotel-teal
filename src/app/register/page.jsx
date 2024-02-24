@@ -44,34 +44,12 @@ const Register = () => {
     e.preventDefault();
     const value = e.target.value;
     if (e.target.name === "id_number") {
-      if (value.length > 17) {
+      if (value.length > 13) {
         return;
       }
 
       const newValue = value.replace(/\D/g, "");
-      newValue.length < 3
-        ? setIdNumber(newValue.replace(/(\d{1})(\d{1})/, "$1-$2"))
-        : newValue.length < 6
-          ? setIdNumber(newValue.replace(/(\d{1})(\d{1,4})/, "$1-$2-"))
-          : newValue.length < 10
-            ? setIdNumber(
-                newValue.replace(/(\d{1})(\d{1,4})(\d{1,5})/, "$1 $2 $3 "),
-              )
-            : newValue.length < 13
-              ? setIdNumber(
-                  newValue.replace(
-                    /(\d{1})(\d{1,4})(\d{1,5})(\d{1,3})/,
-                    "$1 $2 $3 $4 ",
-                  ),
-                )
-              : newValue.length < 17
-                ? setIdNumber(
-                    newValue.replace(
-                      /(\d{1})(\d{1,4})(\d{1,5})(\d{1,3})(\d{0,1})/,
-                      "$1 $2 $3 $4 $5 ",
-                    ),
-                  )
-                : setIdNumber(newValue);
+      setIdNumber(newValue);
       return setValues({ ...values, [e.target.name]: newValue });
     }
     setValues({ ...values, [e.target.name]: value });
@@ -143,6 +121,11 @@ const Register = () => {
 
     return errors.dateOfBirth;
   };
+  const [unique, setUnique] = useState({
+    email: "",
+    username: "",
+    id_number: "",
+  });
   const handleSubmit = async (e) => {
     e.preventDefault();
     //validate Email
@@ -171,13 +154,25 @@ const Register = () => {
     if (
       Object.keys(errors).filter((key) => errors[key] === true).length === 0
     ) {
-      const checkUser = await axios.post("/api/register/checkUser", {
+      const {
+        data: { error },
+      } = await axios.post("/api/register/checkUser", {
         username: values.username,
         email: values.email,
         id_number: values.id_number,
       });
-      if (checkUser.data.error) {
-        return alert(checkUser.data.message);
+
+      if (error) {
+        error.includes("Username") &&
+          setUnique({ ...unique, username: "Username is already exists " });
+        error.includes("Email") &&
+          setUnique((pre) => ({ ...pre, email: "Email is already exists " }));
+        error.includes("Id number") &&
+          setUnique((pre) => ({
+            ...pre,
+            id_number: "Id number is already exists ",
+          }));
+        return alert(error);
       }
 
       const data = await uploadAvatar(e);
@@ -261,9 +256,11 @@ const Register = () => {
                     className={`mx-2 mt-1 grid h-[56px] w-full  p-2 outline-none md:w-[466px] ${errors.username && "border-red-600"}`}
                     placeholder="Enter text..."
                   />
-                  {errors.username && (
+                  {(errors.username || unique.username) && (
                     <div className=" absolute -bottom-7 left-7 text-red-600">
-                      Please enter your username
+                      {unique.username
+                        ? unique.username
+                        : "Please enter your username"}
                     </div>
                   )}
                 </div>
@@ -324,9 +321,9 @@ const Register = () => {
                     className={`mx-2 mt-1 grid h-[56px] w-full  p-2 outline-none  md:w-[440px] ${errors.email && "border-red-600"}`}
                     placeholder="Enter text..."
                   />
-                  {errors.email && (
+                  {(errors.email || unique.email) && (
                     <div className="absolute -bottom-7 left-7  text-red-600">
-                      email is not valid
+                      {unique.email ? unique.email : "email is not valid"}
                     </div>
                   )}
                 </div>
@@ -345,9 +342,11 @@ const Register = () => {
                     onChange={getValue}
                     className={`mx-2 mt-1 grid h-[56px] w-full  p-2 outline-none md:w-[440px] ${errors.id && "border-red-600"}`}
                   />
-                  {errors.id_number && (
+                  {(errors.id_number || unique.id_number) && (
                     <div className=" absolute -bottom-7 left-7  text-red-600">
-                      ID number must be 13 characters
+                      {unique.id_number
+                        ? unique.id_number
+                        : "ID number must be 13 characters"}
                     </div>
                   )}
                 </div>

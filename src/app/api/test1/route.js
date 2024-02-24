@@ -52,12 +52,8 @@ export async function POST(request, response) {
     paymentStatus,
     user_id,
     checkInDate,
-    checkOutDate
+    checkOutDate,
   } = await request.json();
-  console.log(customerDateOfBirth,"1");
-  console.log(checkInDate,"2")
-  console.log(checkOutDate,"3")
-
   // await prisma.customerBooking.create({
   //   data: {
   //     ...birdy,
@@ -80,39 +76,39 @@ export async function POST(request, response) {
   //   },
   // });
 
-  // await prisma.customerBooking.create({
-  //   data: {
-  //     customerName: customerName,
-  //     customerEmail: customerEmail,
-  //     customer_id_number: customer_id_number,
-  //     customerCountry: customerCountry,
-  //     customerDateOfBirth: customerDateOfBirth,
-  //     paymentType: paymentType,
-  //     paymentStatus: paymentStatus,
-  //     order_id: order_id,
-  //     promotionCode: promotionCode,
-  //     guestCount: guestCount,
-  //     discount: discount,
-  //     checkInDate:checkInDate,
-  //     checkOutDate:checkOutDate,
-  //     additionalRequest: additionalRequest,
-  //     bookingRequest: {
-  //       create: bookingRequest.map((request) => {
-  //         return { name: request };
-  //       }),
-  //     },
-  //     customerBooking_room: {
-  //       create: room_id.map((id) => {
-  //         return { room: { connect: { id: id } } };
-  //       }),
-  //     },
-  //     user: {
-  //       connect: {
-  //         id: user_id,
-  //       },
-  //     },
-  //   },
-  // });
+  await prisma.customerBooking.create({
+    data: {
+      customerName: customerName,
+      customerEmail: customerEmail,
+      customer_id_number: customer_id_number,
+      customerCountry: customerCountry,
+      customerDateOfBirth: new Date(customerDateOfBirth),
+      paymentType: paymentType,
+      paymentStatus: paymentStatus,
+      order_id: order_id,
+      promotionCode: promotionCode,
+      guestCount: guestCount,
+      discount: discount,
+      checkInDate: new Date(checkInDate),
+      checkOutDate: new Date(checkOutDate),
+      additionalRequest: additionalRequest,
+      bookingRequest: {
+        create: bookingRequest.map((request) => {
+          return { name: request };
+        }),
+      },
+      customerBooking_room: {
+        create: room_id.map((id) => {
+          return { room: { connect: { id: id } } };
+        }),
+      },
+      user: {
+        connect: {
+          id: user_id,
+        },
+      },
+    },
+  });
 
   return NextResponse.json({
     message: "success",
