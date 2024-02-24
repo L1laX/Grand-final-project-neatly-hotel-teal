@@ -7,6 +7,8 @@ import {
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import { Input } from "../ui/input";
 import LoadingPage from "../common/LoadingPage";
+import axios from "axios";
+import { stripe } from "@/lib/stripe";
 export default function CheckoutForm({
   prevStep,
   promotionCode,
@@ -14,13 +16,16 @@ export default function CheckoutForm({
   isPromotion,
   displayCode,
   setCurrentStep,
+  values,
+  request,
+  setValues,
 }) {
-  const stripe = useStripe();
+  const Stripe = useStripe();
   const elements = useElements();
   const [isLoading, setIsLoading] = React.useState(false);
   const [message, setMessage] = React.useState("");
   React.useEffect(() => {
-    if (!stripe) {
+    if (!Stripe) {
       return;
     }
     const clientSecret = new URLSearchParams(window.location.search).get(
@@ -29,29 +34,54 @@ export default function CheckoutForm({
     if (!clientSecret) {
       return;
     }
-  }, [stripe, isPromotion]);
+  }, [Stripe, isPromotion]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!stripe || !elements) {
+    if (!Stripe || !elements) {
       return;
     }
     setIsLoading(true);
-    const data = await stripe.confirmPayment({
+    const data = await Stripe.confirmPayment({
       elements,
       redirect: "if_required",
       confirmParams: {
         return_url: "http://localhost:3000/booking/success",
       },
     });
-    console.log(data);
     if (data.error) {
       alert(data.error.message);
     }
 
     if (data.paymentIntent?.status === "succeeded") {
       alert("Payment succeeded!");
+      const response = await stripe.paymentMethods.retrieve(
+        data.paymentIntent.payment_method,
+      );
+      let paymentType;
+      if (response.card) {
+        paymentType = response.card.last4;
+      } else {
+        paymentType = response.type;
+      }
+      setValues({
+        ...values,
+        request: request,
+        paymentType: paymentType,
+        paymentStatus: data.paymentIntent.status,
+      });
+      const sendData = {
+        ...values,
+        request: request,
+        paymentType: paymentType,
+        paymentStatus: data.paymentIntent.status,
+      };
+
+      const result = await axios.post(`/api/booking/`, {
+        ...sendData,
+      });
+
       setCurrentStep(4);
     }
     setIsLoading(false);
@@ -96,7 +126,7 @@ export default function CheckoutForm({
           <button className="visitlink" onClick={prevStep}>
             Back
           </button>
-          <span disabled={isLoading || !stripe || !elements} id="submit">
+          <span disabled={isLoading || !Stripe || !elements} id="submit">
             <span id="button-text">
               {isLoading ? (
                 <PrimaryBtn

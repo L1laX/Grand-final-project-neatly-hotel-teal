@@ -176,6 +176,7 @@ export default function FormPayment({
   testtest,
   totalAdditionalPrice,
   setCurrentStep,
+  request,
 }) {
   const [clientSecret, setClientSecret] = React.useState("");
   const [isPromotion, setIsPromotion] = React.useState(false);
@@ -259,6 +260,9 @@ export default function FormPayment({
             isPromotion={isPromotion}
             displayCode={displayCode}
             setCurrentStep={setCurrentStep}
+            setValues={setValues}
+            values={values}
+            request={request}
           />
         </Elements>
       )}

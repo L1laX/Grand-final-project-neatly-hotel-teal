@@ -54,13 +54,8 @@ export async function POST(request, response) {
 
 
     checkInDate,
-    checkOutDate
+    checkOutDate,
   } = await request.json();
-  console.log(customerDateOfBirth,"1");
-  console.log(checkInDate,"2")
-  console.log(checkOutDate,"3")
-
-
   // await prisma.customerBooking.create({
   //   data: {
   //     ...birdy,
@@ -82,7 +77,6 @@ export async function POST(request, response) {
   //     },
   //   },
   // });
-
 
   // await prisma.customerBooking.create({
   //   data: {
