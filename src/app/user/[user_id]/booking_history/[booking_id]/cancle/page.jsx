@@ -1,10 +1,30 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import Modal from "@/components/common/PopupModal";
+import Link from "next/link";
+import axios from "axios";
+import { format } from "date-fns";
 
-const CancleBooking = () => {
+const CancleBooking = ({ params }) => {
+  const { user_id } = params;
   const [showModal, setShowModal] = useState(false);
+  const [cancleBooking, setCancleBooking] = useState([]);
+  console.log(cancleBooking);
+
+  const getCancleBooking = async () => {
+    try {
+      const res = await axios.get(`/api/test/${user_id}`);
+      setCancleBooking(res.data.data);
+      console.log(res.data.data);
+    } catch (error) {
+      console.error("Error fetching customer bookings:", error);
+    }
+  };
+
+  useEffect(() => {
+    getCancleBooking();
+  }, []);
 
   const handleConfirmCancle = () => {
     setShowModal(true);
@@ -23,9 +43,18 @@ const CancleBooking = () => {
           <div className="booking-content flex flex-col md:ml-9 md:w-4/5 md:flex-row md:justify-between">
             {/* Booking Detail */}
             <div className="left">
-              <h3 className=" mb-10">Superior Garden View</h3>
+              <h3 className=" mb-10">
+                Superior Garden View{cancleBooking[0]?.name}
+              </h3>
               <p className=" body1 mb-10 text-[#9aa1b9]">
-                Th, 19 Oct 2022 - Fri, 20 Oct 2022 <br />2 Guests
+                {cancleBooking[0]?.checkInDate === null
+                  ? null
+                  : format(cancleBooking[0]?.checkInDate, "eee, dd MMM yyyy -")}
+                {cancleBooking[0]?.checkOutDate === null
+                  ? null
+                  : format(cancleBooking[0]?.checkOutDate, " eee, dd MMM yyyy")}
+                <br />
+                {cancleBooking[0]?.guestCount} Guests
               </p>
               <p className=" body3 mb-10 text-[#B61515]">
                 *Cancellation of the booking now will not be able to request a
@@ -34,7 +63,10 @@ const CancleBooking = () => {
             </div>
             <div className="right">
               <p className=" body1 text-[#9aa1b9]">
-                Booking date: Tue, 16 Oct 2022
+                Booking date:
+                {cancleBooking[0]?.created_at === null
+                  ? null
+                  : format(cancleBooking[0]?.created_at, " eee, dd MMM yyyy -")}
               </p>
             </div>
           </div>
@@ -42,9 +74,10 @@ const CancleBooking = () => {
         <hr />
         {/* Button */}
         <div className="button flex flex-row justify-between md:my-10">
-          <button className="visitlink" onClick={handleCancel}>
-            Cancle
-          </button>
+          <Link href={`/user/${cancleBooking[0]?.user_id}/booking_history/`}>
+            <button className="visitlink">Back</button>
+          </Link>
+
           <PrimaryBtn
             btnName="Cancle this Booking"
             handleClick={handleConfirmCancle}

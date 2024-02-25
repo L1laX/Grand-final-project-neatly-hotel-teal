@@ -47,6 +47,7 @@ export async function GET(request, { params: { customer_booking_id } }) {
         },
         bookingRequest: true,
       },
+
     });
 
     if (!customerBooking) {
