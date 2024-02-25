@@ -4,7 +4,7 @@ import { stripe } from "@/lib/stripe";
 
 export async function GET(request) {
   const paymentMethod = await stripe.paymentMethods.retrieve(
-    "pm_1OmDjNEHGnk23K7FRGC4dWzS",
+    "pm_1OnEzqEHGnk23K7FO7iq5VCq",
   );
   return NextResponse.json({ message: paymentMethod }, { status: 200 });
 }
