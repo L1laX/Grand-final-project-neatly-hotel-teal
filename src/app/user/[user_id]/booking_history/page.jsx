@@ -65,25 +65,28 @@ const BookingHistory = ({ params }) => {
 
         {/* Conditional Rendering List */}
 
-        {customerBooking.map((booking) => {
-          return (
-            <BookingCard
-              key={booking.id}
-              customerName={booking?.customerName}
-              roomname={booking?.room?.roomName}
-              bookingdate={booking?.created_at}
-              customerCheckin={booking?.checkInDate}
-              customerCheckout={booking?.checkOutDate}
-              guestAmount={booking?.guestCount}
-              paymentMethodType={booking?.paymentType}
-              addReqText={booking?.additionalRequest}
-              addReqPrice={booking?.additionalRequest}
-              promotionPrice={booking?.promotionCode}
-              bookingTotalPrice={booking?.totalPrice}
-              pricePerNight={"1000"}
-            />
-          );
-        })}
+        {customerBooking &&
+          customerBooking.map((booking) => {
+            return (
+              <BookingCard
+                key={booking.id}
+                customerName={booking?.customerName}
+                roomname={booking?.customerBooking_room?.room?.name}
+                bookingdate={booking?.created_at}
+                customerCheckin={booking?.checkInDate}
+                customerCheckout={booking?.checkOutDate}
+                guestAmount={booking?.guestCount}
+                paymentMethodType={booking?.paymentType}
+                addReqText={booking?.additionalRequest}
+                addReqPrice={booking?.additionalRequest}
+                promotionPrice={booking?.promotionCode}
+                bookingTotalPrice={booking?.totalPrice}
+                pricePerNight={"1000"}
+                userId={booking?.user_id}
+                bookingId={booking?.id}
+              />
+            );
+          })}
         {/* <BookingCard /> */}
       </div>
     </div>

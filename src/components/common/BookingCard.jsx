@@ -10,6 +10,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { addDays, format } from "date-fns";
+import Link from "next/link";
 
 export default function BookingCard({
   bookingId,
@@ -25,6 +26,7 @@ export default function BookingCard({
   promotionPrice,
   bookingTotalPrice,
   pricePerNight,
+  userId,
 }) {
   return (
     <div className="mb-10 flex w-full flex-col ">
@@ -33,7 +35,7 @@ export default function BookingCard({
         {/* Image */}
 
         <div className="relative flex h-[16rem] w-11/12 md:h-[18rem] md:w-3/5 xl:w-2/5">
-          {customerName}ชื่อลูกค้า
+          {customerName}ชื่อลูกค้า {userId}ไอดีลูกค้า
           <Image
             src={SuperiorGardenView}
             layout="fill"
@@ -42,14 +44,19 @@ export default function BookingCard({
           />
         </div>
         {/* Booking Card Detail */}
-        <div className="flex w-full flex-col ">
-          <div className="flex w-full items-center justify-between  px-4 md:px-6 xl:px-14">
-            <h3 className="pr-2 text-2xl lg:text-3xl xl:text-4xl">
+        <div className="flex w-full flex-col">
+          <div className="mx-4 mt-4 flex w-full flex-col justify-between md:mt-0 md:flex-row md:px-6">
+            <h3 className=" pr-2 text-2xl lg:text-3xl xl:text-4xl">
               {roomname}ชื่อห้อง
             </h3>
-            <p className="lg:text-md pl-2 text-right text-[#9AA1B9] md:text-sm xl:text-lg">
-              Booking date: {format(bookingdate, "eee, dd MMM yyyy")}
-            </p>
+            <div>
+              <p className="text-[#9AA1B9] md:text-right">
+                Booking date: {format(bookingdate, "eee, dd MMM yyyy")}
+              </p>
+              <p className="text-[#9AA1B9] md:text-right">
+                Cancellation date: {format(bookingdate, "eee, dd MMM yyyy")}
+              </p>
+            </div>
           </div>
 
           <div className=" lg:text-md flex w-full px-4 py-5 text-sm text-[#424C6B] max-md:justify-between md:px-6 md:py-10 xl:px-14 xl:text-lg">
@@ -58,7 +65,7 @@ export default function BookingCard({
               <p>
                 {customerCheckin === null
                   ? null
-                  : format(customerCheckin, "eee, dd MMM yyyy")}{" "}
+                  : format(customerCheckin, "eee, dd MMM yyyy")}
                 | After 2:00 PM
               </p>
             </div>
@@ -67,14 +74,14 @@ export default function BookingCard({
               <p>
                 {customerCheckout === null
                   ? null
-                  : format(customerCheckout, "eee, dd MMM yyyy")}{" "}
+                  : format(customerCheckout, "eee, dd MMM yyyy")}
                 | Before 12:00 PM
               </p>
             </div>
           </div>
 
           {/* Booking Detail */}
-          <div className="mx-auto w-11/12 bg-[#F1F2F6]">
+          <div className="mx-auto w-11/12 rounded-md bg-[#F1F2F6]">
             <Accordion type="single" collapsible>
               <AccordionItem value="item-1">
                 <AccordionTrigger className="px-14">
@@ -134,17 +141,20 @@ export default function BookingCard({
       </div>
       {/* Button */}
       <div className="mt-4 flex w-full items-center justify-between max-sm:flex-col">
-        <button className="visitlink">cancle</button>
+        <Link href={`/user/${userId}/booking_history/${bookingId}/cancle`}>
+          <button className="visitlink">Cancle Booking</button>
+        </Link>
         <div className="flex items-center max-sm:flex-col">
           <button className="visitlink px-0 max-sm:pb-3 sm:px-6">
-            room detail
+            Room Detail
           </button>
           <div className="max-sm:pb-3">
-            <PrimaryBtn
-              btnName="Change Date"
-              primaryButton=""
-              // handleClick={handleClickSearch} คลิกไปที่change date ผ่าน customer_booking_id
-            />
+            {/* url: /user/[user_id]/booking_history/[booking_id]/chage_date */}
+            <Link
+              href={`/user/${userId}/booking_history/${bookingId}/change_date`}
+            >
+              <PrimaryBtn btnName="Change Date" handleClick={() => {}} />
+            </Link>
           </div>
         </div>
       </div>

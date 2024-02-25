@@ -34,11 +34,15 @@ export async function GET(request, { params: { user_id } }) {
       where: {
         user_id: user_id,
       },
+      include: {
+        user: true,
+        customerBooking_room: { include: { room: true } },
+      },
     });
 
-    // console.log(bookingHistory);
+    console.log(bookingHistory);
 
-    if (!bookingHistory)
+    if (!bookingHistory.length)
       return NextResponse.json({
         status: 404,
         message: "Customer Booking not found",

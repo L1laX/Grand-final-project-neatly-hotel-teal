@@ -2,8 +2,12 @@
 import React, { useState } from "react";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import Modal from "@/components/common/PopupModal";
+import Link from "next/link";
+import { format } from "date-fns";
+import axios from "axios";
 
-const ChangeDate = () => {
+const ChangeDate = ({ params }) => {
+  const { user_id } = params;
   const [showModal, setShowModal] = useState(false);
 
   const handleConfirmCancle = () => {
@@ -49,9 +53,11 @@ const ChangeDate = () => {
         <hr />
         {/* Button */}
         <div className="button flex flex-row justify-between lg:my-10">
-          <button className="visitlink" onClick={handleCancel}>
-            Cancle
-          </button>
+          <Link href={`/user/${user_id}/booking_history/`}>
+            <button className="visitlink" onClick={handleCancel}>
+              Back
+            </button>
+          </Link>
           <PrimaryBtn
             btnName="Confirm Change Date"
             handleClick={handleConfirmCancle}
