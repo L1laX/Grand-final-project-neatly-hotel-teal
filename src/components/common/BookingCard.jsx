@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import { addDays, format } from "date-fns";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function BookingCard({
   bookingId,
@@ -27,26 +28,27 @@ export default function BookingCard({
   userId,
   roomImage,
 }) {
+  const router = useRouter();
+
   return (
     <div className="mb-10 flex w-full flex-col ">
-      ตารางroom gallery
+      ตารางroom gallery + {bookingId}
       <div className="flex flex-col items-center md:flex-row md:items-start">
         {/* Image */}
 
         <div className="relative flex h-[16rem] w-11/12 md:h-[18rem] md:w-3/5 xl:w-2/5">
-          <Image
+          {/* <Image
             src={SuperiorGardenView}
             layout="fill"
             objectFit="cover"
             alt="Suite"
-          />
+          /> */}
+          <img src={roomImage} alt="room" />
         </div>
         {/* Booking Card Detail */}
         <div className="flex w-full flex-col">
           <div className="mx-4 mt-4 flex w-full flex-col justify-between md:mt-0 md:flex-row md:px-6">
-            <h3 className=" pr-2 text-2xl lg:text-3xl xl:text-4xl">
-              {roomname}
-            </h3>
+            <h3 className=" text-2xl lg:text-3xl xl:text-4xl">{roomname}</h3>
             <div>
               <p className="text-[#9AA1B9] md:text-right">
                 Booking date: {format(bookingdate, "eee, dd MMM yyyy")}
@@ -58,7 +60,7 @@ export default function BookingCard({
           </div>
 
           <div className=" lg:text-md flex w-full px-4 py-5 text-sm text-[#424C6B] max-md:justify-between md:px-6 md:py-10 xl:px-14 xl:text-lg">
-            <div className="flex flex-col pr-3">
+            <div className=" ml-4 flex flex-col pr-3">
               <p className=" font-semibold">Check-in</p>
               <p>
                 {customerCheckin === null
@@ -105,14 +107,16 @@ export default function BookingCard({
                       </p>
                     </div>
                     <div className="mt-4 flex justify-between">
-                      <p className="text-[#646D89]">Add-on Request</p>
+                      <p className="text-[#646D89]">
+                        Add-on Request : ตาราง add req
+                      </p>
                       <p className="pl-4 text-right font-semibold text-[#2A2E3F]">
-                        {addReqPrice} ตาราง add req
+                        {addReqPrice}
                       </p>
                     </div>
                     <div className="mt-4 flex justify-between">
                       <p className="text-[#646D89]">
-                        Promotion Code ตารางโปรโมชั่น
+                        Promotion Code : ตารางโปรโมชั่น
                       </p>
                       <p className="pl-4 text-right font-semibold text-[#2A2E3F]">
                         {promotionPrice}
@@ -150,11 +154,15 @@ export default function BookingCard({
           </button>
           <div className="max-sm:pb-3">
             {/* url: /user/[user_id]/booking_history/[booking_id]/chage_date */}
-            <Link
-              href={`/user/${userId}/booking_history/${bookingId}/change_date`}
-            >
-              <PrimaryBtn btnName="Change Date" handleClick={() => {}} />
-            </Link>
+
+            <PrimaryBtn
+              btnName="Change Date"
+              handleClick={() =>
+                router.push(
+                  `/user/${userId}/booking_history/${bookingId}/change_date`,
+                )
+              }
+            />
           </div>
         </div>
       </div>

@@ -54,6 +54,9 @@ const BookingHistory = ({ params }) => {
                 }
                 userId={booking?.user_id}
                 bookingId={booking?.id}
+                roomImage={
+                  booking?.customerBooking_room[0]?.room?.roomMainImage
+                }
               />
             );
           })}
