@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "next/legacy/image";
 import SuperiorGardenView from "/src/asset/homepage/Superior-Garden-View.jpg";
-import Superior from "/src/asset/homepage/Superior.jpg";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import {
   Accordion,
@@ -16,7 +15,6 @@ export default function BookingCard({
   bookingId,
   roomname,
   bookingdate,
-  customerName,
   customerCheckin,
   customerCheckout,
   guestAmount,
@@ -27,15 +25,15 @@ export default function BookingCard({
   bookingTotalPrice,
   pricePerNight,
   userId,
+  roomImage,
 }) {
   return (
     <div className="mb-10 flex w-full flex-col ">
-      {bookingId}
+      ตารางroom gallery
       <div className="flex flex-col items-center md:flex-row md:items-start">
         {/* Image */}
 
         <div className="relative flex h-[16rem] w-11/12 md:h-[18rem] md:w-3/5 xl:w-2/5">
-          {customerName}ชื่อลูกค้า {userId}ไอดีลูกค้า
           <Image
             src={SuperiorGardenView}
             layout="fill"
@@ -47,7 +45,7 @@ export default function BookingCard({
         <div className="flex w-full flex-col">
           <div className="mx-4 mt-4 flex w-full flex-col justify-between md:mt-0 md:flex-row md:px-6">
             <h3 className=" pr-2 text-2xl lg:text-3xl xl:text-4xl">
-              {roomname}ชื่อห้อง
+              {roomname}
             </h3>
             <div>
               <p className="text-[#9AA1B9] md:text-right">
@@ -92,7 +90,7 @@ export default function BookingCard({
                 <AccordionContent className="flex flex-col text-lg">
                   <div className="mx-5 flex flex-col text-sm lg:mx-8 lg:text-lg xl:mx-14">
                     <div className="my-5 flex justify-between text-[#646D89]">
-                      <div>{guestAmount} จำนวน Guests (1 Night)</div>
+                      <div>{guestAmount} Guests (1 Night)</div>
                       <div className="text-right max-sm:flex-col">
                         <div className="inline pl-4">Payment success via</div>
                         <div className="ml-2 inline font-semibold">
@@ -103,17 +101,19 @@ export default function BookingCard({
                     <div className="mt-4 flex justify-between">
                       <p>{roomname}</p>
                       <p className="pl-4 text-right font-semibold text-[#2A2E3F]">
-                        ราคาต่อคืน({pricePerNight})
+                        {pricePerNight}/ต่อคืน
                       </p>
                     </div>
                     <div className="mt-4 flex justify-between">
                       <p className="text-[#646D89]">Add-on Request</p>
                       <p className="pl-4 text-right font-semibold text-[#2A2E3F]">
-                        {addReqPrice}
+                        {addReqPrice} ตาราง add req
                       </p>
                     </div>
                     <div className="mt-4 flex justify-between">
-                      <p className="text-[#646D89]">Promotion Code</p>
+                      <p className="text-[#646D89]">
+                        Promotion Code ตารางโปรโมชั่น
+                      </p>
                       <p className="pl-4 text-right font-semibold text-[#2A2E3F]">
                         {promotionPrice}
                       </p>

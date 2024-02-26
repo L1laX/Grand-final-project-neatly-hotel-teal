@@ -9,6 +9,18 @@ import axios from "axios";
 const ChangeDate = ({ params }) => {
   const { user_id } = params;
   const [showModal, setShowModal] = useState(false);
+  const [inputChange, setInputChange] = useState([]);
+  const [changeDate, setChangeDate] = useState([]);
+
+  const getChangeDate = async () => {
+    try {
+      const res = await axios.put(`/api/test/${user_id}`);
+      setChangeDate(res.data.data);
+      console.log(res.data.data);
+    } catch (error) {
+      console.error("Error fetching customer bookings:", error);
+    }
+  };
 
   const handleConfirmCancle = () => {
     setShowModal(true);
