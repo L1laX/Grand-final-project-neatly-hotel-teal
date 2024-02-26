@@ -17,6 +17,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  DialogContentText,
   TextField,
   DialogActions,
   Button,
@@ -35,6 +36,10 @@ const orangeTheme = createTheme({
       styleOverrides: {
         root: {
           color: "#FC5B2C",
+          "&:hover": {
+            backgroundColor: "#FC5B2C",
+            color: "white",
+          },
         },
       },
     },
@@ -56,36 +61,27 @@ function Promotion() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [open, setOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [currentPromotionCode, setCurrentPromotionCode] = useState("");
+  const [currentPromotionId, setCurrentPromotionId] = useState("");
   const [newPromotion, setNewPromotion] = useState({
     promotionCode: "",
     discount: "",
   });
 
+  console.log("data:", data);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get("/api/admin/promotion");
         if (res.status !== 200) throw new Error("Failed to fetch");
-        const { promotions, rooms } = res.data.data;
 
-        // Mapping to include promotion details with each room
-        const mappedData = rooms.map((room) => {
-          // Finding the promotion by room name
-          const promotion = promotions.find(
-            (promo) => promo.name.toLowerCase() === room.name.toLowerCase(),
-          );
+        const promotions = res.data.data.promotions;
+        console.log("promotions:", promotions);
 
-          return {
-            ...room,
-            // Here, you're ensuring that if a promotion is found, you use its details
-            promotionCode: promotion ? promotion.promotionCode : "N/A",
-            discount: promotion ? promotion.discount : "N/A",
-            promotionName: promotion ? promotion.name : "N/A", // Using a different key to avoid overwriting the room's name
-            validUntil: promotion ? "Valid date here" : "N/A", // Assuming you have a validUntil or similar field to add
-          };
-        });
-        setData(mappedData);
+        setData(promotions);
       } catch (error) {
+        console.error("Failed to load data:", error);
         toast.error("Failed to load data.");
       }
     };
@@ -112,21 +108,18 @@ function Promotion() {
     try {
       const promotionData = {
         promotionCode: newPromotion.promotionCode,
-        discount: parseInt(newPromotion.discount), // Ensuring it's an integer
-        name: newPromotion.roomType, // Match the 'name' field with your form's input
+        discount: parseInt(newPromotion.discount),
+        name: newPromotion.roomType,
       };
 
-      // Ensure the endpoint matches your file structure
       const response = await axios.post(
         "/api/admin/promotion/create",
         promotionData,
       );
 
-      // Check for success status code (201 for creation)
       if (response.status === 201) {
         console.log("Promotion added:", response.data);
         toast.success("Promotion added successfully");
-        // Handle additional success actions such as state reset or dialog close
       } else {
         toast.error("Failed to create promotion");
       }
@@ -139,33 +132,42 @@ function Promotion() {
     }
   };
 
-  const handleDeletePromotion = async (promotionCode) => {
+  const handleDeletePromotion = async (promotionId) => {
     try {
-      const response = await axios.delete(
-        `/api/admin/promotion/${promotionCode}`,
-      );
-      if (response.status === 200) {
-        toast.success("Promotion deleted successfully");
-        setData(data.filter((data) => data.promotionCode !== promotionCode));
-      } else {
-        toast.error("Failed to delete promotion");
-      }
+      await axios.delete(`/api/admin/promotion/${promotionId}`);
+      toast.success("Promotion deleted successfully");
+
+      setData(data.filter((item) => item.id !== promotionId));
     } catch (error) {
-      console.error("Error deleting promotion:", error);
-      toast.error(
-        "Failed to delete promotion: " +
-          (error.response?.data?.message || error.message),
+      console.error(
+        "Error deleting promotion:",
+        error.response?.data?.error || "An error occurred",
       );
+      toast.error("Failed to delete promotion");
     }
   };
+
+  console.log("promotionId:", currentPromotionId);
+
+  const handleDeleteClick = (promotionId) => {
+    setCurrentPromotionId(promotionId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    await handleDeletePromotion(currentPromotionId);
+    setDeleteDialogOpen(false);
+  };
+
   const columns = [
-    { id: "name", label: "Room", minWidth: 170 },
-    { id: "pricePerNight", label: "Price per night", minWidth: 170 },
-    { id: "promotionCode", label: "Promotion code", minWidth: 170 },
+    { id: "promotionCode", label: "Promotion Code", minWidth: 170 },
     { id: "discount", label: "Discount", minWidth: 100 },
-    { id: "promotionName", label: "Promotion Name", minWidth: 170 },
+    { id: "name", label: "Applies To", minWidth: 170 },
     { id: "delete", label: "Delete", minWidth: 100 },
-    // Removed the render property for delete action
   ];
 
   return (
@@ -204,29 +206,27 @@ function Promotion() {
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage,
                       )
-                      .map((row) => (
+                      .map((promotion) => (
                         <TableRow
                           hover
                           role="checkbox"
                           tabIndex={-1}
-                          key={row.id}
+                          key={promotion.id}
                         >
                           {columns.map((column) => {
                             if (column.id !== "delete") {
-                              // For all columns except the 'delete' column, render the cell normally
                               return (
                                 <TableCell key={column.id} align="center">
-                                  {row[column.id]}
+                                  {promotion[column.id]}
                                 </TableCell>
                               );
                             } else {
-                              // For the 'delete' column, render the delete button
                               return (
                                 <TableCell key={column.id} align="center">
                                   <Button
                                     color="error"
                                     onClick={() =>
-                                      handleDeletePromotion(row.promotionCode)
+                                      handleDeleteClick(promotion.id)
                                     }
                                   >
                                     Delete
@@ -297,6 +297,29 @@ function Promotion() {
                   variant="contained"
                 >
                   Add
+                </Button>
+              </DialogActions>
+            </Dialog>
+            <Dialog
+              open={deleteDialogOpen}
+              onClose={handleCloseDeleteDialog}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {"Confirm Deletion"}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Are you sure you want to delete this promotion?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseDeleteDialog} color="primary">
+                  Cancel
+                </Button>
+                <Button onClick={handleConfirmDelete} color="primary" autoFocus>
+                  Confirm
                 </Button>
               </DialogActions>
             </Dialog>
