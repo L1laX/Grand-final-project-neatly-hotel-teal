@@ -188,6 +188,8 @@ export default function FormPayment({
     const response = await axios.post(
       "/api/user/payment_method/payment_intent",
       {
+        name: values.name,
+        email: values.email,
         amount: +amount,
         isUpdate: istrue ? true : false,
         intent_id: paymentIntent_id || null,
@@ -198,9 +200,9 @@ export default function FormPayment({
     setPaymentIntent_id(response.data.paymentIntent_id);
     setValues((prev) => ({
       ...values,
+      ...prev,
       payment_id: response.data.customer,
       order_id: response.data.paymentIntent_id,
-      ...prev,
     }));
     setUnique_key_number(unique_key);
   };
