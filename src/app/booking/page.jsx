@@ -19,7 +19,7 @@ export default function StepperController({ searchParams }) {
     ),
     roomReserve: searchParams.room,
     guestReserve: searchParams.guest,
-    allRoomId: searchParams.allRoomId,
+    allRoomId: searchParams.allRoomId.split(','),
     roomPrice: searchParams.roomPrice,
     userId: searchParams.userId,
     nightReserve:
@@ -70,7 +70,7 @@ export default function StepperController({ searchParams }) {
 
   const getUserData = async () => {
     const result = await axios.get(
-      `/api/user/customer_booking/${searchParams.userId}?roomName=${searchParams.roomName}`,
+      `/api/user/customer_booking/${searchParams.userId}?roomName=${searchParams.roomName}&allRoomId=${searchParams.allRoomId}`,
     );
     //setValues({...values,...result?.data?.data,...result?.data?.data?.userProfile})
     setValues({ ...values, ...result?.data?.data });
@@ -146,7 +146,7 @@ export default function StepperController({ searchParams }) {
     setValues({ ...values, country: value });
   };
   const getdateOfBirth = (date) => {
-    const value = new Date(date?.$d).toISOString();
+    const value = new Date(date?.$d);
     setValues({ ...values, dateOfBirth: value });
   };
 
@@ -193,8 +193,8 @@ export default function StepperController({ searchParams }) {
         paymentType: values.payment_id,
         paymentStatus: values.paymentStatus || "Pending",
         user_id:values.user_id,
-        checkInDate:new Date(new Date(values.checkinDate).toISOString()),
-        checkOutDate:new Date(new Date(values.checkOutDate).toISOString()),
+        checkInDate:new Date(values.checkinDate),
+        checkOutDate:new Date(values.checkOutDate),
         totalPrice:values.totalPrice
       };
 
@@ -227,7 +227,7 @@ export default function StepperController({ searchParams }) {
         <p>แขกที่จะเข้าพัก: {testtest.guestReserve}</p>
         <p>วันที่จะเข้าพัก: {testtest.checkinDate}</p>
         <p>วันที่จะออก: {testtest.checkOutDate}</p>
-        <p>id ห้อง: {testtest.allRoomId}</p>
+        <p>id ห้อง: {Array.isArray(testtest.allRoomId)?"true":"false"}</p>
         <p>ราคาตต่อคืน: {testtest.roomPrice}</p>
         <p>จำนวนคืน: {testtest.nightReserve}</p>
         <p>userId: {testtest.userId}</p>

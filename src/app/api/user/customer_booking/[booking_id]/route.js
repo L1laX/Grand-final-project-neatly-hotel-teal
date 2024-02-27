@@ -14,7 +14,17 @@ export async function GET(request, { params: { booking_id } }) {
 
     const searchParams = new URLSearchParams(new URL(request.url).search);
     const roomName = searchParams.get("roomName");
-    //console.log(roomName)
+    const allRoomId = searchParams.get("allRoomId").split(',');
+
+    // await prisma.room.updateMany({
+    //   where: {
+    //     status: "Vacant",
+    //     id: {
+    //       in: allRoomId
+    //     }
+    //   },
+    //   data: { status: "Booking" },
+    // });
 
     const customerBooking = await prisma.user.findUnique({
       where: {
@@ -39,10 +49,10 @@ export async function GET(request, { params: { booking_id } }) {
         name: roomName
       }
     })
-    console.log(promotionCode)
+    // console.log(promotionCode)
     
 
-    console.log(customerBooking);
+    // console.log(customerBooking);
     return NextResponse.json({
       message: "Fetching booking_id data complete!",
       data: customerBooking,
