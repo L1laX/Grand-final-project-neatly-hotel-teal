@@ -1,7 +1,25 @@
 import React from "react";
 import Image from "next/legacy/image";
+import CloseIcon from "@/asset/icons/close-outline.svg";
+import BG from "@/asset/background/login-page/bg.png";
 import SuperiorGardenView from "/src/asset/homepage/Superior-Garden-View.jpg";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import {
   Accordion,
   AccordionContent,
@@ -21,7 +39,8 @@ export default function BookingCard({
   guestAmount,
   paymentMethodType,
   addReqText,
-  addReqPrice,
+  addOnReq,
+  addOnPrice,
   promotionPrice,
   bookingTotalPrice,
   pricePerNight,
@@ -32,7 +51,7 @@ export default function BookingCard({
 
   return (
     <div className="mb-10 flex w-full flex-col ">
-      ตารางroom gallery + {bookingId}
+      {bookingId}
       <div className="flex flex-col items-center md:flex-row md:items-start">
         {/* Image */}
 
@@ -69,7 +88,7 @@ export default function BookingCard({
               <p>
                 {customerCheckin === null
                   ? null
-                  : format(customerCheckin, "eee, dd MMM yyyy")}
+                  : format(customerCheckin, "eee, dd MMM yyyy ")}
                 | After 2:00 PM
               </p>
             </div>
@@ -78,7 +97,7 @@ export default function BookingCard({
               <p>
                 {customerCheckout === null
                   ? null
-                  : format(customerCheckout, "eee, dd MMM yyyy")}
+                  : format(customerCheckout, "eee, dd MMM yyyy ")}
                 | Before 12:00 PM
               </p>
             </div>
@@ -107,15 +126,15 @@ export default function BookingCard({
                     <div className="mt-4 flex justify-between">
                       <p>{roomname}</p>
                       <p className="pl-4 text-right font-semibold text-[#2A2E3F]">
-                        {pricePerNight}/ต่อคืน
+                        {pricePerNight}
                       </p>
                     </div>
                     <div className="mt-4 flex justify-between">
                       <p className="text-[#646D89]">
-                        Add-on Request : ตาราง add req
+                        Add-on Request : {addOnReq}
                       </p>
                       <p className="pl-4 text-right font-semibold text-[#2A2E3F]">
-                        {addReqPrice}
+                        {/* {addReqPrice} */}
                       </p>
                     </div>
                     <div className="mt-4 flex justify-between">
@@ -153,9 +172,92 @@ export default function BookingCard({
           <button className="visitlink">Cancle Booking</button>
         </Link>
         <div className="flex items-center max-sm:flex-col">
-          <button className="visitlink px-0 max-sm:pb-3 sm:px-6">
-            Room Detail
-          </button>
+          {/* Popup Room Detail */}
+          <div className=" mr-4">
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <p className="visitlink">Room Detail</p>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    <div className=" flex flex-row justify-between gap-5 p-4 md:ml-20">
+                      <h5>Superior Garden View</h5>
+
+                      <AlertDialogCancel>
+                        <Image
+                          className="cursor-pointer"
+                          src={CloseIcon}
+                          width={20}
+                          height={20}
+                        />
+                      </AlertDialogCancel>
+                    </div>
+                  </AlertDialogTitle>
+                </AlertDialogHeader>
+                <AlertDialogDescription>
+                  <div className="content mt-5 p-4 md:mx-20">
+                    <div className="px-5 md:px-0">
+                      <Carousel>
+                        <CarouselContent>
+                          <CarouselItem className="basis-1/3">
+                            <Image src={BG} />
+                          </CarouselItem>
+                          <CarouselItem className="basis-1/3">
+                            <Image src={BG} />
+                          </CarouselItem>
+                          <CarouselItem className="basis-1/3">
+                            <Image src={BG} />
+                          </CarouselItem>
+                          <CarouselItem className="basis-1/3">
+                            <Image src={BG} />
+                          </CarouselItem>
+                        </CarouselContent>
+                        <CarouselNext />
+                        <CarouselPrevious />
+                      </Carousel>
+                    </div>
+                    <div className="content-detail divide-y-2 divide-gray-300 p-4">
+                      <div className="py-5">
+                        <p className="font-sans text-base font-normal text-[#646D89]">
+                          {/* {roomGuests} Guests | {roombedtype} | {roomsize} */}
+                        </p>
+                        <p className="font-sans text-base font-normal text-[#646D89]">
+                          {/* {roomdesc} */}
+                        </p>
+                      </div>
+                      <div className="py-5">
+                        <h5 className="text-black">Room Amenities</h5>
+                        <div className="flex flex-col justify-between gap-6 p-4 md:flex-row">
+                          <ul className="amenities-1 list-disc">
+                            <li className="bullet-text">Safe in Room</li>
+                            <li className="bullet-text">Air Conditioning</li>
+                            <li className="bullet-text">
+                              High-speed internet connection
+                            </li>
+                            <li className="bullet-text">Hairdryer</li>
+                            <li className="bullet-text">Shower</li>
+                            <li className="bullet-text">Bathroom amenities</li>
+                            <li className="bullet-text">Lamp</li>
+                          </ul>
+                          <ul className="amenities-2 list-disc">
+                            <li className="bullet-text">Minibar</li>
+                            <li className="bullet-text">Telephone</li>
+                            <li className="bullet-text">Ironing board</li>
+                            <li className="bullet-text">
+                              A floor only accessible via a guest room key
+                            </li>
+                            <li className="bullet-text">Alarm clock</li>
+                            <li className="bullet-text">Bathrobe</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </AlertDialogDescription>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
           <div className="max-sm:pb-3">
             {/* url: /user/[user_id]/booking_history/[booking_id]/chage_date */}
 
