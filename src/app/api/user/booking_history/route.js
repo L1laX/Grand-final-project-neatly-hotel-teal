@@ -11,6 +11,9 @@ export async function GET(request) {
       where: {
         user_id: user_id,
       },
+      orderBy: {
+        last_updated_at: "desc",
+      },
       include: {
         user: true,
         customerBooking_room: { include: { room: true } },

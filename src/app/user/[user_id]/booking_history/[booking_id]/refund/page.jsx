@@ -23,7 +23,7 @@ const RefundBooking = ({ params }) => {
 
   const getRefundOrder = async () => {
     try {
-      const res = await axios.delete(`/api/user/booking_history/${booking_id}`);
+      const res = await axios.post(`/api/user/booking_history/${booking_id}`);
       if (res.status === 200) {
         alert(
           "Your refund request has been processed! We will notify you once the refund is completed.",
@@ -39,7 +39,7 @@ const RefundBooking = ({ params }) => {
     getRefundBooking();
   }, []);
 
-  const handleConfirmCancle = () => {
+  const handleConfirmCancel = () => {
     setShowModal(true);
   };
 
@@ -100,8 +100,8 @@ const RefundBooking = ({ params }) => {
             Back
           </button>
           <PrimaryBtn
-            btnName="Cancle this Booking"
-            handleClick={handleConfirmCancle}
+            btnName="Cancel this Booking"
+            handleClick={handleConfirmCancel}
           ></PrimaryBtn>
         </div>
       </section>
@@ -111,10 +111,10 @@ const RefundBooking = ({ params }) => {
         showModal={showModal}
         handleCancel={handleCancel}
         handleConfirm={() => getRefundOrder(booking_id)}
-        modalTitle="Cancle and Refund this Booking"
+        modalTitle="Cancel and Refund this Booking"
         modalContent="Are you sure you want to cancel this booking and request a refund?"
-        cancelButton="Cancle"
-        confirmButton="Confirm Cancle and Refund"
+        cancelButton="Cancel"
+        confirmButton="Confirm Cancel and Refund"
       />
     </>
   );
