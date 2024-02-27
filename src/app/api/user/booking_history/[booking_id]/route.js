@@ -34,20 +34,30 @@ export async function GET(request, { params: { booking_id } }) {
     });
   }
 }
-
-export async function DELETE(request, { params: { booking_id } }) {
+//เมื่อกด cancle จะไม่ลบข้อมูลออกจาก database แต่จะเปลี่ยน status ของ paymentStatus ให้เป็น canceled
+export async function POST(request, { params: { booking_id } }) {
   console.log(booking_id);
   try {
-    const deleteBookingOrder = await prisma.customerBooking.delete({
+    const cancleBookingOrder = await prisma.customerBooking.update({
       where: {
         id: booking_id,
+      },
+      data: {
+        upsert: {
+          creat: {
+            paymentStatus: "canceled",
+          },
+          update: {
+            paymentStatus: "canceled",
+          },
+        },
       },
     });
 
     return NextResponse.json({
-      data: deleteBookingOrder,
+      data: cancleBookingOrder,
       status: 200,
-      message: "Booking Order has been deleted",
+      message: "Booking Order has been cancled",
     });
   } catch (error) {
     console.log("Error deleting Booking Order:", error);
@@ -57,3 +67,26 @@ export async function DELETE(request, { params: { booking_id } }) {
     });
   }
 }
+
+// export async function DELETE(request, { params: { booking_id } }) {
+//   console.log(booking_id);
+//   try {
+//     const deleteBookingOrder = await prisma.customerBooking.delete({
+//       where: {
+//         id: booking_id,
+//       },
+//     });
+
+//     return NextResponse.json({
+//       data: deleteBookingOrder,
+//       status: 200,
+//       message: "Booking Order has been deleted",
+//     });
+//   } catch (error) {
+//     console.log("Error deleting Booking Order:", error);
+//     return NextResponse.json({
+//       status: 500,
+//       message: "Internal Server Error",
+//     });
+//   }
+// }

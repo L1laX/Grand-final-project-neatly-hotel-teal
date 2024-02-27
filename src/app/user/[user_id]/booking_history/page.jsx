@@ -38,7 +38,7 @@ const BookingHistory = ({ params }) => {
             return (
               <BookingCard
                 key={booking.id}
-                customerName={booking?.customerName}
+                bookingId={booking?.id}
                 roomname={booking?.customerBooking_room[0]?.room?.name}
                 bookingdate={booking?.created_at}
                 customerCheckin={booking?.checkInDate}
@@ -46,14 +46,14 @@ const BookingHistory = ({ params }) => {
                 guestAmount={booking?.guestCount}
                 paymentMethodType={booking?.paymentType}
                 addReqText={booking?.additionalRequest}
-                addReqPrice={booking?.additionalRequest}
+                addOnReq={booking?.bookingRequest[0]?.name}
+                addOnPrice={booking?.bookingRequest?.price}
                 promotionPrice={booking?.promotionCode}
                 bookingTotalPrice={booking?.totalPrice}
                 pricePerNight={
                   booking?.customerBooking_room[0]?.room.pricePerNight
                 }
                 userId={booking?.user_id}
-                bookingId={booking?.id}
                 roomImage={
                   booking?.customerBooking_room[0]?.room?.roomMainImage
                 }

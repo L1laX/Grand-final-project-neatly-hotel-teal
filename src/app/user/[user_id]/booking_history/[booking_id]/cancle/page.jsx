@@ -25,7 +25,7 @@ const CancleBooking = ({ params }) => {
 
   const deleteBookingOrder = async () => {
     try {
-      const res = await axios.delete(`/api/user/booking_history/${booking_id}`);
+      const res = await axios.post(`/api/user/booking_history/${booking_id}`);
       if (res.status === 200) {
         alert("Booking Order has been deleted");
         router.push(`/user/${user_id}/booking_history`);
@@ -77,9 +77,6 @@ const CancleBooking = ({ params }) => {
                 </h3>
               )}
 
-              {/* <h3 className=" mb-10">
-                {cancleBooking?.customerBooking_room[0]?.room?.name}
-              </h3> */}
               <p className=" body1 mb-10 text-[#9aa1b9]">
                 {cancleBooking?.checkInDate} - {cancleBooking?.checkOutDate}
                 <br />
