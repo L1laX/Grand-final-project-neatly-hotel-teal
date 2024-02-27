@@ -8,7 +8,7 @@ const PrimaryBtn = ({ btnName, handleClick, primaryButton, isLoading }) => {
         <div role="status" className="">
           <svg
             aria-hidden="true"
-            class="inline h-5 w-5 animate-spin fill-orange-500 text-gray-200 dark:text-gray-600"
+            className="inline h-5 w-5 animate-spin fill-orange-500 text-gray-200 dark:text-gray-600"
             viewBox="0 0 100 101"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

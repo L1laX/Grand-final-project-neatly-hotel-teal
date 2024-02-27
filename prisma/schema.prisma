@@ -36,11 +36,11 @@ model userProfile {
 }
 
 model customerBooking_room {
-  id                 String          @id @unique @default(uuid())
-  customerBooking_id String
-  room_id            String
-  customerBooking    customerBooking @relation(fields: [customerBooking_id], references: [id])
-  room               room            @relation(fields: [room_id], references: [id])
+  id                 String           @id @unique @default(uuid())
+  customerBooking_id String?
+  room_id            String?
+  customerBooking    customerBooking? @relation(fields: [customerBooking_id], references: [id], onDelete: Cascade)
+  room               room?            @relation(fields: [room_id], references: [id])
 }
 
 model room {

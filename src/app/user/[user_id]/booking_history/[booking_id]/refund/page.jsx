@@ -1,10 +1,30 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import Modal from "@/components/common/PopupModal";
+import { useRouter } from "next/navigation";
 
-const RefundBooking = () => {
+const RefundBooking = ({ params }) => {
+  const router = useRouter();
+  const { user_id, booking_id } = params;
   const [showModal, setShowModal] = useState(false);
+  const [refundBooking, setRefundBooking] = useState([]);
+
+  const getRefundBooking = async () => {
+    try {
+      const res = await axios.get(
+        `/api/user/booking_history?userId=${user_id}`,
+      );
+      setRefundBooking(res.data.data);
+      console.log(res.data.data, "Fetching Booking History");
+    } catch (error) {
+      console.error("Error fetching customer bookings:", error);
+    }
+  };
+
+  useEffect(() => {
+    getRefundBooking();
+  }, []);
 
   const handleConfirmCancle = () => {
     setShowModal(true);
@@ -40,8 +60,11 @@ const RefundBooking = () => {
         <hr />
         {/* Button */}
         <div className="button flex flex-row justify-between md:my-10">
-          <button className="visitlink" onClick={handleCancel}>
-            Cancle
+          <button
+            className="visitlink"
+            onClick={() => router.push(`/user/${user_id}/booking_history`)}
+          >
+            Back
           </button>
           <PrimaryBtn
             btnName="Cancle this Booking"

@@ -20,24 +20,12 @@ export async function POST(request) {
         id_number: id_number,
       },
     });
-    if (isId_NumberDuplicate) {
-      return NextResponse.json(
-        { error: "Id Number already exists" },
-        { status: 400 },
-      );
+    if (isId_NumberDuplicate || isUserDuplicate || isEmailDuplicate) {
+      return NextResponse.json({
+        error: `${isId_NumberDuplicate ? "Id number," : ""}${isUserDuplicate ? " Username," : ""}${isEmailDuplicate ? " Email" : ""} already exists`,
+      });
     }
-    if (isUserDuplicate) {
-      return NextResponse.json(
-        { error: "Username already exists" },
-        { status: 400 },
-      );
-    }
-    if (isEmailDuplicate) {
-      return NextResponse.json(
-        { error: "Email already exists" },
-        { status: 400 },
-      );
-    }
+
     return NextResponse.json({ message: "success" });
   } catch (error) {
     console.log(error);
