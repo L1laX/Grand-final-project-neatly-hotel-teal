@@ -10,7 +10,7 @@ import SubmitTotal from "@/components/common/SubmitTotal";
 export default function StepperController({ searchParams }) {
   // console.log(new Date(searchParams.from))
   // const datesInRange = eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) });
-  const [ourPromotionCode,setOurPromotionCode] = useState([])
+  const [ourPromotionCode, setOurPromotionCode] = useState([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [values, setValues] = useState({
     dateOfBirth: "",
@@ -19,6 +19,7 @@ export default function StepperController({ searchParams }) {
     country: "",
     payment_id: "",
     order_id: "",
+    discount: 0,
     roomName: searchParams.roomName,
     roomReserve: searchParams.room,
     nightReserve:
@@ -47,13 +48,12 @@ export default function StepperController({ searchParams }) {
     const result = await axios.get(
       `/api/user/customer_booking/${searchParams.userId}?roomName=${searchParams.roomName}&allRoomId=${searchParams.allRoomId}`,
     );
-    console.log(result)
     setValues({
       ...values,
       ...result?.data?.data,
       ...result?.data?.data?.userProfile,
     });
-    setOurPromotionCode([...result.data.promotionCode])
+    setOurPromotionCode([...result.data.promotionCode]);
   };
 
   const [request, setRequest] = useState({});
@@ -169,11 +169,10 @@ export default function StepperController({ searchParams }) {
         paymentType: values.payment_id,
         paymentStatus: values.paymentStatus || "Pending",
 
-        user_id:values.user_id,
-        checkInDate:new Date(values.checkinDate),
-        checkOutDate:new Date(values.checkOutDate),
-        totalPrice:values.totalPrice
-
+        user_id: values.user_id,
+        checkInDate: new Date(values.checkinDate),
+        checkOutDate: new Date(values.checkOutDate),
+        totalPrice: values.totalPrice,
       };
 
       // Create customer booking in the database
@@ -194,9 +193,8 @@ export default function StepperController({ searchParams }) {
   useEffect(() => {
     getUserData();
   }, []);
-
+  console.log(values, "values");
   return (
-
     <>
       {currentStep !== 4 ? (
         <section className="booking-area mx-5 my-10 md:mx-40">
@@ -249,7 +247,6 @@ export default function StepperController({ searchParams }) {
                   <h5 className=" text-[#9aa1b9]">Payment Method</h5>
                 </div>
               )}
-
             </div>
             <hr className=" my-10" />
           </div>

@@ -116,8 +116,12 @@ export default function CheckoutForm({
             />
           </label>
           {displayCode && (
-            <div>
-              Promotion code applied !: <span>{displayCode}</span>
+            <div className="mt-5">
+              Promotion code applied :{" "}
+              <span className="text-orange-500">
+                {" "}
+                {displayCode.toUpperCase()}
+              </span>
             </div>
           )}
         </div>

@@ -163,6 +163,7 @@ import axios from "axios";
 import React from "react";
 import CheckoutForm from "@/components/stripe/CheckoutForm";
 import { v4 as uuidv4 } from "uuid";
+import { set } from "date-fns";
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 );
@@ -175,7 +176,7 @@ export default function FormPayment({
   setPromotionCode,
   setCurrentStep,
   request,
-  ourPromotionCode
+  ourPromotionCode,
 }) {
   const [clientSecret, setClientSecret] = React.useState("");
   const [isPromotion, setIsPromotion] = React.useState("first");
@@ -188,26 +189,20 @@ export default function FormPayment({
       "/api/user/payment_method/payment_intent",
       {
         amount: +amount,
-        isUpdate: istrue? true : false,
+        isUpdate: istrue ? true : false,
         intent_id: paymentIntent_id || null,
         customer_id: values.payment_id || null,
       },
     );
     setClientSecret(response.data.clientSecret);
     setPaymentIntent_id(response.data.paymentIntent_id);
-    setValues({
+    setValues((prev) => ({
       ...values,
       payment_id: response.data.customer,
       order_id: response.data.paymentIntent_id,
-    });
+      ...prev,
+    }));
     setUnique_key_number(unique_key);
-  };
-  const checkPromotion = (userPromotionCode) => {
-    console.log(ourPromotionCode)
-    console.log(userPromotionCode)
-    const promotion =  ourPromotionCode.find((item) => item.promotionCode.toLowerCase() === userPromotionCode.toLowerCase())
-    console.log(promotion)
-    return promotion
   };
   const appearance = {
     theme: "stripe",
@@ -220,34 +215,44 @@ export default function FormPayment({
     clientSecret,
     appearance,
   };
-  console.log(values)
-  React.useEffect(() => {
-   const applyPromotion = checkPromotion(promotionCode);
-    console.log(applyPromotion)
-    if (applyPromotion) { 
-      console.log("applyed!")
-      const newTotalPrice = values.totalPrice-applyPromotion.discount
-      console.log(newTotalPrice)
-      const newValue = {...values , discount:applyPromotion.discount,totalPrice: newTotalPrice}
-      console.log(newValue,"newValue Naja")
-      setValues({...newValue})
+  console.log(values);
+  const checkPromotion = (userPromotionCode) => {
+    const applyPromotion = ourPromotionCode.find(
+      (item) =>
+        item.promotionCode.toLowerCase() === userPromotionCode.toLowerCase(),
+    );
+    if (applyPromotion) {
+      console.log("applyed!");
+      const newTotalPrice = values.totalPrice - applyPromotion.discount;
+      console.log(newTotalPrice);
+      const newValue = {
+        ...values,
+        discount: applyPromotion.discount,
+        totalPrice: newTotalPrice,
+      };
+      console.log(newValue, "newValue Naja");
       setIsPromotion(true);
+      setValues({ ...newValue });
+      setDisplayCode(userPromotionCode);
       getClientSecret(newTotalPrice, true);
     }
-    if(isPromotion===true && !applyPromotion){
-      setIsPromotion(false)
-      const newValue = {...values }
-      const newTotalPrice = values.totalPrice+values.discount
-      console.log(newTotalPrice)
-      delete newValue.discount
-      setValues({...values,totalPrice:newTotalPrice})
-       getClientSecret(newTotalPrice,true)
+    if (isPromotion === true && !applyPromotion) {
+      setIsPromotion(false);
+      const newValue = { ...values };
+      const newTotalPrice = values.totalPrice + values.discount;
+      delete newValue.discount;
+      setValues({ ...values, totalPrice: newTotalPrice });
+      setDisplayCode("");
+      getClientSecret(newTotalPrice, true);
     }
-    if(isPromotion==="first"){
-      console.log("Hello")
-      setIsPromotion(false)
-     getClientSecret(values.totalPrice);
+    if (isPromotion === "first") {
+      setIsPromotion(false);
+      getClientSecret(values.totalPrice);
     }
+  };
+
+  React.useEffect(() => {
+    checkPromotion(promotionCode);
   }, [promotionCode]);
   return (
     <div className="main mr-6 rounded bg-white p-10">
