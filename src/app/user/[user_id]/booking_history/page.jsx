@@ -46,9 +46,10 @@ const BookingHistory = ({ params }) => {
                 guestAmount={booking?.guestCount}
                 paymentMethodType={booking?.paymentType}
                 addReqText={booking?.additionalRequest}
-                addOnReq={booking?.bookingRequest[0]?.name}
-                addOnPrice={booking?.bookingRequest?.price}
-                promotionPrice={booking?.promotionCode}
+                addOnReq={booking?.bookingRequest}
+                paymentStatus={booking?.paymentStatus}
+                promotionCode={booking?.promotionCode}
+                promotionPrice={booking?.discount}
                 bookingTotalPrice={booking?.totalPrice}
                 pricePerNight={
                   booking?.customerBooking_room[0]?.room.pricePerNight
