@@ -85,6 +85,18 @@ function BookingDetail({ params: { booking_id } }) {
     (new Date(checkOutDate) - new Date(checkInDate)) / (1000 * 60 * 60 * 24),
   );
 
+  const calculateTotalPrice = (
+    customerBooking_room,
+    checkInDate,
+    checkOutDate,
+  ) => {
+    const stayDuration = calculateStayDuration(checkInDate, checkOutDate);
+    return customerBooking_room.reduce(
+      (acc, cur) => acc + cur.room.pricePerNight * stayDuration,
+      0,
+    );
+  };
+
   const roomCount = customerBooking_room.length;
 
   const checkInDateObj = new Date(checkInDate);
