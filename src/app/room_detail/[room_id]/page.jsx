@@ -28,12 +28,14 @@ import "./react-slick.css";
 export default function RoomDetailById({ params: { room_id } }) {
   // add2 usestate
   const [carouselImages, setCarouselImages] = useState([]);
+  const [otherRoom, setOtherRoom] = useState([]);
 
   const fetchCarouselImages = async () => {
     try {
       const images = await axios.get(`/api/room_detail/${room_id}`); // Fetch images from Prisma
       setCarouselImages(images.data.data);
-      console.log(images.data.data);
+      setOtherRoom(images.data.otherRoomImages);
+      console.log(images);
     } catch (error) {
       console.error("Error fetching carousel images:", error);
     }
@@ -143,35 +145,31 @@ export default function RoomDetailById({ params: { room_id } }) {
         </div>
       </div>
       <h4 className="mt-10 text-center">Other Rooms</h4>
-      <div className="random-room  flex justify-center  ">
-        <div className="slide-randon m-20 flex items-center justify-center">
-          <Carousel>
-            <CarouselContent className="flex items-center justify-center">
-              <CarouselItem className="  relative basis-1/3">
-                <Image
-                  className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-                  src={BG}
-                />
-                <div className="absolute left-10 top-60 flex h-full w-full flex-col items-start ">
-                  <h5 className="text-2xl font-bold text-white">Deluxe</h5>
-                  <h6 className="text-base text-white">Explore Room</h6>
-                </div>
-              </CarouselItem>
-              <CarouselItem className=" relative basis-1/3">
-                <Image
-                  className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-                  src={BG}
-                />
-                <div className="absolute left-10 top-60 flex h-full w-full flex-col items-start ">
-                  <h5 className="text-2xl font-bold text-white">Superior</h5>
-                  <h6 className="text-base  text-white">Explore Room</h6>
-                </div>
-              </CarouselItem>
-            </CarouselContent>
-            <CarouselNext />
-            <CarouselPrevious />
-          </Carousel>
-        </div>
+      <div className="random-room flex w-full justify-center">
+        {otherRoom?.map((item, index) => {
+          if (index <= 1) {
+            return (
+              <div className="relative mx-2 my-4 h-[8rem] w-2/6 text-[#FFFFFF] md:h-[12rem] lg:h-[16rem] xl:h-[20rem]">
+                <Link href={{ pathname: `/room_detail/${item.id}` }}>
+                  <Image
+                    className="pointer transform brightness-75 transition-transform duration-500 hover:scale-110"
+                    layout="fill"
+                    objectFit="cover"
+                    src={item.roomMainImage}
+                    alt=""
+                    unoptimized
+                  />
+                  <div className="absolute left-5 top-60 z-10 lg:text-xl">
+                    {item.name}
+                  </div>
+                  <div className="absolute left-5 top-60 z-10 mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-sm xl:mt-6">
+                    Explore Room →
+                  </div>
+                </Link>
+              </div>
+            );
+          }
+        })}
       </div>
     </main>
   );
