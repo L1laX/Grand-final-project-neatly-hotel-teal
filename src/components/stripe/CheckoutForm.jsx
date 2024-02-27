@@ -47,7 +47,7 @@ export default function CheckoutForm({
       elements,
       redirect: "if_required",
       confirmParams: {
-        return_url: "http://localhost:3000/booking/success",
+        // return_url: `http://localhost:3000/user/${values.user_id}/booking_history`,
       },
     });
     if (data.error) {

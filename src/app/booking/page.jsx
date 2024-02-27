@@ -170,7 +170,7 @@ export default function StepperController({ searchParams }) {
         paymentStatus: values.paymentStatus || "Pending",
 
         user_id: values.user_id,
-        checkInDate: new Date(values.checkinDate),
+        checkInDate: new Date(values.checkInDate),
         checkOutDate: new Date(values.checkOutDate),
         totalPrice: values.totalPrice,
       };

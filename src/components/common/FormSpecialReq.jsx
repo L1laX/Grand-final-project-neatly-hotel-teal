@@ -163,11 +163,11 @@ const FormSpecialReq = ({
       </div>
 
       {/* Booking Button */}
-      <div className=" flex flex-row justify-between">
+      <div className=" flex flex-row-reverse justify-between">
+        <PrimaryBtn btnName="Next" handleClick={handleSubmit}></PrimaryBtn>
         <button className="visitlink" onClick={prevStep}>
           Back
         </button>
-        <PrimaryBtn btnName="Next" handleClick={nextStep}></PrimaryBtn>
       </div>
     </form>
   );
