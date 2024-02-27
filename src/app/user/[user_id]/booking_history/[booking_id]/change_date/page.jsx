@@ -1,14 +1,31 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import Modal from "@/components/common/PopupModal";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import axios from "axios";
 
 const ChangeDate = ({ params }) => {
-  const { user_id } = params;
+  const router = useRouter();
+  const { user_id, booking_id } = params;
   const [showModal, setShowModal] = useState(false);
+  const [inputChange, setInputChange] = useState([]);
+  const [changeDate, setChangeDate] = useState([]);
+
+  const getChangeDate = async () => {
+    try {
+      const res = await axios.get(`/api/user/booking_history/${booking_id}`);
+      setChangeDate(res.data.data);
+      console.log(res.data.data);
+    } catch (error) {
+      console.error("Error fetching customer bookings:", error);
+    }
+  };
+
+  useEffect(() => {
+    getChangeDate();
+  }, []);
 
   const handleConfirmCancle = () => {
     setShowModal(true);
@@ -27,20 +44,38 @@ const ChangeDate = ({ params }) => {
           and Check-out Date
         </h2>
         <div className="booking-history flex flex-col py-10 lg:flex-row lg:justify-start">
-          <div className=" h-[210px] w-[357px] rounded bg-slate-200">image</div>
+          <div className=" h-[210px] w-[357px] rounded bg-slate-200">
+            {Object.keys(changeDate).length === 0 ? (
+              <p></p>
+            ) : (
+              <img
+                className="h-[210px] w-[357px] rounded object-cover"
+                src={changeDate?.customerBooking_room[0]?.room?.roomMainImage}
+                alt="room"
+              />
+            )}
+          </div>
 
           <div className="booking-content flex flex-col lg:ml-9 lg:w-4/5">
             {/* Booking Detail */}
             <section className="flex flex-col lg:flex-row lg:justify-between">
               <div className="left">
-                <h3 className=" mb-10">Superior Garden View</h3>
+                <h3 className=" mb-10">
+                  {Object.keys(changeDate).length === 0 ? (
+                    <p></p>
+                  ) : (
+                    changeDate?.customerBooking_room[0]?.room?.name
+                  )}
+                </h3>
                 <p className=" font-semibold text-[#424C6B]">Booking Date</p>
                 <p className=" body1 mb-10 text-[#9aa1b9]">
-                  Th, 19 Oct 2022 - Fri, 20 Oct 2022 <br />2 Guests
+                  {changeDate?.checkInDate} - {changeDate?.checkOutDate} <br />
+                  {changeDate?.guestCount} Guests
                 </p>
               </div>
               <p className=" body1 text-[#9aa1b9]">
-                Booking date: Tue, 16 Oct 2022
+                Booking date:
+                {changeDate?.created_at}
               </p>
             </section>
             {/* Changing Date */}
@@ -53,11 +88,13 @@ const ChangeDate = ({ params }) => {
         <hr />
         {/* Button */}
         <div className="button flex flex-row justify-between lg:my-10">
-          <Link href={`/user/${user_id}/booking_history/`}>
-            <button className="visitlink" onClick={handleCancel}>
-              Back
-            </button>
-          </Link>
+          <button
+            className="visitlink"
+            onClick={() => router.push(`/user/${user_id}/booking_history`)}
+          >
+            Back
+          </button>
+
           <PrimaryBtn
             btnName="Confirm Change Date"
             handleClick={handleConfirmCancle}
