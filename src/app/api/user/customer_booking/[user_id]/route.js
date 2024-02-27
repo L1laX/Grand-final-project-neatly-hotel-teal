@@ -1,19 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET(request, { params: { booking_id } }) {
+export async function GET(request, { params: { user_id } }) {
   // const customerBooking = await prisma.user.findUnique({
   //   where: {
-  //     id: booking_id,
+  //     id: user_id,
   //   },
   //   include:{userProfile:true}
   // });
   //const {name} = await request.json()
-
-  const searchParams = new URLSearchParams(new URL(request.url).search);
-  const roomName = searchParams.get("roomName");
-  //console.log(roomName)
-
     const searchParams = new URLSearchParams(new URL(request.url).search);
     const roomName = searchParams.get("roomName");
     const allRoomId = searchParams.get("allRoomId").split(',');
@@ -27,27 +22,29 @@ export async function GET(request, { params: { booking_id } }) {
     //   },
     //   data: { status: "Booking" },
     // });
-
+    console.log(user_id)
     const customerBooking = await prisma.user.findUnique({
       where: {
-        id: booking_id,
+        id: user_id,
       },
+      include:{
+        userProfile:true
+      }
     },
-  });
+  );
 
+ 
 
     const promotionCode = await prisma.promotion.findMany({
       where: {
         name: roomName
       }
     })
-    // console.log(promotionCode)
-    
-
-    // console.log(customerBooking);
+  
+    console.log(customerBooking);
     return NextResponse.json({
 
-      message: "Fetching booking_id data complete!",
+      message: "Fetching user_id data complete!",
       data: customerBooking,
       promotionCode: promotionCode,
     },
@@ -111,3 +108,4 @@ export async function GET(request, { params: { booking_id } }) {
 //     );
 //   }
 // }
+

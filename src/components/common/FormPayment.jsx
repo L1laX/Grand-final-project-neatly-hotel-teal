@@ -173,24 +173,22 @@ export default function FormPayment({
   setValues,
   promotionCode,
   setPromotionCode,
-  testtest,
-  totalAdditionalPrice,
   setCurrentStep,
   request,
+  ourPromotionCode
 }) {
   const [clientSecret, setClientSecret] = React.useState("");
-  const [isPromotion, setIsPromotion] = React.useState(false);
+  const [isPromotion, setIsPromotion] = React.useState("first");
   const [displayCode, setDisplayCode] = React.useState("");
   const [paymentIntent_id, setPaymentIntent_id] = React.useState("");
   const [unique_key_number, setUnique_key_number] = React.useState(0);
   const getClientSecret = async (amount, istrue) => {
     const unique_key = uuidv4();
-    console.log(amount);
     const response = await axios.post(
       "/api/user/payment_method/payment_intent",
       {
-        amount: +amount || 1000,
-        isPromotion: istrue || false,
+        amount: +amount,
+        isUpdate: istrue? true : false,
         intent_id: paymentIntent_id || null,
         customer_id: values.payment_id || null,
       },
@@ -204,20 +202,12 @@ export default function FormPayment({
     });
     setUnique_key_number(unique_key);
   };
-  const checkPromotion = (promotion) => {
-    if (promotion === "NEATLYNEW400") {
-      setDisplayCode(promotion);
-      setIsPromotion(true);
-      return 400;
-    }
-    if (promotion === "NEATLYNEW500") {
-      setDisplayCode(promotion);
-      setIsPromotion(true);
-      return 500;
-    }
-    setIsPromotion(false);
-    setDisplayCode("");
-    return values.amount;
+  const checkPromotion = (userPromotionCode) => {
+    console.log(ourPromotionCode)
+    console.log(userPromotionCode)
+    const promotion =  ourPromotionCode.find((item) => item.promotionCode.toLowerCase() === userPromotionCode.toLowerCase())
+    console.log(promotion)
+    return promotion
   };
   const appearance = {
     theme: "stripe",
@@ -230,19 +220,33 @@ export default function FormPayment({
     clientSecret,
     appearance,
   };
+  console.log(values)
   React.useEffect(() => {
-    // Create PaymentIntent as soon as the page loads
-    checkPromotion(promotionCode);
-    if (promotionCode) {
-      const newAmount = checkPromotion(promotionCode);
+   const applyPromotion = checkPromotion(promotionCode);
+    console.log(applyPromotion)
+    if (applyPromotion) { 
+      console.log("applyed!")
+      const newTotalPrice = values.totalPrice-applyPromotion.discount
+      console.log(newTotalPrice)
+      const newValue = {...values , discount:applyPromotion.discount,totalPrice: newTotalPrice}
+      console.log(newValue,"newValue Naja")
+      setValues({...newValue})
       setIsPromotion(true);
-      if (newAmount) {
-        getClientSecret(values.totalPrice + totalAdditionalPrice, true);
-      }
-    } else {
-      console.log("test");
-      getClientSecret(values.totalPrice + totalAdditionalPrice);
-      setIsPromotion(false);
+      getClientSecret(newTotalPrice, true);
+    }
+    if(isPromotion===true && !applyPromotion){
+      setIsPromotion(false)
+      const newValue = {...values }
+      const newTotalPrice = values.totalPrice+values.discount
+      console.log(newTotalPrice)
+      delete newValue.discount
+      setValues({...values,totalPrice:newTotalPrice})
+       getClientSecret(newTotalPrice,true)
+    }
+    if(isPromotion==="first"){
+      console.log("Hello")
+      setIsPromotion(false)
+     getClientSecret(values.totalPrice);
     }
   }, [promotionCode]);
   return (

@@ -2,13 +2,13 @@ import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 
 export async function POST(request, response) {
-  const { amount, isPromotion, intent_id, customer_id } = await request.json();
+  const { amount, isUpdate, intent_id, customer_id } = await request.json();
   let customer = customer_id || null;
   if (!customer) {
     customer = await stripe.customers.create();
   }
 
-  if (isPromotion && intent_id) {
+  if (isUpdate && intent_id) {
     try {
       const paymentIntent = await stripe.paymentIntents.update(intent_id, {
         amount: +amount * 100,

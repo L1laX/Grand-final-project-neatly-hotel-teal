@@ -25,32 +25,28 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { useSession, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export const RoomCard = ({
-  roomitem,
+  roomItem,
   roomName,
-  roomimage,
+  roomImage,
   roomGuests,
-  roomdesc,
-  roomprice,
-  roomdisc,
-  roombedtype,
-  roomsize,
-  // handleBooking,
+  roomDesc,
+  roomPrice,
+  roomDisc,
+  roomBedType,
+  roomSize,
   roomAvailable,
   dateRoomGuest,
   allRoomId,
-
-  roomPrice,
 }) => {
+  const { data: session } = useSession();
   const router = useRouter();
-  const { data: session, status } = useSession();
-
   const handleBooking = () => {
     const queryString = new URLSearchParams(dateRoomGuest).toString();
     const path = "/booking";
-
+    allRoomId = allRoomId.slice(0, dateRoomGuest.room);
     const url =
       String(path) +
       "?" +
@@ -63,18 +59,16 @@ export const RoomCard = ({
       roomPrice +
       "&userId=" +
       session?.user?.id;
-
     router.push(url);
   };
-
   return (
     <div>
-      <div className={roomitem}>
+      <div className={roomItem}>
         <div className="room-card flex flex-col justify-center gap-12 px-5 py-10 lg:flex-row">
           <AlertDialog>
             <AlertDialogTrigger>
               <div className="h-[320px] w-[413px] cursor-pointer rounded-md bg-slate-200">
-                for image{roomimage}
+                for image{roomImage}
               </div>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -95,7 +89,7 @@ export const RoomCard = ({
               </AlertDialogHeader>
               <AlertDialogDescription>
                 <div className="content mt-5 h-full w-full p-4 md:mx-20">
-                  <Image src={roomimage} width={1080} height={920} />
+                  <Image src={roomImage} width={1080} height={920} />
                 </div>
               </AlertDialogDescription>
             </AlertDialogContent>
@@ -104,22 +98,22 @@ export const RoomCard = ({
           <section className="room-detail flex flex-col lg:justify-between">
             <div className="flex-col lg:flex">
               <div className="lg:w-1/2">
-                <Link href={{ pathname: `/room_detail/${roomitem}` }}>
+                <Link href={{ pathname: `/room_detail/${roomItem}` }}>
                   <h1 className="cursor-pointer">{roomName}</h1>
                 </Link>
                 <p className="font-sans text-base font-normal text-[#646D89]">
-                  {roomGuests} Guests per room | {roombedtype} | {roomsize}
+                  {roomGuests} Guests per room | {roomBedType} | {roomSize}
                 </p>
                 <p className="font-sans text-base font-normal text-[#646D89]">
-                  {roomdesc}
+                  {roomDesc}
                 </p>
               </div>
               <h1>availableRoom = {roomAvailable}</h1>
               <div className="pt-5 lg:flex lg:w-1/2 lg:flex-col lg:items-end lg:pt-0">
                 <p className="text-left font-sans text-base font-normal text-[#646D89] line-through">
-                  THB {roomdisc}
+                  THB {roomDisc}
                 </p>
-                <h5>THB {roomprice}</h5>
+                <h5>THB {roomPrice}</h5>
                 <p className="font-sans text-base font-normal text-[#646D89] lg:text-right">
                   Per Night <br /> (Including Taxes & Fees)
                 </p>
@@ -172,10 +166,10 @@ export const RoomCard = ({
                       <div className="content-detail divide-y-2 divide-gray-300 p-4">
                         <div className="py-5">
                           <p className="font-sans text-base font-normal text-[#646D89]">
-                            {roomGuests} Guests | {roombedtype} | {roomsize}
+                            {roomGuests} Guests | {roomBedType} | {roomSize}
                           </p>
                           <p className="font-sans text-base font-normal text-[#646D89]">
-                            {roomdesc}
+                            {roomDesc}
                           </p>
                         </div>
                         <div className="py-5">

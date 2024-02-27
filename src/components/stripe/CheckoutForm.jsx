@@ -78,7 +78,7 @@ export default function CheckoutForm({
         paymentStatus: data.paymentIntent.status,
       };
 
-      const result = await axios.post(`/api/booking/`, {
+      const result = await axios.post(`/api/user/customer_booking`, {
         ...sendData,
       });
 

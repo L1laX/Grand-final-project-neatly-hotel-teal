@@ -1,114 +1,90 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET(request, { params: { booking_id } }) {
-  // const customerBooking = await prisma.user.findUnique({
-  //   where: {
-  //     id: booking_id,
-  //   },
-  //   include:{userProfile:true}
-  // });
-  //const {name} = await request.json()
+export async function POST(request) {
+  const data = await request.json();
+  const allRoom = data.allRoomId.includes(",")
+    ? data.allRoomId.split(",")
+    : [data.allRoomId];
+  const requestName = [...Object.keys(data.request)];
+  const requestValue = [...Object.values(data.request)];
 
-  const searchParams = new URLSearchParams(new URL(request.url).search);
-  const roomName = searchParams.get("roomName");
-  //console.log(roomName)
-
-  const customerBooking = await prisma.user.findUnique({
-    where: {
-      id: booking_id,
-    },
-    select: {
-      name: true,
-      email: true,
-      userProfile: {
-        select: {
-          country: true,
-          id_number: true,
-          dateOfBirth: true,
-          payment_id: true,
+  try {
+    const booking = await prisma.customerBooking.create({
+      data: {
+        customerName: data.name,
+        customerEmail: data.email,
+        customer_id_number: data.id_number,
+        customerCountry: data.country,
+        customerDateOfBirth: new Date(data.dateOfBirth),
+        paymentType: data.paymentType + "",
+        paymentStatus: data.paymentStatus,
+        discount: data?.discount,
+        guestCount: +data.guestCount,
+        totalPrice: +data.totalPrice,
+        additionalRequest: data.additionalRequest,
+        checkInDate: new Date(data.checkInDate),
+        checkOutDate: new Date(data.checkOutDate),
+        promotionCode: data?.promotionCode,
+        order_id: data.order_id,
+        user: {
+          connect: {
+            id: data.user_id,
+          },
+        },
+        bookingRequest: {
+          create: requestName.map((request, index) => {
+            return {
+              name: requestName[index],
+              price: +requestValue[index] ? +requestValue[index] : 0,
+            };
+          }),
+        },
+        customerBooking_room: {
+          create: allRoom.map((room_id) => {
+            return {
+              room: {
+                connect: {
+                  id: room_id,
+                },
+              },
+            };
+          }),
         },
       },
-    },
-  });
-
-  const promotionCode = await prisma.promotion.findMany({
-    where: {
-      name: roomName,
-    },
-  });
-  console.log(promotionCode);
-
-  console.log(customerBooking);
-  return NextResponse.json(
-    {
-      message: "Fetching booking_id data complete!",
-      data: customerBooking,
-      promotionCode: promotionCode,
-    },
-    { status: 200 },
-  );
-}
-
-export async function POST(request, { params: { booking_id } }) {
+    });
+  } catch (e) {
+    console.log(e);
+    return NextResponse.error(new Error("Booking failed"), { status: 404 });
+  }
   try {
-    const {
-      dateOfBirth,
-      email,
-      id_number,
-      country,
-      payment_id,
-      order_id,
-      roomName,
-      checkinDate,
-      checkOutDate,
-      guestCount,
-      allRoomId,
-      roomPrice,
-      user_id,
-      totalPrice,
-    } = request.body;
-
-    // Create customer booking in the database
-    const customerBooking = await prisma.customerBooking.create({
+    const updateUserPayment_id = await prisma.userProfile.update({
+      where: {
+        user_id: data.user_id,
+      },
       data: {
-        dateOfBirth,
-        email,
-        id_number,
-        country,
-        payment_id,
-        order_id,
-        roomName,
-        checkinDate,
-        checkOutDate,
-        guestCount,
-        allRoomId,
-        roomPrice,
-        user_id,
-        totalPrice,
+        payment_id: data.payment_id,
       },
     });
-
-    console.log("Customer booking created:", customerBooking);
-
-    // Return success response with the created booking data
-    return NextResponse.json(
-      {
-        message: "Customer booking created successfully",
-        data: customerBooking,
-      },
-      { status: 200 },
-    );
-  } catch (error) {
-    console.error("Error creating customer booking:", error);
-
-    // Return error response
-    return NextResponse.json(
-      {
-        message: "Error creating customer booking",
-        error: error.message,
-      },
-      { status: 500 },
-    );
+  } catch (e) {
+    console.log(e);
+    return NextResponse.error(new Error("User not found"), { status: 404 });
   }
+  try {
+    const updateRoomStatus = await prisma.room.updateMany({
+      where: {
+        id: {
+          in: allRoom,
+        },
+      },
+      data: {
+        status: "Occupied",
+      },
+    });
+  } catch (e) {
+    console.log(e);
+    return NextResponse.error(new Error("User not found"), { status: 404 });
+  }
+
+  return NextResponse.json({ message: "POST Methode success", status: 200 });
 }
