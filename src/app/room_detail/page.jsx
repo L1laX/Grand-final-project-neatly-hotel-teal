@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { addDays, format } from "date-fns";
 import { DateRangeRoomGuest } from "@/components/ui/DateRangeRoomGuest";
 import axios from "axios";
+import { Suspense } from "react";
+import LoadingLinear from "@/components/common/LoadingLinear";
 
 export default function RoomDetail({ searchParams }) {
   const initialDate = searchParams.dateString
@@ -82,7 +84,7 @@ export default function RoomDetail({ searchParams }) {
   //   }
   // };
 
-  const dateRoomGuest = {...date,...roomAndGuest}
+  const dateRoomGuest = { ...date, ...roomAndGuest };
 
   return (
     <main>
@@ -106,22 +108,25 @@ export default function RoomDetail({ searchParams }) {
           />
         </div>
       </div>
+
       <div className="divide-y-2 divide-gray-300 lg:m-20">
         {rooms.length ? (
           rooms?.map((item, index) => (
             <RoomCard
-            key={index}
-            roomitem={item.id}
-            roomName={item.name}
-            dateRoomGuest={dateRoomGuest}
-            handleBooking={item.id}
-            roomAvailable={item.availableRoom}
-            roomGuests={item.guests}
-            allRoomId={item.room_id_list}
-            roomPrice={item.pricePerNight}
-          />
-        ))):(<p>No Room</p>)}
-
+              key={index}
+              roomitem={item.id}
+              roomName={item.name}
+              dateRoomGuest={dateRoomGuest}
+              handleBooking={item.id}
+              roomAvailable={item.availableRoom}
+              roomGuests={item.guests}
+              allRoomId={item.room_id_list}
+              roomPrice={item.pricePerNight}
+            />
+          ))
+        ) : (
+          <p>No room</p>
+        )}
       </div>
     </main>
   );

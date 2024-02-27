@@ -8,8 +8,9 @@ import bg from "/src/asset/background/login-page/bg.png";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { FcGoogle } from "react-icons/fc";
 import SecondaryBtn from "@/components/common/SecondaryBtn";
+
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -37,6 +38,8 @@ const Login = () => {
       console.error(e);
     }
   };
+
+  
 
   return (
     <div className="main-content relative flex">
@@ -82,10 +85,10 @@ const Login = () => {
             />
           </div>
           <div className="to-register mt-5 text-center md:text-start">
-            Don't have an account?
+            Don't have an account ?
             <Link
               href={"/register"}
-              className="visitlink visitlink:hover visitlink:disabled"
+              className="visitlink visitlink:hover visitlink:disabled ml-3"
             >
               Register
             </Link>

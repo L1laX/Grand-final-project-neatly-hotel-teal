@@ -2,11 +2,11 @@ import { prisma } from "@/lib/prisma.js";
 import { NextResponse } from "next/server";
 
 export async function GET(request, { params: { customer_booking_id } }) {
-  const searchParams = request.nextUrl.searchParams;
-  const keywords = searchParams.get("keywords");
-
   try {
-    const customerBookings = await prisma.customerBooking.findMany({
+    const customerBooking = await prisma.customerBooking.findUnique({
+      where: {
+        id: customer_booking_id,
+      },
       include: {
         user: {
           select: {
@@ -47,26 +47,38 @@ export async function GET(request, { params: { customer_booking_id } }) {
         },
         bookingRequest: true,
       },
-      where: keywords
-        ? {
-            OR: [
-              {
-                customerName: {
-                  contains: keywords,
-                  mode: "insensitive",
-                },
-              },
-            ],
-          }
-        : {},
+
     });
+
+    if (!customerBooking) {
+      return NextResponse.error("Customer booking not found", { status: 404 });
+    }
+
+    const rooms = customerBooking.customerBooking_room.map((bookingRoom) => ({
+      name: bookingRoom.room.name,
+      size: bookingRoom.room.size,
+      bedType: bookingRoom.room.bedType,
+      status: bookingRoom.room.status,
+      checkInDate: bookingRoom.room.checkInDate,
+      checkOutDate: bookingRoom.room.checkOutDate,
+      guests: bookingRoom.room.guests,
+      description: bookingRoom.room.description,
+      roomMainImage: bookingRoom.room.roomMainImage,
+      pricePerNight: bookingRoom.room.pricePerNight,
+      promotionPrice: bookingRoom.room.promotionPrice,
+      created_at: bookingRoom.room.created_at,
+      last_updated_at: bookingRoom.room.last_updated_at,
+      roomAmenity: bookingRoom.room.roomAmenity,
+      roomGallery: bookingRoom.room.roomGallery,
+    }));
 
     return NextResponse.json({
       success: true,
-      data: customerBookings,
+      data: { ...customerBooking, rooms },
+      status: 200,
     });
   } catch (error) {
-    console.error("Error fetching customer bookings:", error);
-    return NextResponse.error("Error fetching customer bookings");
+    console.error("Error fetching customer booking:", error);
+    return NextResponse.error("Error fetching customer booking");
   }
 }

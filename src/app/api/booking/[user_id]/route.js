@@ -39,3 +39,5 @@ export async function GET(request, { params: { user_id } }) {
     status: 200,
   });
 }
+
+

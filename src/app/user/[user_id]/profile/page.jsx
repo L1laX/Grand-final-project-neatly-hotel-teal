@@ -11,7 +11,6 @@ import { useSession } from "next-auth/react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import DatePicker from "@/components/common/DatePicker";
-
 export default function UserProfile({ params: { user_id } }) {
   const router = useRouter();
   const [userProfiles, setUserProfiles] = useState("");
