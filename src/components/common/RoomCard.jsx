@@ -40,10 +40,13 @@ export const RoomCard = ({
   roomAvailable,
   dateRoomGuest,
   allRoomId,
+  roomPromotionPrice,
 }) => {
   const { data: session } = useSession();
   const router = useRouter();
+  console.log(roomPromotionPrice, "roomPromotionPrice");
   const handleBooking = () => {
+    const price = roomPromotionPrice ? roomPromotionPrice : roomPrice;
     const queryString = new URLSearchParams(dateRoomGuest).toString();
     const path = "/booking";
     allRoomId = allRoomId.slice(0, dateRoomGuest.room);
@@ -55,10 +58,12 @@ export const RoomCard = ({
       roomName +
       "&allRoomId=" +
       allRoomId +
-      "&roomPrice=" +
-      roomPrice +
       "&userId=" +
-      session?.user?.id;
+      session?.user?.id +
+      "&roomPrice=" +
+      price;
+
+    console.log(url);
     router.push(url);
   };
   return (
@@ -111,9 +116,9 @@ export const RoomCard = ({
               <h1>availableRoom = {roomAvailable}</h1>
               <div className="pt-5 lg:flex lg:w-1/2 lg:flex-col lg:items-end lg:pt-0">
                 <p className="text-left font-sans text-base font-normal text-[#646D89] line-through">
-                  THB {roomDisc}
+                  THB {roomPrice}
                 </p>
-                <h5>THB {roomPrice}</h5>
+                <h5>THB {roomPromotionPrice}</h5>
                 <p className="font-sans text-base font-normal text-[#646D89] lg:text-right">
                   Per Night <br /> (Including Taxes & Fees)
                 </p>

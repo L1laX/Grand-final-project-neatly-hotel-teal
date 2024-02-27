@@ -47,7 +47,7 @@ export default function CheckoutForm({
       elements,
       redirect: "if_required",
       confirmParams: {
-        return_url: "http://localhost:3000/booking/success",
+        // return_url: `http://localhost:3000/user/${values.user_id}/booking_history`,
       },
     });
     if (data.error) {
@@ -116,8 +116,12 @@ export default function CheckoutForm({
             />
           </label>
           {displayCode && (
-            <div>
-              Promotion code applied !: <span>{displayCode}</span>
+            <div className="mt-5">
+              Promotion code applied :{" "}
+              <span className="text-orange-500">
+                {" "}
+                {displayCode.toUpperCase()}
+              </span>
             </div>
           )}
         </div>
