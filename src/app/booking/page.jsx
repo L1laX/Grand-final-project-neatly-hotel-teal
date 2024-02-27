@@ -45,7 +45,7 @@ export default function StepperController({ searchParams }) {
   });
   const getUserData = async () => {
     const result = await axios.get(
-      `/api/user/customer_booking/${searchParams.userId}?roomName=${searchParams.roomName}`,
+      `/api/user/customer_booking/${searchParams.userId}?roomName=${searchParams.roomName}&allRoomId=${searchParams.allRoomId}`,
     );
     setValues({
       ...values,
@@ -166,10 +166,12 @@ export default function StepperController({ searchParams }) {
         customerDateOfBirth: new Date(values.dateOfBirth),
         paymentType: values.payment_id,
         paymentStatus: values.paymentStatus || "Pending",
-        user_id: values.user_id,
-        checkInDate: values.checkinDate,
-        checkOutDate: values.checkOutDate,
-        totalPrice: values.totalPrice,
+
+        user_id:values.user_id,
+        checkInDate:new Date(values.checkinDate),
+        checkOutDate:new Date(values.checkOutDate),
+        totalPrice:values.totalPrice
+
       };
 
       // Create customer booking in the database
@@ -192,6 +194,7 @@ export default function StepperController({ searchParams }) {
   }, []);
 
   return (
+
     <>
       {currentStep !== 4 ? (
         <section className="booking-area mx-5 my-10 md:mx-40">
@@ -244,6 +247,7 @@ export default function StepperController({ searchParams }) {
                   <h5 className=" text-[#9aa1b9]">Payment Method</h5>
                 </div>
               )}
+
             </div>
             <hr className=" my-10" />
           </div>
