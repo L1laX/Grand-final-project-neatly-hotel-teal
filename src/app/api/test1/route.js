@@ -52,10 +52,10 @@ export async function POST(request, response) {
     paymentStatus,
     user_id,
 
-
     checkInDate,
     checkOutDate,
   } = await request.json();
+
   // await prisma.customerBooking.create({
   //   data: {
   //     ...birdy,
@@ -111,7 +111,6 @@ export async function POST(request, response) {
   //     },
   //   },
   // });
-
 
   return NextResponse.json({
     message: "success",
