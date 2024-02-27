@@ -145,29 +145,33 @@ export default function RoomDetailById({ params: { room_id } }) {
         </div>
       </div>
       <h4 className="mt-10 text-center">Other Rooms</h4>
-      <div className="random-room flex justify-center w-full">
-          {
-            otherRoom?.map((item,index)=>{
-              if(index<=1){
-                return (
-                  <div className="relative h-[8rem] md:h-[12rem] lg:h-[16rem] xl:h-[20rem] w-2/6 mx-2 my-4">
-                    <Link  href={{ pathname: `/room_detail/${item.id}`}}>
-                    <Image
-                      className="pointer transform brightness-75 transition-transform duration-500 hover:scale-110"
-                      layout="fill"
-                      objectFit="cover"
-                      src={item.roomMainImage}
-                      alt=""
-                      unoptimized
-                    />
-                    <div className="absolute top-0 left-0 z-10">{item.name}</div>
-                    </Link>
-                  </div>
 
-                )
-              }
-            })
+      <div className="random-room flex w-full justify-center">
+        {otherRoom?.map((item, index) => {
+          if (index <= 1) {
+            return (
+              <div className="relative mx-2 my-4 h-[8rem] w-2/6 text-[#FFFFFF] md:h-[12rem] lg:h-[16rem] xl:h-[20rem]">
+                <Link href={{ pathname: `/room_detail/${item.id}` }}>
+                  <Image
+                    className="pointer transform brightness-75 transition-transform duration-500 hover:scale-110"
+                    layout="fill"
+                    objectFit="cover"
+                    src={item.roomMainImage}
+                    alt=""
+                    unoptimized
+                  />
+                  <div className="absolute left-5 top-60 z-10 lg:text-xl">
+                    {item.name}
+                  </div>
+                  <div className="absolute left-5 top-60 z-10 mt-2 text-sm text-white sm:mt-3 md:mt-4 md:text-lg lg:mt-5 lg:text-sm xl:mt-6">
+                    Explore Room →
+                  </div>
+                </Link>
+              </div>
+            );
           }
+        })}
+
       </div>
     </main>
   );
