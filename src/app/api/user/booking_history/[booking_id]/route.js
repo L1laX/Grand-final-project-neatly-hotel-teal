@@ -35,7 +35,7 @@ export async function GET(request, { params: { booking_id } }) {
   }
 }
 //เมื่อกด cancle จะไม่ลบข้อมูลออกจาก database แต่จะเปลี่ยน status ของ paymentStatus ให้เป็น canceled
-export async function POST(request, { params: { booking_id } }) {
+export async function PUT(request, { params: { booking_id } }) {
   console.log(booking_id);
   try {
     const cancleBookingOrder = await prisma.customerBooking.update({
@@ -43,14 +43,7 @@ export async function POST(request, { params: { booking_id } }) {
         id: booking_id,
       },
       data: {
-        upsert: {
-          creat: {
-            paymentStatus: "canceled",
-          },
-          update: {
-            paymentStatus: "canceled",
-          },
-        },
+        paymentStatus: "canceled",
       },
     });
 

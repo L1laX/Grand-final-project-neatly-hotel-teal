@@ -1,9 +1,19 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 
-const PrimaryBtn = ({ btnName, handleClick, primaryButton, isLoading }) => {
+const PrimaryBtn = ({
+  btnName,
+  handleClick,
+  primaryButton,
+  isLoading,
+  disabled,
+}) => {
   return (
-    <button className={cn(primaryButton, "btn-primary")} onClick={handleClick}>
+    <button
+      className={cn(primaryButton, "btn-primary")}
+      disabled={disabled}
+      onClick={handleClick}
+    >
       {isLoading ? (
         <div role="status" className="">
           <svg

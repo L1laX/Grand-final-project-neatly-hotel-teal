@@ -40,8 +40,9 @@ export default function BookingCard({
   paymentMethodType,
   addReqText,
   addOnReq,
-  addOnPrice,
+  paymentStatus,
   promotionPrice,
+  promotionCode,
   bookingTotalPrice,
   pricePerNight,
   userId,
@@ -51,38 +52,36 @@ export default function BookingCard({
 
   return (
     <div className="mb-10 flex w-full flex-col ">
-      {bookingId}
+      <p className=" text-sm text-[#9AA1B9]">
+        Booking ID: {bookingId.slice(0, 13)}*****
+      </p>
       <div className="flex flex-col items-center md:flex-row md:items-start">
         {/* Image */}
 
         <div className="relative flex h-[16rem] w-11/12 md:h-[18rem] md:w-3/5 xl:w-2/5">
-          {/* <Image
-            src={SuperiorGardenView}
-            layout="fill"
-            objectFit="cover"
-            alt="Suite"
-          /> */}
           <img
             className="h-[16rem] w-11/12 rounded"
             src={roomImage}
             alt="room"
           />
         </div>
-        {/* Booking Card Detail */}
+        {/* Booking Card Detail Checkin-Checkout */}
         <div className="flex w-full flex-col">
-          <div className="mx-4 mt-4 flex w-full flex-col justify-between md:mt-0 md:flex-row md:px-6">
+          <div className="mt-4 flex w-full flex-col justify-between md:mt-0 md:flex-row">
             <h3 className=" text-2xl lg:text-3xl xl:text-4xl">{roomname}</h3>
             <div>
               <p className="text-[#9AA1B9] md:text-right">
                 Booking date: {format(bookingdate, "eee, dd MMM yyyy")}
               </p>
-              <p className="text-[#9AA1B9] md:text-right">
-                Cancellation date: {format(bookingdate, "eee, dd MMM yyyy")}
-              </p>
+              {paymentStatus === "canceled" ? (
+                <p className="text-[#9AA1B9] md:text-right">
+                  Cancellation date: {format(bookingdate, "eee, dd MMM yyyy")}
+                </p>
+              ) : null}
             </div>
           </div>
 
-          <div className=" lg:text-md flex w-full px-4 py-5 text-sm text-[#424C6B] max-md:justify-between md:px-6 md:py-10 xl:px-14 xl:text-lg">
+          <div className=" lg:text-md flex w-full py-5 text-sm text-[#424C6B] max-md:justify-between md:py-10 xl:text-lg">
             <div className=" ml-4 flex flex-col pr-3">
               <p className=" font-semibold">Check-in</p>
               <p>
@@ -103,8 +102,8 @@ export default function BookingCard({
             </div>
           </div>
 
-          {/* Booking Detail */}
-          <div className="mx-auto w-11/12 rounded-md bg-[#F1F2F6]">
+          {/* Booking Detail and Accordion */}
+          <div className=" rounded-md bg-[#F1F2F6]">
             <Accordion type="single" collapsible>
               <AccordionItem value="item-1">
                 <AccordionTrigger className="px-14">
@@ -129,21 +128,34 @@ export default function BookingCard({
                         {pricePerNight}
                       </p>
                     </div>
-                    <div className="mt-4 flex justify-between">
-                      <p className="text-[#646D89]">
-                        Add-on Request : {addOnReq}
-                      </p>
+                    <div className="mt-4">
+                      {addOnReq.length === 0 ? null : (
+                        <>
+                          <p className="text-[#646D89]">Add-on Request :</p>
+                          {addOnReq.map((item) => (
+                            <div className=" flex flex-row justify-between">
+                              <p className="text-[#646D89]">- {item?.name}</p>
+                              <p className=" font-semibold">{item?.price}</p>
+                            </div>
+                          ))}
+                        </>
+                      )}
+
                       <p className="pl-4 text-right font-semibold text-[#2A2E3F]">
                         {/* {addReqPrice} */}
                       </p>
                     </div>
-                    <div className="mt-4 flex justify-between">
-                      <p className="text-[#646D89]">
-                        Promotion Code : ตารางโปรโมชั่น
-                      </p>
-                      <p className="pl-4 text-right font-semibold text-[#2A2E3F]">
-                        {promotionPrice}
-                      </p>
+                    {/* Promotion Code */}
+                    <div className="mt-4">
+                      <p className="text-[#646D89]">Promotion Code :</p>
+                      {promotionCode === null ? (
+                        <div className="flex flex-row justify-between">
+                          <p className="text-[#646D89]">{promotionCode} code</p>
+                          <p className="pl-4 text-right font-semibold text-[#2A2E3F]">
+                            {promotionPrice} test
+                          </p>
+                        </div>
+                      ) : null}
                     </div>
                     <hr className="mt-4 w-full border-[1.75px]" />
                     <div className="flex justify-between py-4">
@@ -166,13 +178,33 @@ export default function BookingCard({
           </div>
         </div>
       </div>
+
       {/* Button */}
       <div className="mt-4 flex w-full items-center justify-between max-sm:flex-col">
-        <Link href={`/user/${userId}/booking_history/${bookingId}/cancle`}>
-          <button className="visitlink">Cancle Booking</button>
-        </Link>
+        {paymentStatus === "canceled" ? (
+          <button
+            className="visitlink"
+            disabled={true}
+            onClick={() =>
+              router.push(`/user/${userId}/booking_history/${bookingId}/cancle`)
+            }
+          >
+            Cancle Booking
+          </button>
+        ) : (
+          <button
+            className="visitlink"
+            disabled={false}
+            onClick={() =>
+              router.push(`/user/${userId}/booking_history/${bookingId}/cancle`)
+            }
+          >
+            Cancle Booking
+          </button>
+        )}
+
+        {/* Popup Room Detail */}
         <div className="flex items-center max-sm:flex-col">
-          {/* Popup Room Detail */}
           <div className=" mr-4">
             <AlertDialog>
               <AlertDialogTrigger>
@@ -258,17 +290,22 @@ export default function BookingCard({
               </AlertDialogContent>
             </AlertDialog>
           </div>
-          <div className="max-sm:pb-3">
-            {/* url: /user/[user_id]/booking_history/[booking_id]/chage_date */}
 
-            <PrimaryBtn
-              btnName="Change Date"
-              handleClick={() =>
-                router.push(
-                  `/user/${userId}/booking_history/${bookingId}/change_date`,
-                )
-              }
-            />
+          {/* Change Date Button */}
+          <div className="max-sm:pb-3">
+            {paymentStatus === "canceled" ? (
+              <PrimaryBtn
+                disabled={true}
+                btnName="Change Date"
+                handleClick={() =>
+                  router.push(
+                    `/user/${userId}/booking_history/${bookingId}/change_date`,
+                  )
+                }
+              />
+            ) : (
+              <PrimaryBtn disabled={false} btnName="Change Date" />
+            )}
           </div>
         </div>
       </div>

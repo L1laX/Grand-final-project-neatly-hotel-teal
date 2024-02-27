@@ -149,7 +149,7 @@ html {
     }
 
     .btn-primary {
-      @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded bg-[#c14817] px-8 py-4 text-center text-base font-semibold leading-[125%] text-[#fff] hover:bg-[#e76b39] active:bg-[#803010] disabled:bg-[#e4e6ed] disabled:text-[#9aa1b9];
+      @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded bg-[#c14817] px-8 py-4 text-center text-base font-semibold leading-[125%] text-[#fff] hover:bg-[#e76b39] active:bg-[#803010] disabled:pointer-events-none disabled:bg-[#e4e6ed] disabled:text-[#9aa1b9];
     }
     .btn-secondary {
       @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded border border-[#e76b39] px-8 py-4 text-center text-base font-semibold leading-[125%] text-[#e76b39] hover:border-[#ed906b] hover:text-[#ed906b] active:border-[#c14817] active:text-[#c14817] disabled:border-[#d6d9e4] disabled:text-[#d6d9e4];
