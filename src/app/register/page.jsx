@@ -12,6 +12,7 @@ import axios from "axios";
 import { supabase } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import DatePicker from "@/components/common/DatePicker";
+import { set } from "date-fns";
 //import Validation from "./registervalidation.js";
 const Register = () => {
   const router = useRouter();
@@ -46,13 +47,14 @@ const Register = () => {
       if (value.length > 13) {
         return;
       }
+
       const newValue = value.replace(/\D/g, "");
-      setValues({ ...values, [e.target.name]: newValue });
-      return setIdNumber(newValue);
+      setIdNumber(newValue);
+      return setValues({ ...values, [e.target.name]: newValue });
     }
     setValues({ ...values, [e.target.name]: value });
   };
-
+  console.log(values);
   const handleAvatar = (e) => {
     const file = e.target.files[0];
     if (file.size <= 10 * 1024 * 1024) {
@@ -68,7 +70,8 @@ const Register = () => {
     setValues({ ...values, country: value });
   };
   const getdateOfBirth = (date) => {
-    const value = new Date(date?.$d).toISOString();
+    const value = new Date(date?.$d);
+    console.log(value);
     setValues({ ...values, dateOfBirth: value });
   };
 
@@ -118,6 +121,11 @@ const Register = () => {
 
     return errors.dateOfBirth;
   };
+  const [unique, setUnique] = useState({
+    email: "",
+    username: "",
+    id_number: "",
+  });
   const handleSubmit = async (e) => {
     e.preventDefault();
     //validate Email
@@ -146,16 +154,25 @@ const Register = () => {
     if (
       Object.keys(errors).filter((key) => errors[key] === true).length === 0
     ) {
-      const checkUser = await axios.post("/api/register/checkUser", {
+      const {
+        data: { error },
+      } = await axios.post("/api/register/checkUser", {
         username: values.username,
         email: values.email,
         id_number: values.id_number,
       });
-      if (checkUser.data.message === "Username already exists") {
-        return alert("Username already exists");
-      }
-      if (checkUser.data.message === "Email already exists") {
-        return alert("Email already exists");
+
+      if (error) {
+        error.includes("Username") &&
+          setUnique({ ...unique, username: "Username is already exists " });
+        error.includes("Email") &&
+          setUnique((pre) => ({ ...pre, email: "Email is already exists " }));
+        error.includes("Id number") &&
+          setUnique((pre) => ({
+            ...pre,
+            id_number: "Id number is already exists ",
+          }));
+        return alert(error);
       }
 
       const data = await uploadAvatar(e);
@@ -239,9 +256,11 @@ const Register = () => {
                     className={`mx-2 mt-1 grid h-[56px] w-full  p-2 outline-none md:w-[466px] ${errors.username && "border-red-600"}`}
                     placeholder="Enter text..."
                   />
-                  {errors.username && (
+                  {(errors.username || unique.username) && (
                     <div className=" absolute -bottom-7 left-7 text-red-600">
-                      Please enter your username
+                      {unique.username
+                        ? unique.username
+                        : "Please enter your username"}
                     </div>
                   )}
                 </div>
@@ -273,7 +292,10 @@ const Register = () => {
                     className="text-sm font-medium text-gray-600"
                   ></lable>
                   <div className="date-picker  ml-2 mt-4 h-[56px] rounded-md p-2 md:w-[480px]">
-                    <DatePicker getdateOfBirth={getdateOfBirth} />
+                    <DatePicker
+                      getdateOfBirth={getdateOfBirth}
+                      value={values.dateOfBirth}
+                    />
                   </div>
                   {errors.dateOfBirth && (
                     <div className=" absolute -bottom-10 left-7  text-red-600">
@@ -299,9 +321,9 @@ const Register = () => {
                     className={`mx-2 mt-1 grid h-[56px] w-full  p-2 outline-none  md:w-[440px] ${errors.email && "border-red-600"}`}
                     placeholder="Enter text..."
                   />
-                  {errors.email && (
+                  {(errors.email || unique.email) && (
                     <div className="absolute -bottom-7 left-7  text-red-600">
-                      email is not valid
+                      {unique.email ? unique.email : "email is not valid"}
                     </div>
                   )}
                 </div>
@@ -320,9 +342,11 @@ const Register = () => {
                     onChange={getValue}
                     className={`mx-2 mt-1 grid h-[56px] w-full  p-2 outline-none md:w-[440px] ${errors.id && "border-red-600"}`}
                   />
-                  {errors.id_number && (
+                  {(errors.id_number || unique.id_number) && (
                     <div className=" absolute -bottom-7 left-7  text-red-600">
-                      ID number must be 13 characters
+                      {unique.id_number
+                        ? unique.id_number
+                        : "ID number must be 13 characters"}
                     </div>
                   )}
                 </div>

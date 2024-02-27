@@ -20,8 +20,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import Link from "next/link";
-import PrimaryBtn from "@/components/common/PrimaryBtn";
 
 export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
 

@@ -83,12 +83,26 @@ function Admin() {
       align: "center",
     },
     { id: "guestCount", label: "Guest(s)", minWidth: 100, align: "center" },
-    { id: "room.name", label: "Room type", minWidth: 100, align: "center" },
-    { id: "totalPrice", label: "Amount", minWidth: 100, align: "center" },
-    { id: "room.bedType", label: "Bed type", minWidth: 100, align: "center" },
+    { id: "roomType", label: "Room Type", minWidth: 100, align: "center" },
+
+    {
+      id: "totalPrice",
+      label: "Amount",
+      minWidth: 100,
+      align: "center",
+    },
+    { id: "bedType", label: "Bed Type", minWidth: 100, align: "center" },
     { id: "checkInDate", label: "Check-in", minWidth: 100, align: "center" },
     { id: "checkOutDate", label: "Check-out", minWidth: 100, align: "center" },
   ];
+
+  const calculateStayDuration = (checkInDate, checkOutDate) => {
+    const checkIn = new Date(checkInDate);
+    const checkOut = new Date(checkOutDate);
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+    const duration = (checkOut - checkIn) / millisecondsPerDay;
+    return Math.max(duration, 1);
+  };
 
   return (
     <div className="flex flex-row bg-gray-100">
@@ -129,29 +143,39 @@ function Admin() {
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage,
                       )
-                      .map((row) => (
-                        <TableRow
-                          key={row.id}
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          onClick={() => handleRowClick(row.id)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          {columns.map((column) => (
-                            <TableCell key={column.id} align={column.align}>
-                              {column.id === "checkInDate" ||
-                              column.id === "checkOutDate"
-                                ? formatDate(row[column.id])
-                                : (column.id === "room.name" ||
-                                      column.id === "room.bedType") &&
-                                    row.room
-                                  ? row.room[column.id.split(".")[1]]
-                                  : row[column.id]}
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      ))
+                      .map((row) => {
+                        const roomDetails = row.customerBooking_room[0]?.room;
+
+                        return (
+                          <TableRow
+                            key={row.id}
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            onClick={() => handleRowClick(row.id)}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {columns.map((column) => {
+                              let value = row[column.id];
+                              if (column.id === "roomType") {
+                                value = roomDetails?.name || "N/A";
+                              } else if (column.id === "bedType") {
+                                value = roomDetails?.bedType || "N/A";
+                              } else if (
+                                column.id === "checkInDate" ||
+                                column.id === "checkOutDate"
+                              ) {
+                                value = formatDate(row[column.id]);
+                              }
+                              return (
+                                <TableCell key={column.id} align={column.align}>
+                                  {value}
+                                </TableCell>
+                              );
+                            })}
+                          </TableRow>
+                        );
+                      })
                   )}
                 </TableBody>
               </Table>

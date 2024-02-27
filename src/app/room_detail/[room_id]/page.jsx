@@ -145,6 +145,7 @@ export default function RoomDetailById({ params: { room_id } }) {
         </div>
       </div>
       <h4 className="mt-10 text-center">Other Rooms</h4>
+
       <div className="random-room flex w-full justify-center">
         {otherRoom?.map((item, index) => {
           if (index <= 1) {
@@ -170,6 +171,7 @@ export default function RoomDetailById({ params: { room_id } }) {
             );
           }
         })}
+
       </div>
     </main>
   );

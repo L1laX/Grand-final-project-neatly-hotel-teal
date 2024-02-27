@@ -36,17 +36,18 @@ const FormInformation = ({
     const lastedEmail = email[email.length - 1];
     const validEmailRegex =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    console.log(values);
     const error = {
-      fullName: !values?.userProfile?.fullName,
-      dateOfBirth: validateDateofBirth(values?.userProfile?.dateOfBirth),
+      fullName: !values?.name,
+      dateOfBirth: validateDateofBirth(values?.dateOfBirth),
       email:
         !values?.email.length ||
         !values?.email.toLowerCase().match(validEmailRegex) ||
         !lastedEmail === "com" ||
         !lastedEmail === "co" ||
         !lastedEmail === "org",
-      id_number: values?.userProfile?.id_number.length !== 13,
-      country: values?.userProfile?.country.length < 1,
+      id_number: values?.id_number.length !== 13,
+      country: values?.country.length < 1,
     };
     setErrors({ ...error });
     if (
@@ -72,9 +73,9 @@ const FormInformation = ({
           <Input
             className={`grid outline-none ${errors.fullName && "border-red-600"}`}
             type="text"
-            name="fullName"
+            name="name"
             onChange={handleInputChange}
-            value={values?.fullName}
+            value={values?.name}
             placeholder="fullname"
           />
         </label>

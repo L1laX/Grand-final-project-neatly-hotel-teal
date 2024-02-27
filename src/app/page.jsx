@@ -18,7 +18,6 @@ import Lounge from "/src/asset/icons/iconoir_two-seater-sofa";
 import Wifi from "/src/asset/icons/ant-design_wifi-outlined";
 import Car from "/src/asset/icons/carbon_car";
 import Phone from "/src/asset/icons/bx_phone-call";
-import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 import ScrollToTopButton from "@/components/ui/scrollToTop";
 import NextPrevBtn from "@/asset/icons/next_button";
 import {
@@ -100,21 +99,12 @@ export default function Home() {
     slidesToScroll: 1,
   };
 
-  // const dateString = JSON.stringify({
-  //   from: date?.from
-  //     ? format(date?.from, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
-  //     : null,
-  //   to: date?.to ? format(date?.to, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
-  // });
-
   const dateString = JSON.stringify({
     from: date?.from
-      ? format(date?.from.setUTCHours(0, 0, 0, 0), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
+      ? format(date?.from, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
       : null,
-    to: date?.to
-      ? format(date?.to.setUTCHours(0, 0, 0, 0), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
-      : null,
-  });  
+    to: date?.to ? format(date?.to, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
+  });
 
   const roomAndGuestString = JSON.stringify({
     room: roomAndGuest?.room ? roomAndGuest?.room : null,

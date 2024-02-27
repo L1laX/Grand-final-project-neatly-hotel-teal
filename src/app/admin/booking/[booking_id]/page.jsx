@@ -59,6 +59,7 @@ function BookingDetail({ params: { booking_id } }) {
 
     return null;
   }
+
   if (!booking) {
     toast.error("Failed to fetch booking details. Please try again.", {
       position: "top-center",
@@ -68,22 +69,23 @@ function BookingDetail({ params: { booking_id } }) {
 
   const {
     customerName,
-    discount,
     guestCount,
-    room_id,
     checkInDate,
     checkOutDate,
     paymentType,
+    discount,
     totalPrice,
-    promotionPrice,
     additionalRequest,
     created_at,
-    room,
+    user: { email: customerEmail },
+    customerBooking_room,
   } = booking;
 
   const stayDuration = Math.floor(
     (new Date(checkOutDate) - new Date(checkInDate)) / (1000 * 60 * 60 * 24),
   );
+
+  const roomCount = customerBooking_room.length;
 
   const checkInDateObj = new Date(checkInDate);
   const checkOutDateObj = new Date(checkOutDate);
@@ -117,7 +119,11 @@ function BookingDetail({ params: { booking_id } }) {
         <div className="flex w-full flex-col pl-4">
           <NavBar
             customerName={customerName}
-            navName={room.name}
+            navName={
+              customerBooking_room.length > 0
+                ? customerBooking_room[0]?.room?.name
+                : ""
+            }
             buttonName={"Update"}
             notSearch={true}
             backarrow={true}
@@ -129,72 +135,67 @@ function BookingDetail({ params: { booking_id } }) {
           >
             <div className="flex flex-col rounded border border-solid border-[color:var(--gray-300,#E4E6ED)] bg-white px-20 py-11 max-md:max-w-full max-md:px-5">
               <header className="text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
-                {" "}
-                Customer name{" "}
+                Customer name
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
                 {customerName}
               </div>
 
               <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
-                {" "}
-                Guest(s){" "}
+                Guest(s)
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
                 {guestCount}
               </div>
 
-              <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
-                {" "}
-                Room type{" "}
-              </header>
-              <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
-                {room.name}
-              </div>
+              {customerBooking_room.map((bookingRoom, index) => (
+                <React.Fragment key={index}>
+                  <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
+                    Room type
+                  </header>
+                  <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
+                    {bookingRoom.room.name}
+                  </div>
+
+                  <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
+                    Amount
+                  </header>
+                  <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
+                    {roomCount} room(s)
+                  </div>
+
+                  <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
+                    Bed type
+                  </header>
+                  <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
+                    {bookingRoom.room.bedType}
+                  </div>
+                </React.Fragment>
+              ))}
 
               <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
-                {" "}
-                Amount{" "}
-              </header>
-              <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
-                {room.pricePerNight * stayDuration}
-              </div>
-
-              <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
-                {" "}
-                Bed type{" "}
-              </header>
-              <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
-                {room.bedType}
-              </div>
-
-              <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
-                {" "}
-                Check-in{" "}
+                Check-in
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
                 {formattedCheckInDate}
               </div>
 
               <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
-                {" "}
-                Check-out{" "}
+                Check-out
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
                 {formattedCheckOutDate}
               </div>
 
               <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
-                {" "}
-                Stay (total){" "}
+                Stay (total)
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
-                {stayDuration} days
+                {stayDuration} night
               </div>
 
               <header className="mt-10 text-xl font-semibold stacked-fractions tracking-tight max-md:max-w-full">
-                {" "}
-                Booking date{" "}
+                Booking date
               </header>
               <div className="mt-1 text-base tracking-tight text-black max-md:max-w-full">
                 {formattedBookingDate}
@@ -209,49 +210,56 @@ function BookingDetail({ params: { booking_id } }) {
                   <span className="font-semibold">{paymentType}</span>
                 </div>
 
+                {customerBooking_room.map((bookingRoom, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap"
+                  >
+                    <span>{bookingRoom.room.name}</span>
+
+                    <span className="grow text-right font-semibold max-md:max-w-full">
+                      {bookingRoom.room.pricePerNight}
+                    </span>
+                  </div>
+                ))}
                 <div className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap">
-                  <span>{room.name}</span>
+                  <span>{"Airport transfer"}</span>
+
                   <span className="grow text-right font-semibold max-md:max-w-full">
-                    {room.pricePerNight}
+                    {"200"}
                   </span>
                 </div>
 
                 <div className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap">
-                  <span>Airport transfer</span>
-                  <span className="grow text-right font-semibold max-md:max-w-full">
-                    200THB
-                  </span>
-                </div>
+                  <span>{"Promotion code"}</span>
 
-                <div className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap">
-                  <span>Promotion Code</span>
                   <span className="grow text-right font-semibold max-md:max-w-full">
-                    {promotionPrice || "N/A"}
+                    {discount || "0.00"}
                   </span>
                 </div>
 
                 <div className="mt-2 flex justify-between gap-5 border-t border-solid border-t-[color:var(--gray-300,#E4E6ED)] pt-6 max-md:max-w-full max-md:flex-wrap">
                   <div className="mt-1.5 flex-auto self-start text-base tracking-tight">
-                    {" "}
-                    Total{" "}
+                    Total
                   </div>
                   <span className="flex-auto text-right text-xl font-semibold stacked-fractions tracking-tight">
-                    {(
-                      room.pricePerNight * stayDuration +
-                      200 +
-                      (promotionPrice ?? 0)
-                    ).toLocaleString("en-US", {
-                      style: "currency",
-                      currency: "THB",
-                    })}
+                    {customerBooking_room
+                      .reduce(
+                        (acc, cur) =>
+                          acc + cur.room.pricePerNight * stayDuration,
+                        0,
+                      )
+                      .toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "THB",
+                      })}
                   </span>
                 </div>
               </form>
 
               <div className="mb-2.5 mt-10 flex flex-col rounded bg-gray-200 px-6 py-4 text-base tracking-tight text-slate-500 max-md:max-w-full max-md:px-5">
                 <div className="font-semibold max-md:max-w-full">
-                  {" "}
-                  Additional Request{" "}
+                  Additional Request
                 </div>
                 <div className="mt-2 max-md:max-w-full">
                   {additionalRequest || "N/A"}

@@ -65,13 +65,11 @@ export async function POST(req) {
           role: role,
           password: hashedPassword,
           image: image,
-          name:fullName,
+          name: fullName,
           userProfile: {
             create: {
               id_number: id_number,
-              dateOfBirth: new Date(
-                new Date(dateOfBirth).setUTCHours(0, 0, 0, 0),
-              ).toISOString(),
+              dateOfBirth: new Date(dateOfBirth),
               country: country,
             },
           },

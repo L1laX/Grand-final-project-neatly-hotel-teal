@@ -21,8 +21,10 @@ export async function GET(req, { params: { room_id } }) {
     select: { id: true, name:true, roomMainImage: true },
   });
 
+
   allMainImage = Object.values(allMainImage.reduce((acc, obj) => {
     acc[obj.name] = acc[obj.name] || obj;
+
     return acc;
   }, {}));
 

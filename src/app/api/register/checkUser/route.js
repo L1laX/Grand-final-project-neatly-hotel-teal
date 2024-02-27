@@ -20,15 +20,12 @@ export async function POST(request) {
         id_number: id_number,
       },
     });
-    if (isId_NumberDuplicate) {
-      return NextResponse.json({ message: "Id Number already exists" });
+    if (isId_NumberDuplicate || isUserDuplicate || isEmailDuplicate) {
+      return NextResponse.json({
+        error: `${isId_NumberDuplicate ? "Id number," : ""}${isUserDuplicate ? " Username," : ""}${isEmailDuplicate ? " Email" : ""} already exists`,
+      });
     }
-    if (isUserDuplicate) {
-      return NextResponse.json({ message: "Username already exists" });
-    }
-    if (isEmailDuplicate) {
-      return NextResponse.json({ message: "Email already exists" });
-    }
+
     return NextResponse.json({ message: "success" });
   } catch (error) {
     console.log(error);
