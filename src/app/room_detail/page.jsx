@@ -23,7 +23,7 @@ export default function RoomDetail({ searchParams }) {
         room: 1,
         guest: 2,
       };
-  console.log(searchParams.roomAndGuestString);
+
   const [rooms, setRooms] = useState([]);
   // const [date, setDate] = useState(JSON.parse(searchParams.dateString));
   const [date, setDate] = useState(initialDate);
@@ -114,14 +114,14 @@ export default function RoomDetail({ searchParams }) {
           rooms?.map((item, index) => (
             <RoomCard
               key={index}
-              roomitem={item.id}
+              roomItem={item.id}
               roomName={item.name}
               dateRoomGuest={dateRoomGuest}
-              handleBooking={item.id}
               roomAvailable={item.availableRoom}
               roomGuests={item.guests}
               allRoomId={item.room_id_list}
               roomPrice={item.pricePerNight}
+              roomPromotionPrice={item.promotionPrice}
             />
           ))
         ) : (

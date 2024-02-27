@@ -10,7 +10,7 @@ import SubmitTotal from "@/components/common/SubmitTotal";
 export default function StepperController({ searchParams }) {
   // console.log(new Date(searchParams.from))
   // const datesInRange = eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) });
-
+  const [ourPromotionCode, setOurPromotionCode] = useState([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [values, setValues] = useState({
     dateOfBirth: "",
@@ -19,6 +19,7 @@ export default function StepperController({ searchParams }) {
     country: "",
     payment_id: "",
     order_id: "",
+    discount: 0,
     roomName: searchParams.roomName,
     roomReserve: searchParams.room,
     nightReserve:
@@ -45,13 +46,14 @@ export default function StepperController({ searchParams }) {
   });
   const getUserData = async () => {
     const result = await axios.get(
-      `/api/user/customer_booking/${searchParams.userId}?roomName=${searchParams.roomName}`,
+      `/api/user/customer_booking/${searchParams.userId}?roomName=${searchParams.roomName}&allRoomId=${searchParams.allRoomId}`,
     );
     setValues({
       ...values,
       ...result?.data?.data,
       ...result?.data?.data?.userProfile,
     });
+    setOurPromotionCode([...result.data.promotionCode]);
   };
 
   const [request, setRequest] = useState({});
@@ -104,12 +106,12 @@ export default function StepperController({ searchParams }) {
   // }));
   // console.log(arrRequest);
 
-  const totalAdditionalPrice = Object.keys(request).reduce((acc, cur) => {
-    if (typeof request[cur] === "number") {
-      acc += request[cur];
-    }
-    return acc;
-  }, 0);
+  // const totalAdditionalPrice = Object.keys(request).reduce((acc, cur) => {
+  //   if (typeof request[cur] === "number") {
+  //     acc += request[cur];
+  //   }
+  //   return acc;
+  // }, 0);
 
   const nextStep = () => {
     setCurrentStep((prevStep) => (prevStep < 3 ? prevStep + 1 : prevStep));
@@ -166,9 +168,10 @@ export default function StepperController({ searchParams }) {
         customerDateOfBirth: new Date(values.dateOfBirth),
         paymentType: values.payment_id,
         paymentStatus: values.paymentStatus || "Pending",
+
         user_id: values.user_id,
-        checkInDate: values.checkinDate,
-        checkOutDate: values.checkOutDate,
+        checkInDate: new Date(values.checkInDate),
+        checkOutDate: new Date(values.checkOutDate),
         totalPrice: values.totalPrice,
       };
 
@@ -190,7 +193,7 @@ export default function StepperController({ searchParams }) {
   useEffect(() => {
     getUserData();
   }, []);
-
+  console.log(values, "values");
   return (
     <>
       {currentStep !== 4 ? (
@@ -279,6 +282,7 @@ export default function StepperController({ searchParams }) {
                   setPromotionCode={setPromotionCode}
                   setCurrentStep={setCurrentStep}
                   request={request}
+                  ourPromotionCode={ourPromotionCode}
                 />
               )}
             </div>

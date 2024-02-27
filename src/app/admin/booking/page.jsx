@@ -87,7 +87,7 @@ function CustomerBooking() {
 
     {
       id: "totalPrice",
-      label: "Amount",
+      label: "Total Price ",
       minWidth: 100,
       align: "center",
     },
@@ -102,6 +102,19 @@ function CustomerBooking() {
     const millisecondsPerDay = 1000 * 60 * 60 * 24;
     const duration = (checkOut - checkIn) / millisecondsPerDay;
     return Math.max(duration, 1);
+  };
+
+  const calculateTotalPrice = (
+    customerBooking_room,
+    checkInDate,
+    checkOutDate,
+  ) => {
+    const stayDuration = calculateStayDuration(checkInDate, checkOutDate);
+    const totalPrice = customerBooking_room.reduce(
+      (acc, cur) => acc + cur.room.pricePerNight * stayDuration,
+      0,
+    );
+    return Math.round(totalPrice);
   };
 
   return (
@@ -144,7 +157,11 @@ function CustomerBooking() {
                         page * rowsPerPage + rowsPerPage,
                       )
                       .map((row) => {
-                        const roomDetails = row.customerBooking_room[0]?.room;
+                        const totalPrice = calculateTotalPrice(
+                          row.customerBooking_room,
+                          row.checkInDate,
+                          row.checkOutDate,
+                        );
 
                         return (
                           <TableRow
@@ -158,14 +175,28 @@ function CustomerBooking() {
                             {columns.map((column) => {
                               let value = row[column.id];
                               if (column.id === "roomType") {
-                                value = roomDetails?.name || "N/A";
+                                value =
+                                  row.customerBooking_room
+                                    .map((room) => room.room.name)
+                                    .join(", ") || "N/A";
                               } else if (column.id === "bedType") {
-                                value = roomDetails?.bedType || "N/A";
+                                value =
+                                  row.customerBooking_room
+                                    .map((room) => room.room.bedType)
+                                    .join(", ") || "N/A";
                               } else if (
                                 column.id === "checkInDate" ||
                                 column.id === "checkOutDate"
                               ) {
                                 value = formatDate(row[column.id]);
+                              } else if (column.id === "totalPrice") {
+                                const isWholeNumber = totalPrice % 1 === 0;
+                                value = totalPrice.toLocaleString("en-US", {
+                                  style: "currency",
+                                  currency: "THB",
+                                  minimumFractionDigits: isWholeNumber ? 0 : 2,
+                                  maximumFractionDigits: 2,
+                                });
                               }
                               return (
                                 <TableCell key={column.id} align={column.align}>

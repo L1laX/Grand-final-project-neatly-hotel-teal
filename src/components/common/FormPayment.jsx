@@ -163,6 +163,7 @@ import axios from "axios";
 import React from "react";
 import CheckoutForm from "@/components/stripe/CheckoutForm";
 import { v4 as uuidv4 } from "uuid";
+import { set } from "date-fns";
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 );
@@ -173,51 +174,35 @@ export default function FormPayment({
   setValues,
   promotionCode,
   setPromotionCode,
-  testtest,
-  totalAdditionalPrice,
   setCurrentStep,
   request,
+  ourPromotionCode,
 }) {
   const [clientSecret, setClientSecret] = React.useState("");
-  const [isPromotion, setIsPromotion] = React.useState(false);
+  const [isPromotion, setIsPromotion] = React.useState("first");
   const [displayCode, setDisplayCode] = React.useState("");
   const [paymentIntent_id, setPaymentIntent_id] = React.useState("");
   const [unique_key_number, setUnique_key_number] = React.useState(0);
   const getClientSecret = async (amount, istrue) => {
     const unique_key = uuidv4();
-    console.log(amount);
     const response = await axios.post(
       "/api/user/payment_method/payment_intent",
       {
-        amount: +amount || 1000,
-        isPromotion: istrue || false,
+        amount: +amount,
+        isUpdate: istrue ? true : false,
         intent_id: paymentIntent_id || null,
         customer_id: values.payment_id || null,
       },
     );
     setClientSecret(response.data.clientSecret);
     setPaymentIntent_id(response.data.paymentIntent_id);
-    setValues({
+    setValues((prev) => ({
       ...values,
       payment_id: response.data.customer,
       order_id: response.data.paymentIntent_id,
-    });
+      ...prev,
+    }));
     setUnique_key_number(unique_key);
-  };
-  const checkPromotion = (promotion) => {
-    if (promotion === "NEATLYNEW400") {
-      setDisplayCode(promotion);
-      setIsPromotion(true);
-      return 400;
-    }
-    if (promotion === "NEATLYNEW500") {
-      setDisplayCode(promotion);
-      setIsPromotion(true);
-      return 500;
-    }
-    setIsPromotion(false);
-    setDisplayCode("");
-    return values.amount;
   };
   const appearance = {
     theme: "stripe",
@@ -230,20 +215,44 @@ export default function FormPayment({
     clientSecret,
     appearance,
   };
-  React.useEffect(() => {
-    // Create PaymentIntent as soon as the page loads
-    checkPromotion(promotionCode);
-    if (promotionCode) {
-      const newAmount = checkPromotion(promotionCode);
+  console.log(values);
+  const checkPromotion = (userPromotionCode) => {
+    const applyPromotion = ourPromotionCode.find(
+      (item) =>
+        item.promotionCode.toLowerCase() === userPromotionCode.toLowerCase(),
+    );
+    if (applyPromotion) {
+      console.log("applyed!");
+      const newTotalPrice = values.totalPrice - applyPromotion.discount;
+      console.log(newTotalPrice);
+      const newValue = {
+        ...values,
+        discount: applyPromotion.discount,
+        totalPrice: newTotalPrice,
+      };
+      console.log(newValue, "newValue Naja");
       setIsPromotion(true);
-      if (newAmount) {
-        getClientSecret(values.totalPrice + totalAdditionalPrice, true);
-      }
-    } else {
-      console.log("test");
-      getClientSecret(values.totalPrice + totalAdditionalPrice);
-      setIsPromotion(false);
+      setValues({ ...newValue });
+      setDisplayCode(userPromotionCode);
+      getClientSecret(newTotalPrice, true);
     }
+    if (isPromotion === true && !applyPromotion) {
+      setIsPromotion(false);
+      const newValue = { ...values };
+      const newTotalPrice = values.totalPrice + values.discount;
+      delete newValue.discount;
+      setValues({ ...values, totalPrice: newTotalPrice });
+      setDisplayCode("");
+      getClientSecret(newTotalPrice, true);
+    }
+    if (isPromotion === "first") {
+      setIsPromotion(false);
+      getClientSecret(values.totalPrice);
+    }
+  };
+
+  React.useEffect(() => {
+    checkPromotion(promotionCode);
   }, [promotionCode]);
   return (
     <div className="main mr-6 rounded bg-white p-10">

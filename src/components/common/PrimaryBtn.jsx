@@ -6,13 +6,19 @@ const PrimaryBtn = ({
   handleClick,
   primaryButton,
   isLoading,
+
   disabled,
+
 }) => {
   return (
     <button
       className={cn(primaryButton, "btn-primary")}
+
       disabled={disabled}
       onClick={handleClick}
+
+      type="submit"
+
     >
       {isLoading ? (
         <div role="status" className="">
