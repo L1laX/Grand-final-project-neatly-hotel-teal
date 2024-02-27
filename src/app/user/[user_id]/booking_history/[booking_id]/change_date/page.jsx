@@ -44,14 +44,28 @@ const ChangeDate = ({ params }) => {
           and Check-out Date
         </h2>
         <div className="booking-history flex flex-col py-10 lg:flex-row lg:justify-start">
-          <div className=" h-[210px] w-[357px] rounded bg-slate-200">image</div>
+          <div className=" h-[210px] w-[357px] rounded bg-slate-200">
+            {Object.keys(changeDate).length === 0 ? (
+              <p></p>
+            ) : (
+              <img
+                className="h-[210px] w-[357px] rounded object-cover"
+                src={changeDate?.customerBooking_room[0]?.room?.roomMainImage}
+                alt="room"
+              />
+            )}
+          </div>
 
           <div className="booking-content flex flex-col lg:ml-9 lg:w-4/5">
             {/* Booking Detail */}
             <section className="flex flex-col lg:flex-row lg:justify-between">
               <div className="left">
                 <h3 className=" mb-10">
-                  nammee {changeDate?.customerBooking_room?.room?.name}
+                  {Object.keys(changeDate).length === 0 ? (
+                    <p></p>
+                  ) : (
+                    changeDate?.customerBooking_room[0]?.room?.name
+                  )}
                 </h3>
                 <p className=" font-semibold text-[#424C6B]">Booking Date</p>
                 <p className=" body1 mb-10 text-[#9aa1b9]">

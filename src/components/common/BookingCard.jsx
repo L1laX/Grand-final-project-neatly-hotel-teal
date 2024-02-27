@@ -43,7 +43,11 @@ export default function BookingCard({
             objectFit="cover"
             alt="Suite"
           /> */}
-          <img src={roomImage} alt="room" />
+          <img
+            className="h-[16rem] w-11/12 rounded"
+            src={roomImage}
+            alt="room"
+          />
         </div>
         {/* Booking Card Detail */}
         <div className="flex w-full flex-col">

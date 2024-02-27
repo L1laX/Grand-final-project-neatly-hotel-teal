@@ -23,7 +23,7 @@ const CancleBooking = ({ params }) => {
     }
   };
 
-  const deleteBookingOrder = async (booking_id) => {
+  const deleteBookingOrder = async () => {
     try {
       const res = await axios.delete(`/api/user/booking_history${booking_id}`);
       if (res.status === 200) {
@@ -57,14 +57,15 @@ const CancleBooking = ({ params }) => {
               <p></p>
             ) : (
               <img
+                className="h-[210px] w-[357px] rounded object-cover"
                 src={
                   cancleBooking?.customerBooking_room[0]?.room?.roomMainImage
                 }
                 alt="room"
               />
             )}
-            {/* image{cancleBooking?.customerBooking_room[0]?.room?.roomMainImage} */}
           </div>
+
           <div className="booking-content flex flex-col md:ml-9 md:w-4/5 md:flex-row md:justify-between">
             {/* Booking Detail */}
             <div className="left">
