@@ -70,21 +70,6 @@ export async function POST(request) {
     console.log(e);
     return NextResponse.error(new Error("User not found"), { status: 404 });
   }
-  try {
-    const updateRoomStatus = await prisma.room.updateMany({
-      where: {
-        id: {
-          in: allRoom,
-        },
-      },
-      data: {
-        status: "Occupied",
-      },
-    });
-  } catch (e) {
-    console.log(e);
-    return NextResponse.error(new Error("User not found"), { status: 404 });
-  }
 
   return NextResponse.json({ message: "POST Methode success", status: 200 });
 }
