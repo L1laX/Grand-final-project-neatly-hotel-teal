@@ -2,71 +2,86 @@ import { prisma } from "@/lib/prisma.js";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
-  const searchParams = request.nextUrl.searchParams;
+  const searchParams = new URL(request.url).searchParams;
   const keywords = searchParams.get("keywords");
+  const page = parseInt(searchParams.get("page"), 10) || 0;
+  const pageSize = parseInt(searchParams.get("pageSize"), 10) || 10; // Adjusted default pageSize to 10 for practicality
+  const skip = page * pageSize;
+
+  console.log("Fetching customer bookings:", {
+    keywords,
+    page,
+    pageSize,
+    skip,
+  });
 
   try {
-    const customerBookings = await prisma.customerBooking.findMany({
-      include: {
-        user: {
-          select: {
-            id: true,
-            email: true,
-            username: true,
-            role: true,
-            image: true,
-            created_at: true,
-            updated_at: true,
-            emailVerified: true,
-            name: true,
-            userProfile: true,
-          },
-        },
-        customerBooking_room: {
-          include: {
-            room: {
-              select: {
-                name: true,
-                size: true,
-                bedType: true,
-                status: true,
-                checkInDate: true,
-                checkOutDate: true,
-                guests: true,
-                description: true,
-                roomMainImage: true,
-                pricePerNight: true,
-                promotionPrice: true,
-                created_at: true,
-                last_updated_at: true,
-                roomAmenity: true,
-                roomGallery: true,
-              },
+    const [customerBookings, totalRows] = await prisma.$transaction([
+      prisma.customerBooking.findMany({
+        skip,
+        take: pageSize,
+        include: {
+          user: true, // Simplify if detailed user info is not required
+          customerBooking_room: {
+            include: {
+              room: true, // Simplify if detailed room info is not required
             },
           },
+          bookingRequest: true,
         },
-        bookingRequest: true,
-      },
-      where: keywords
-        ? {
-            OR: [
-              {
-                customerName: {
-                  contains: keywords,
-                  mode: "insensitive",
-                },
-              },
-            ],
-          }
-        : {},
-    });
+        where: {
+          OR: keywords
+            ? [
+                { customerName: { contains: keywords, mode: "insensitive" } },
+                // Add more search conditions here if necessary
+              ]
+            : undefined,
+        },
+      }),
+      prisma.customerBooking.count({
+        where: {
+          OR: keywords
+            ? [
+                { customerName: { contains: keywords, mode: "insensitive" } },
+                // Add more count conditions here if necessary
+              ]
+            : undefined,
+        },
+      }),
+    ]);
 
-    return NextResponse.json({
-      success: true,
-      data: customerBookings,
-    });
+    const totalPages = Math.ceil(totalRows / pageSize);
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        data: customerBookings,
+        totalRows,
+        totalPages,
+        currentPage: page,
+        pageSize,
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
   } catch (error) {
     console.error("Error fetching customer bookings:", error);
-    return NextResponse.error("Error fetching customer bookings");
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: "Error fetching customer bookings",
+        error: error.message,
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
   }
 }
