@@ -16,12 +16,16 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function CustomerBooking() {
-  const [search, setSearch] = useState("");
   const router = useRouter();
+  const [search, setSearch] = useState("");
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(3);
   const [totalRows, setTotalRows] = useState(0);
+  const [highestPage, setHighestPage] = React.useState(0);
+  const [newPage, setNewPage] = React.useState(0);
+
+  console.log(rows.length);
 
   const formatDate = (dateString) => {
     const options = {
@@ -41,7 +45,8 @@ function CustomerBooking() {
         params: { keywords: search, page, pageSize: rowsPerPage },
       });
 
-      setRows(data.data);
+      console.log(data);
+      setRows([...rows, ...data.data]);
       setTotalRows(data.totalRows);
       toast.dismiss();
     } catch (error) {
@@ -52,11 +57,25 @@ function CustomerBooking() {
   };
 
   useEffect(() => {
-    fetchData(); // Fetch data on component mount and when dependencies change
-  }, [search, page, rowsPerPage]);
+    if (newPage === page) {
+      setPage(newPage);
+      fetchData(newPage);
+    }
+    if (newPage > page && newPage <= highestPage) {
+      setPage(newPage);
+    }
+    if (newPage > page && newPage > highestPage) {
+      setHighestPage(newPage);
+      setPage(newPage);
+      fetchData(newPage);
+    }
+    if (newPage < page) {
+      setPage(newPage);
+    }
+  }, [search, newPage]);
 
   const handleChangePage = (_event, newPage) => {
-    setPage(newPage);
+    setNewPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -94,27 +113,6 @@ function CustomerBooking() {
   useEffect(() => {
     console.log("Total Rows:", totalRows);
   }, [totalRows]);
-
-  const calculateStayDuration = (checkInDate, checkOutDate) => {
-    const checkIn = new Date(checkInDate);
-    const checkOut = new Date(checkOutDate);
-    const millisecondsPerDay = 1000 * 60 * 60 * 24;
-    const duration = (checkOut - checkIn) / millisecondsPerDay;
-    return Math.max(duration, 1);
-  };
-
-  const calculateTotalPrice = (
-    customerBooking_room,
-    checkInDate,
-    checkOutDate,
-  ) => {
-    const stayDuration = calculateStayDuration(checkInDate, checkOutDate);
-    const totalPrice = customerBooking_room.reduce(
-      (acc, cur) => acc + cur.room.pricePerNight * stayDuration,
-      0,
-    );
-    return Math.round(totalPrice);
-  };
 
   return (
     <div className="flex flex-row bg-gray-100">
@@ -156,12 +154,6 @@ function CustomerBooking() {
                         page * rowsPerPage + rowsPerPage,
                       )
                       .map((row) => {
-                        const totalPrice = calculateTotalPrice(
-                          row.customerBooking_room,
-                          row.checkInDate,
-                          row.checkOutDate,
-                        );
-
                         return (
                           <TableRow
                             key={row.id}
@@ -189,12 +181,9 @@ function CustomerBooking() {
                               ) {
                                 value = formatDate(row[column.id]);
                               } else if (column.id === "totalPrice") {
-                                const isWholeNumber = totalPrice % 1 === 0;
-                                value = totalPrice.toLocaleString("en-US", {
+                                value = row.totalPrice.toLocaleString("en-US", {
                                   style: "currency",
-                                  currency: "THB",
-                                  minimumFractionDigits: isWholeNumber ? 0 : 2,
-                                  maximumFractionDigits: 2,
+                                  currency: "USD", // Adjust currency code as necessary
                                 });
                               }
                               return (
@@ -211,11 +200,11 @@ function CustomerBooking() {
               </Table>
             </TableContainer>
             <TablePagination
-              rowsPerPageOptions={[10, 25, 50, 100, 1000]}
+              rowsPerPageOptions={[10, 25, 50, 100]}
               component="div"
               count={totalRows}
               rowsPerPage={rowsPerPage}
-              page={page} // Make sure this is correctly representing the current page
+              page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
