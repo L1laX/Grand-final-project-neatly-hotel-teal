@@ -6,8 +6,6 @@ import { useEffect, useState } from "react";
 import { addDays, format } from "date-fns";
 import { DateRangeRoomGuest } from "@/components/ui/DateRangeRoomGuest";
 import axios from "axios";
-import { Suspense } from "react";
-import LoadingLinear from "@/components/common/LoadingLinear";
 
 export default function RoomDetail({ searchParams }) {
   const initialDate = searchParams.dateString

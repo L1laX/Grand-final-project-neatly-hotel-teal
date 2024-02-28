@@ -47,7 +47,7 @@ export default function AvatarDropdown({ image, name, session_id }) {
                 <span className="image h-7 w-7 opacity-40 hover:opacity-75">
                   <Image src={BookingIcon} alt="Booking-icon" />
                 </span>
-                <p className=" hover:opacity-85"> Booking</p>
+                <p className=" hover:opacity-85"> Bookings</p>
               </div>
             </DropdownMenuItem>
           </div>

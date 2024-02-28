@@ -7,6 +7,7 @@ export async function GET(request, { params: { booking_id } }) {
       where: {
         id: booking_id,
       },
+
       include: {
         user: true,
         customerBooking_room: { include: { room: true } },
@@ -61,25 +62,25 @@ export async function PUT(request, { params: { booking_id } }) {
   }
 }
 
-// export async function DELETE(request, { params: { booking_id } }) {
-//   console.log(booking_id);
-//   try {
-//     const deleteBookingOrder = await prisma.customerBooking.delete({
-//       where: {
-//         id: booking_id,
-//       },
-//     });
+export async function DELETE(request, { params: { booking_id } }) {
+  console.log(booking_id);
+  try {
+    const deleteBookingOrder = await prisma.customerBooking.delete({
+      where: {
+        id: booking_id,
+      },
+    });
 
-//     return NextResponse.json({
-//       data: deleteBookingOrder,
-//       status: 200,
-//       message: "Booking Order has been deleted",
-//     });
-//   } catch (error) {
-//     console.log("Error deleting Booking Order:", error);
-//     return NextResponse.json({
-//       status: 500,
-//       message: "Internal Server Error",
-//     });
-//   }
-// }
+    return NextResponse.json({
+      data: deleteBookingOrder,
+      status: 200,
+      message: "Booking Order has been deleted",
+    });
+  } catch (error) {
+    console.log("Error deleting Booking Order:", error);
+    return NextResponse.json({
+      status: 500,
+      message: "Internal Server Error",
+    });
+  }
+}

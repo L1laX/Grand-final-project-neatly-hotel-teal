@@ -32,7 +32,7 @@ import { useRouter } from "next/navigation";
 
 export default function BookingCard({
   bookingId,
-  roomname,
+  roomName,
   bookingdate,
   customerCheckin,
   customerCheckout,
@@ -47,6 +47,9 @@ export default function BookingCard({
   pricePerNight,
   userId,
   roomImage,
+  handleDelete,
+  bedType,
+  roomList,
 }) {
   const router = useRouter();
 
@@ -68,7 +71,7 @@ export default function BookingCard({
         {/* Booking Card Detail Checkin-Checkout */}
         <div className="flex w-full flex-col">
           <div className="mt-4 flex w-full flex-col justify-between md:mt-0 md:flex-row">
-            <h3 className=" text-2xl lg:text-3xl xl:text-4xl">{roomname}</h3>
+            <h3 className=" text-2xl lg:text-3xl xl:text-4xl">{roomName}</h3>
             <div>
               <p className="text-[#9AA1B9] md:text-right">
                 Booking date: {format(bookingdate, "eee, dd MMM yyyy")}
@@ -123,7 +126,7 @@ export default function BookingCard({
                       </div>
                     </div>
                     <div className="mt-4 flex justify-between">
-                      <p>{roomname}</p>
+                      <p>{roomName}</p>
                       <p className="pl-4 text-right font-semibold text-[#2A2E3F]">
                         {pricePerNight}
                       </p>
@@ -140,10 +143,6 @@ export default function BookingCard({
                           ))}
                         </>
                       )}
-
-                      <p className="pl-4 text-right font-semibold text-[#2A2E3F]">
-                        {/* {addReqPrice} */}
-                      </p>
                     </div>
                     {/* Promotion Code */}
                     <div className="mt-4">
@@ -181,116 +180,140 @@ export default function BookingCard({
 
       {/* Button */}
       <div className="mt-4 flex w-full items-center justify-between max-sm:flex-col">
-        {paymentStatus === "canceled" ? (
-          <button
-            className="visitlink"
-            disabled={true}
-            onClick={() =>
-              router.push(`/user/${userId}/booking_history/${bookingId}/cancle`)
-            }
-          >
-            Cancle Booking
+        <div>
+          {paymentStatus === "canceled" ? (
+            <button
+              className="visitlink"
+              disabled={true}
+              onClick={() =>
+                router.push(
+                  `/user/${userId}/booking_history/${bookingId}/cancel`,
+                )
+              }
+            >
+              Cancel Booking
+            </button>
+          ) : (
+            <button
+              className="visitlink"
+              disabled={false}
+              onClick={() =>
+                router.push(
+                  `/user/${userId}/booking_history/${bookingId}/cancel`,
+                )
+              }
+            >
+              Cancel Booking
+            </button>
+          )}
+          {/* delete */}
+          <button className="visitlink ml-4" onClick={handleDelete}>
+            delete
           </button>
-        ) : (
-          <button
-            className="visitlink"
-            disabled={false}
-            onClick={() =>
-              router.push(`/user/${userId}/booking_history/${bookingId}/cancle`)
-            }
-          >
-            Cancle Booking
-          </button>
-        )}
+        </div>
 
-        {/* Popup Room Detail */}
         <div className="flex items-center max-sm:flex-col">
-          <div className=" mr-4">
-            <AlertDialog>
-              <AlertDialogTrigger>
-                <p className="visitlink">Room Detail</p>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    <div className=" flex flex-row justify-between gap-5 p-4 md:ml-20">
-                      <h5>Superior Garden View</h5>
+          {/* Popup Room Detail */}
+          {roomList.map((customerRoom, index) => (
+            <div key={index} className=" mr-4">
+              <AlertDialog>
+                <AlertDialogTrigger>
+                  <p className="visitlink">Room Detail</p>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      <div className=" flex flex-row justify-between gap-5 p-4 md:ml-20">
+                        <h5>{customerRoom.room.name}</h5>
 
-                      <AlertDialogCancel>
-                        <Image
-                          className="cursor-pointer"
-                          src={CloseIcon}
-                          width={20}
-                          height={20}
-                        />
-                      </AlertDialogCancel>
-                    </div>
-                  </AlertDialogTitle>
-                </AlertDialogHeader>
-                <AlertDialogDescription>
-                  <div className="content mt-5 p-4 md:mx-20">
-                    <div className="px-5 md:px-0">
-                      <Carousel>
-                        <CarouselContent>
-                          <CarouselItem className="basis-1/3">
-                            <Image src={BG} />
-                          </CarouselItem>
-                          <CarouselItem className="basis-1/3">
-                            <Image src={BG} />
-                          </CarouselItem>
-                          <CarouselItem className="basis-1/3">
-                            <Image src={BG} />
-                          </CarouselItem>
-                          <CarouselItem className="basis-1/3">
-                            <Image src={BG} />
-                          </CarouselItem>
-                        </CarouselContent>
-                        <CarouselNext />
-                        <CarouselPrevious />
-                      </Carousel>
-                    </div>
-                    <div className="content-detail divide-y-2 divide-gray-300 p-4">
-                      <div className="py-5">
-                        <p className="font-sans text-base font-normal text-[#646D89]">
-                          {/* {roomGuests} Guests | {roombedtype} | {roomsize} */}
-                        </p>
-                        <p className="font-sans text-base font-normal text-[#646D89]">
-                          {/* {roomdesc} */}
-                        </p>
+                        <AlertDialogCancel>
+                          <Image
+                            className="cursor-pointer"
+                            src={CloseIcon}
+                            width={20}
+                            height={20}
+                          />
+                        </AlertDialogCancel>
                       </div>
-                      <div className="py-5">
-                        <h5 className="text-black">Room Amenities</h5>
-                        <div className="flex flex-col justify-between gap-6 p-4 md:flex-row">
-                          <ul className="amenities-1 list-disc">
-                            <li className="bullet-text">Safe in Room</li>
-                            <li className="bullet-text">Air Conditioning</li>
-                            <li className="bullet-text">
-                              High-speed internet connection
-                            </li>
-                            <li className="bullet-text">Hairdryer</li>
-                            <li className="bullet-text">Shower</li>
-                            <li className="bullet-text">Bathroom amenities</li>
-                            <li className="bullet-text">Lamp</li>
-                          </ul>
-                          <ul className="amenities-2 list-disc">
-                            <li className="bullet-text">Minibar</li>
-                            <li className="bullet-text">Telephone</li>
-                            <li className="bullet-text">Ironing board</li>
-                            <li className="bullet-text">
-                              A floor only accessible via a guest room key
-                            </li>
-                            <li className="bullet-text">Alarm clock</li>
-                            <li className="bullet-text">Bathrobe</li>
-                          </ul>
+                    </AlertDialogTitle>
+                  </AlertDialogHeader>
+                  <AlertDialogDescription>
+                    <div className="content mt-5 p-4 md:mx-20">
+                      <div className="px-5 md:px-0">
+                        <Carousel>
+                          <CarouselContent>
+                            <CarouselItem className="basis-1/3">
+                              <img
+                                src={customerRoom.room.roomMainImage}
+                                alt="room"
+                                onClick={() =>
+                                  router.push(
+                                    `${customerRoom.room.roomMainImage}`,
+                                  )
+                                }
+                              />
+                            </CarouselItem>
+
+                            {/* <CarouselItem className="basis-1/3">
+                            <Image src={BG} />
+                          </CarouselItem>
+                          <CarouselItem className="basis-1/3">
+                            <Image src={BG} />
+                          </CarouselItem>
+                          <CarouselItem className="basis-1/3">
+                            <Image src={BG} />
+                          </CarouselItem> */}
+                          </CarouselContent>
+                          <CarouselNext />
+                          <CarouselPrevious />
+                        </Carousel>
+                      </div>
+                      <div className="content-detail divide-y-2 divide-gray-300 p-4">
+                        <div className="py-5">
+                          <p className="font-sans text-base font-normal text-[#646D89]">
+                            {customerRoom.room.guests} Guests |
+                            {customerRoom.room.bedType} |
+                            {customerRoom.room.size} sqm.
+                          </p>
+                          <p className="font-sans text-base font-normal text-[#646D89]">
+                            {customerRoom.room.description}
+                          </p>
+                        </div>
+                        <div className="py-5">
+                          <h5 className="text-black">Room Amenities</h5>
+                          <div className="flex flex-col justify-between gap-6 p-4 md:flex-row">
+                            <ul className="amenities-1 list-disc">
+                              <li className="bullet-text">Safe in Room</li>
+                              <li className="bullet-text">Air Conditioning</li>
+                              <li className="bullet-text">
+                                High-speed internet connection
+                              </li>
+                              <li className="bullet-text">Hairdryer</li>
+                              <li className="bullet-text">Shower</li>
+                              <li className="bullet-text">
+                                Bathroom amenities
+                              </li>
+                              <li className="bullet-text">Lamp</li>
+                            </ul>
+                            <ul className="amenities-2 list-disc">
+                              <li className="bullet-text">Minibar</li>
+                              <li className="bullet-text">Telephone</li>
+                              <li className="bullet-text">Ironing board</li>
+                              <li className="bullet-text">
+                                A floor only accessible via a guest room key
+                              </li>
+                              <li className="bullet-text">Alarm clock</li>
+                              <li className="bullet-text">Bathrobe</li>
+                            </ul>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </AlertDialogDescription>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-
+                  </AlertDialogDescription>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          ))}
           {/* Change Date Button */}
           <div className="max-sm:pb-3">
             {paymentStatus === "canceled" ? (
@@ -304,7 +327,15 @@ export default function BookingCard({
                 }
               />
             ) : (
-              <PrimaryBtn disabled={false} btnName="Change Date" />
+              <PrimaryBtn
+                disabled={false}
+                btnName="Change Date"
+                handleClick={() =>
+                  router.push(
+                    `/user/${userId}/booking_history/${bookingId}/change_date`,
+                  )
+                }
+              />
             )}
           </div>
         </div>

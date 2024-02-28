@@ -31,7 +31,7 @@ const CancelBooking = ({ params }) => {
         router.push(`/user/${user_id}/booking_history`);
       }
     } catch (error) {
-      console.error("Failed to delete booking order:", error);
+      console.error("Failed to cancel booking order:", error);
     }
   };
 
@@ -106,7 +106,7 @@ const CancelBooking = ({ params }) => {
           </button>
 
           <PrimaryBtn
-            btnName="Cancle this Booking"
+            btnName="Cancel this Booking"
             handleClick={handleConfirmCancel}
           ></PrimaryBtn>
         </div>
@@ -119,7 +119,7 @@ const CancelBooking = ({ params }) => {
         handleConfirm={() => deleteBookingOrder(booking_id)}
         modalTitle="Cancel Booking "
         modalContent="Are you sure you want to Cancel this Booking?"
-        cancelButton="Cancle"
+        cancelButton="Cancel"
         confirmButton="Confirm"
       />
     </>

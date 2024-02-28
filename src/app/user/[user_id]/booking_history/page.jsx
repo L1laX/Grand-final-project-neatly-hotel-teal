@@ -1,9 +1,14 @@
 "use client";
 import BookingCard from "@/components/common/BookingCard";
+import PrimaryBtn from "@/components/common/PrimaryBtn";
+import onlineBookingO from "@/asset/icons/online-booking-orange.png";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const BookingHistory = ({ params }) => {
+  const router = useRouter();
   const { user_id } = params;
   const [customerBooking, setCustomerBooking] = useState([]);
 
@@ -20,6 +25,18 @@ const BookingHistory = ({ params }) => {
     }
   };
 
+  const deleteBooking = async (bookingId) => {
+    try {
+      const res = await axios.delete(`/api/user/booking_history/${bookingId}`);
+      if (res.status === 200) {
+        alert("Your booking has been canceled!");
+        getBookingHistory();
+      }
+    } catch (error) {
+      console.error("Failed to cancel booking:", error);
+    }
+  };
+
   useEffect(() => {
     getBookingHistory();
   }, []);
@@ -33,13 +50,13 @@ const BookingHistory = ({ params }) => {
 
         {/* Conditional Rendering List */}
 
-        {customerBooking &&
+        {customerBooking ? (
           customerBooking.map((booking) => {
             return (
               <BookingCard
                 key={booking.id}
                 bookingId={booking?.id}
-                roomname={booking?.customerBooking_room[0]?.room?.name}
+                roomName={booking?.customerBooking_room[0]?.room?.name}
                 bookingdate={booking?.created_at}
                 customerCheckin={booking?.checkInDate}
                 customerCheckout={booking?.checkOutDate}
@@ -58,9 +75,33 @@ const BookingHistory = ({ params }) => {
                 roomImage={
                   booking?.customerBooking_room[0]?.room?.roomMainImage
                 }
+                handleDelete={() => deleteBooking(booking.id)}
+                roomList={booking?.customerBooking_room}
               />
             );
-          })}
+          })
+        ) : (
+          <>
+            <div className=" my-20 flex flex-col items-center">
+              <Image
+                className=" opacity-50"
+                src={onlineBookingO}
+                width={150}
+                height={150}
+                alt="online-booking"
+              />
+              <h4 className="text-[#646d89]">Your booking is empty</h4>
+              <p className=" pb-4 text-[#9aa1b9]">
+                Shop for hotels to plan your next trip.
+              </p>
+              <PrimaryBtn
+                handleClick={() => router.push(`/`)}
+                btnName="Search Room"
+              />
+            </div>
+          </>
+        )}
+
         {/* <BookingCard /> */}
       </div>
     </div>
