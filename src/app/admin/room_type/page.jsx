@@ -224,7 +224,7 @@ const RoomType = () => {
               </Table>
             </TableContainer>
             <TablePagination
-              rowsPerPageOptions={[5, 25, 30]}
+              rowsPerPageOptions={[10, 25, 50, 100]}
               component="div"
               count={totalPage}
               rowsPerPage={rowsPerPage}
