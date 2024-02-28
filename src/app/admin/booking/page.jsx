@@ -21,6 +21,7 @@ function CustomerBooking() {
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [totalRows, setTotalRows] = useState(0);
 
   const formatDate = (dateString) => {
     const options = {
@@ -33,21 +34,17 @@ function CustomerBooking() {
   };
 
   const fetchData = async () => {
+    toast.info("Fetching data...", { position: "top-center", autoClose: 5000 });
+
     try {
-      toast.info("Fetching data...", {
-        position: "top-center",
-        autoClose: false,
+      const { data } = await axios.get("/api/admin/customer_booking", {
+        params: { keywords: search, page, pageSize: rowsPerPage },
       });
 
-      const response = await axios.get(
-        `/api/admin/customer_booking?keywords=${search}`,
-      );
-
-      const data = response.data;
       setRows(data.data);
+      setTotalRows(data.totalRows);
       toast.dismiss();
     } catch (error) {
-      console.error("Error fetching data from API:", error.message);
       toast.error("Failed to fetch data. Please try again later.", {
         position: "bottom-center",
       });
@@ -55,12 +52,8 @@ function CustomerBooking() {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [search]);
-
-  useEffect(() => {
-    console.log("Fetched Data:", rows);
-  }, [rows]);
+    fetchData(); // Fetch data on component mount and when dependencies change
+  }, [search, page, rowsPerPage]);
 
   const handleChangePage = (_event, newPage) => {
     setPage(newPage);
@@ -68,7 +61,7 @@ function CustomerBooking() {
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
-    setPage(0);
+    setPage(0); // Reset to the first page when rows per page changes
   };
 
   const handleRowClick = (id) => {
@@ -78,23 +71,29 @@ function CustomerBooking() {
   const columns = [
     {
       id: "customerName",
-      label: "Customer name",
-      minWidth: 100,
+      label: "Customer Name",
+      minWidth: 170,
       align: "center",
     },
     { id: "guestCount", label: "Guest(s)", minWidth: 100, align: "center" },
-    { id: "roomType", label: "Room Type", minWidth: 100, align: "center" },
-
-    {
-      id: "totalPrice",
-      label: "Total Price ",
-      minWidth: 100,
-      align: "center",
-    },
-    { id: "bedType", label: "Bed Type", minWidth: 100, align: "center" },
-    { id: "checkInDate", label: "Check-in", minWidth: 100, align: "center" },
-    { id: "checkOutDate", label: "Check-out", minWidth: 100, align: "center" },
+    { id: "roomType", label: "Room Type", minWidth: 170, align: "center" },
+    { id: "totalPrice", label: "Total Price", minWidth: 170, align: "center" },
+    { id: "bedType", label: "Bed Type", minWidth: 170, align: "center" },
+    { id: "checkInDate", label: "Check-in", minWidth: 170, align: "center" },
+    { id: "checkOutDate", label: "Check-out", minWidth: 170, align: "center" },
   ];
+
+  useEffect(() => {
+    fetchData();
+  }, [search]);
+
+  useEffect(() => {
+    console.log("Fetched Data:", rows);
+  }, [rows]);
+
+  useEffect(() => {
+    console.log("Total Rows:", totalRows);
+  }, [totalRows]);
 
   const calculateStayDuration = (checkInDate, checkOutDate) => {
     const checkIn = new Date(checkInDate);
@@ -212,11 +211,11 @@ function CustomerBooking() {
               </Table>
             </TableContainer>
             <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
+              rowsPerPageOptions={[10, 25, 50, 100, 1000]}
               component="div"
-              count={rows.length}
+              count={totalRows}
               rowsPerPage={rowsPerPage}
-              page={page}
+              page={page} // Make sure this is correctly representing the current page
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
