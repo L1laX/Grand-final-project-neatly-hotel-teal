@@ -143,10 +143,6 @@ export default function BookingCard({
                           ))}
                         </>
                       )}
-
-                      <p className="pl-4 text-right font-semibold text-[#2A2E3F]">
-                        {/* {addReqPrice} */}
-                      </p>
                     </div>
                     {/* Promotion Code */}
                     <div className="mt-4">
@@ -195,7 +191,7 @@ export default function BookingCard({
                 )
               }
             >
-              Cancle Booking
+              Cancel Booking
             </button>
           ) : (
             <button
@@ -207,7 +203,7 @@ export default function BookingCard({
                 )
               }
             >
-              Cancle Booking
+              Cancel Booking
             </button>
           )}
           {/* delete */}
