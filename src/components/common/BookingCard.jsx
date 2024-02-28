@@ -61,15 +61,15 @@ export default function BookingCard({
       <div className="flex flex-col items-center md:flex-row md:items-start">
         {/* Image */}
 
-        <div className="relative flex h-[16rem] w-11/12 md:h-[18rem] md:w-3/5 xl:w-2/5">
+        <div className="relative rounded-md">
           <img
-            className="h-[16rem] w-11/12 rounded"
+            className="h-[320px] w-[453px] rounded-md object-cover"
             src={roomImage}
             alt="room"
           />
         </div>
         {/* Booking Card Detail Checkin-Checkout */}
-        <div className="flex w-full flex-col">
+        <div className="flex flex-col md:ml-12 md:w-2/3">
           <div className="mt-4 flex w-full flex-col justify-between md:mt-0 md:flex-row">
             <h3 className=" text-2xl lg:text-3xl xl:text-4xl">{roomName}</h3>
             <div>
@@ -273,7 +273,7 @@ export default function BookingCard({
                           <p className="font-sans text-base font-normal text-[#646D89]">
                             {customerRoom.room.guests} Guests |
                             {customerRoom.room.bedType} |
-                            {customerRoom.room.size} sqm.
+                            {customerRoom.room.size} sqm
                           </p>
                           <p className="font-sans text-base font-normal text-[#646D89]">
                             {customerRoom.room.description}

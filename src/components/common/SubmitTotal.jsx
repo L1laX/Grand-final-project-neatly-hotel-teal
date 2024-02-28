@@ -90,7 +90,7 @@ const SubmitTotal = ({ values }) => {
       </div>
       {/* Button */}
       <section className="mx-10 my-10 xl:mx-[351px]">
-        <div className=" flex flex-row justify-center gap-10 px-60">
+        <div className=" flex flex-row justify-center gap-10 ">
           <button
             className="visitlink"
             onClick={() => {

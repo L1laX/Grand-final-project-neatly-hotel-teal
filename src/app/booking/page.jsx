@@ -5,6 +5,9 @@ import FormSpecialReq from "@/components/common/FormSpecialReq";
 import FormPayment from "@/components/common/FormPayment";
 import axios from "axios";
 import { format, addDays, eachDayOfInterval } from "date-fns";
+import BookingIcon from "@/asset/icons/booking.svg";
+import Image from "next/image";
+import { HiOutlineBriefcase } from "react-icons/hi";
 
 import SubmitTotal from "@/components/common/SubmitTotal";
 export default function StepperController({ searchParams }) {
@@ -253,7 +256,7 @@ export default function StepperController({ searchParams }) {
           {/* Conditional rendering Form Stepper */}
           <div className="flex flex-col justify-between md:flex-row">
             {/* Form Information*/}
-            <div className=" border-2 border-red-500 md:w-full">
+            <div className="md:w-full">
               {currentStep === 1 && (
                 <FormInformation
                   nextStep={nextStep}
@@ -288,49 +291,62 @@ export default function StepperController({ searchParams }) {
             </div>
             {/* Booking Result mapping from /api/room_detail/room_id*/}
             <div className=" flex flex-col md:w-1/2">
-              <div className=" rounded bg-[#5d7b6a]">
-                <h5 className=" rounded rounded-b-none bg-[#2f3e35] p-4 text-white">
+              <div className=" rounded bg-[#465c50]">
+                <h5 className=" flex items-center gap-2 rounded rounded-b-none bg-[#2f3e35] p-4 text-white">
+                  <HiOutlineBriefcase />
                   Booking Detail
                 </h5>
-                <div className=" p-6 text-white">
-                  <p>
-                    Check-in: {format(values.checkInDate, "eee, dd MMM yyyy")}
-                  </p>
-                  <p>
-                    Check-Out: {format(values.checkOutDate, "eee, dd MMM yyyy")}
-                  </p>
-                  <p>แขกที่จะเข้าพัก: {values.guestCount}</p>
-                  <p>ชื่อห้อง: {values.roomName}</p>
-                  <p>ราคาตต่อคืน: {values.roomPrice}</p>
+                <div className="detail-box p-6 text-white">
+                  <div className="mb-10 grid grid-flow-col grid-rows-2 gap-4">
+                    <p>Check-in</p>
+                    <p className="body1 text-white">After 2:00 PM</p>
+                    <p>Check-Out</p>
+                    <p className="body1 text-white">Before 12:00 PM</p>
+                  </div>
+                  <div className="checkin-checkout-date mb-10">
+                    <p>
+                      {format(values.checkInDate, "eee, dd MMM yyyy")} -{" "}
+                      {format(values.checkOutDate, "eee, dd MMM yyyy")}
+                    </p>
+
+                    <p className="body1 text-white">
+                      {values.guestCount} Guests | {values.roomReserve} Room |{" "}
+                      {values.nightReserve} Nights
+                    </p>
+                  </div>
+
+                  <div className="room-price mb-10">
+                    <ol className="flex flex-row justify-between">
+                      <li>{values.roomName}</li>
+                      <li>{values.roomPrice}</li>
+                    </ol>
+                    {/* Add-on Request */}
+                    {request
+                      ? Object.keys(request).map((key) => (
+                          <ol className="flex flex-row justify-between">
+                            <li className="body1 text-[#D5DFDA]">{[key]}</li>
+                            <li>{request[key]}</li>
+                          </ol>
+                        ))
+                      : null}
+                  </div>
+
                   {/* {
                 arrRequest?.length?arrRequest.map((item,index)=>(
                   <p>{Object.keys(item)[0]} : {item[Object.keys(item)[0]]}</p>
                   //<p>{Object.keys(item)[0]} : {(Object.values(item))}</p>
                 )):null
               } */}
+                  <hr className=" text-[#D5DFDA]" />
 
-                  {request
-                    ? Object.keys(request).map((key) => (
-                        <p>
-                          {[key]}: {request[key]}
-                        </p>
-                      ))
-                    : null}
-
-                  <p>
-                    จอง {values.roomReserve} ห้อง, {values.nightReserve} คืน
-                    รวมราคา: {values.totalPrice}
-                  </p>
-                  <p>total:{values.totalPrice}</p>
-                  <button
-                    className="mt-4 w-full rounded-md bg-[#e76b39] p-2 text-white hover:bg-[#f1f2f6] hover:text-[#e76b39]"
-                    onClick={reservedRoom}
-                  >
-                    Booking
-                  </button>
+                  <div className="total-price mt-6 flex flex-row justify-between">
+                    <p className="body1 text-[#D5DFDA]">Total</p>
+                    <h5 className="text-white">THB {values.totalPrice}</h5>
+                  </div>
                 </div>
               </div>
-              {/* ไม่มีการเปลี่ยนแปลงข้อมูล */}
+
+              {/* Notice detail don't change */}
               <div className="description-before-purchase mt-4 rounded bg-slate-300">
                 <ol className="m-7 list-disc text-[#5d7b6a]">
                   <li>
