@@ -16,8 +16,6 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
-
 const columnstable = [
   {
     id: "roomMainImage",
@@ -79,8 +77,9 @@ const RoomType = () => {
   const [newPage, setNewPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [rows, setRows] = React.useState([]);
+  const [newRowsPerPage, setNewRowsPerPage] = React.useState(10);
   const [totalPage, setTotalPage] = React.useState(0);
-  const fetchData = async (newPage) => {
+  const fetchData = async (isNew) => {
     try {
       toast.info("Fetching Room Data...", {
         position: "top-center",
@@ -90,7 +89,7 @@ const RoomType = () => {
         `/api/admin/room_prop?keywords=${search}&limit=${rowsPerPage}&offset=${newPage}`,
       );
       const data = res.data;
-      setRows([...rows, ...data.data]);
+      isNew ? setRows([...data.data]) : setRows([...rows, ...data.data]);
       setTotalPage(data.totalPage);
       setColumns([...columnstable]);
       toast.dismiss();
@@ -102,24 +101,25 @@ const RoomType = () => {
       });
     }
   };
+
   useEffect(() => {
-    if (newPage === page) {
+    if (newRowsPerPage !== rowsPerPage) {
+      setNewRowsPerPage(rowsPerPage);
+      setHighestPage(0);
+      fetchData("new");
+    } else if (newPage > page && newPage <= highestPage) {
       setPage(newPage);
-      fetchData(newPage);
-    }
-    if (newPage > page && newPage <= highestPage) {
-      setPage(newPage);
-    }
-    if (newPage > page && newPage > highestPage) {
+    } else if (newPage > page && newPage > highestPage) {
       setHighestPage(newPage);
       setPage(newPage);
-      fetchData(newPage);
-    }
-    if (newPage < page) {
+      fetchData();
+    } else if (newPage < page) {
       setPage(newPage);
+    } else if (newPage === page) {
+      setPage(newPage);
+      fetchData();
     }
-  }, [search, newPage]);
-
+  }, [search, newPage, rowsPerPage]);
   const handleChangePage = (_event, newPage) => {
     setNewPage(newPage);
   };

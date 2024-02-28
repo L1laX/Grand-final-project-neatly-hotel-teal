@@ -6,6 +6,7 @@ export async function GET(request) {
   const keywords = searchParams.get("keywords");
   const limit = searchParams.get("limit");
   const offset = searchParams.get("offset");
+  console.log(offset);
   const query = keywords
     ? {
         where: {
