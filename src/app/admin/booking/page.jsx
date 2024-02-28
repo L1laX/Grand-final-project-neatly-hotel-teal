@@ -34,13 +34,13 @@ function CustomerBooking() {
   };
 
   const fetchData = async () => {
-    toast.info("Fetching data...", { position: "top-center", autoClose: 5000 });
+    toast.info("Fetching data...", { position: "top-center" });
 
     try {
       const { data } = await axios.get("/api/admin/customer_booking", {
         params: { keywords: search, page, pageSize: rowsPerPage },
       });
-
+      console.log(data.data);
       setRows(data.data);
       setTotalRows(data.totalRows);
       toast.dismiss();

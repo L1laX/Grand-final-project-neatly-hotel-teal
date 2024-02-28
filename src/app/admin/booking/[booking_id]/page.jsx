@@ -36,8 +36,6 @@ function BookingDetail({ params: { booking_id } }) {
         toast.error("Failed to fetch Booking Details. Please try again.", {
           position: "top-center",
         });
-      } finally {
-        toast.dismiss();
       }
     };
 
@@ -255,16 +253,10 @@ function BookingDetail({ params: { booking_id } }) {
                     Total
                   </div>
                   <span className="flex-auto text-right text-xl font-semibold stacked-fractions tracking-tight">
-                    {customerBooking_room
-                      .reduce(
-                        (acc, cur) =>
-                          acc + cur.room.pricePerNight * stayDuration,
-                        0,
-                      )
-                      .toLocaleString("en-US", {
-                        style: "currency",
-                        currency: "THB",
-                      })}
+                    {totalPrice.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "THB",
+                    })}
                   </span>
                 </div>
               </form>
