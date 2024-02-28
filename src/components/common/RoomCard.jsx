@@ -42,6 +42,21 @@ export const RoomCard = ({
 }) => {
   const { data: session } = useSession();
   const router = useRouter();
+  const getRoomname = (name) => {
+    switch (name) {
+      case "singleBed":
+        return "Single Bed";
+      case "doubleBed":
+        return "Double Bed";
+      case "doubleBed(kingSize)":
+        return "Double Bed (King Size)";
+      case "twinBed":
+        return "Twin Bed";
+      default:
+        return name;
+    }
+  };
+
   console.log(roomPromotionPrice, "roomPromotionPrice");
   const handleBooking = () => {
     const price = roomPromotionPrice ? roomPromotionPrice : roomPrice;
@@ -83,7 +98,7 @@ export const RoomCard = ({
               <AlertDialogHeader>
                 <AlertDialogTitle>
                   <div className="flex flex-row justify-between p-4 md:mx-4">
-                    <h5>{roomName}</h5>
+                    <h5> {roomName}</h5>
                     <AlertDialogCancel>
                       <Image
                         className="cursor-pointer"
@@ -114,7 +129,8 @@ export const RoomCard = ({
                   {roomName}
                 </h4>
                 <p className="body1 text-[#646D89]">
-                  {roomGuests} Guests | {roomBedType} | {roomSize} sqm
+                  {roomGuests} Guests | {getRoomname(roomBedType)} | {roomSize}{" "}
+                  sqm
                 </p>
                 <p className="body1 mt-8 text-[#646D89]">
                   {roomDesc.slice(0, 150)} Lorem ipsum dolor sit amet
@@ -128,13 +144,24 @@ export const RoomCard = ({
               </div>
 
               <div className="left-content flex flex-col pl-6 pt-4 lg:items-end ">
-                <p className="text-left font-sans text-base font-normal text-[#646D89] line-through">
-                  THB {roomPrice.toLocaleString()}
-                </p>
-                <h5>THB {roomPromotionPrice}</h5>
-                <p className="font-sans text-base font-normal text-[#646D89] lg:text-right">
-                  Per Night <br /> (Including Taxes & Fees)
-                </p>
+                {roomPromotionPrice ? (
+                  <div>
+                    <p className="text-left font-sans text-base font-normal text-[#646D89] line-through">
+                      THB {roomPrice.toLocaleString()}
+                    </p>
+                    <h5>THB {roomPromotionPrice?.toLocaleString()}</h5>
+                    <p className="font-sans text-base font-normal text-[#646D89] lg:text-right">
+                      Per Night <br /> (Including Taxes & Fees)
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <h5>THB {roomPrice?.toLocaleString()}</h5>
+                    <p className="font-sans text-base font-normal text-[#646D89] lg:text-right">
+                      Per Night <br /> (Including Taxes & Fees)
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 

@@ -48,7 +48,6 @@ model room {
   size                 String
   bedType              String
   status               String
-  userBooking_id       String?
   guests               Int
   description          String
   roomMainImage        String
@@ -57,6 +56,7 @@ model room {
   id                   String                 @id @unique @default(uuid())
   created_at           DateTime               @default(now()) @db.Timestamptz(3)
   last_updated_at      DateTime               @updatedAt @db.Timestamptz(3)
+  userBooking_id       String?
   customerBooking_room customerBooking_room[]
   roomAmenity          roomAmenity[]
   roomGallery          roomGallery[]

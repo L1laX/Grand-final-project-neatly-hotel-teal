@@ -4,25 +4,42 @@ import { NextResponse } from "next/server";
 export async function GET(request) {
   const searchParams = request.nextUrl.searchParams;
   const keywords = searchParams.get("keywords");
-  const checked = keywords.replace(" ", " | ");
-  console.log(checked);
+  const limit = searchParams.get("limit");
+  const offset = searchParams.get("offset");
+  const query = keywords
+    ? {
+        where: {
+          name: {
+            startsWith: keywords,
+            mode: "insensitive",
+          },
+        },
+        take: +limit,
+        skip: +offset * +limit,
+      }
+    : {
+        take: +limit,
+        skip: +offset * +limit,
+      };
+  const pageQuery = keywords
+    ? {
+        where: {
+          name: {
+            startsWith: keywords,
+            mode: "insensitive",
+          },
+        },
+      }
+    : {};
 
   try {
-    const result = await prisma.room.findMany(
-      keywords
-        ? {
-            where: {
-              name: {
-                startsWith: keywords,
-                mode: "insensitive",
-              },
-            },
-          }
-        : {},
-    );
+    const result = await prisma.room.findMany(query);
+    const totalPage = Math.ceil(await prisma.room.count(pageQuery));
+
     return NextResponse.json({
       message: "GET Methode success",
       data: result,
+      totalPage: totalPage,
     });
   } catch (e) {
     console.log(e);
