@@ -6,6 +6,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Sub } from "@radix-ui/react-dropdown-menu";
+import SubmitTotal from "@/components/common/SubmitTotal";
 
 const BookingHistory = ({ params }) => {
   const router = useRouter();
@@ -101,8 +103,6 @@ const BookingHistory = ({ params }) => {
             </div>
           </>
         )}
-
-        {/* <BookingCard /> */}
       </div>
     </div>
   );

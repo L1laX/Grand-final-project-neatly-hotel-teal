@@ -1,10 +1,8 @@
 "use client";
 
 import PrimaryBtn from "@/components/common/PrimaryBtn";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import CloseIcon from "@/asset/icons/close-outline.svg";
-import BG from "@/asset/background/login-page/bg.png";
-import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -70,17 +68,22 @@ export const RoomCard = ({
     <div>
       <div className={roomItem}>
         <div className="room-card flex flex-col justify-center gap-12 px-5 py-10 lg:flex-row">
+          {/* Image and Image Popup */}
           <AlertDialog>
             <AlertDialogTrigger>
-              <div className="h-[320px] w-[413px] cursor-pointer rounded-md bg-slate-200">
-                for image{roomImage}
+              <div className="cursor-pointer rounded-md bg-slate-200">
+                <img
+                  src={roomImage}
+                  className="h-[320px] w-[453px] rounded-md object-cover"
+                  alt="roomImage"
+                />
               </div>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent className="h-3/4 w-2/3">
               <AlertDialogHeader>
                 <AlertDialogTitle>
-                  <div className="flex flex-row justify-between gap-5 p-4 md:ml-20">
-                    <h5>Superior Garden View</h5>
+                  <div className="flex flex-row justify-between p-4 md:mx-4">
+                    <h5>{roomName}</h5>
                     <AlertDialogCancel>
                       <Image
                         className="cursor-pointer"
@@ -93,30 +96,40 @@ export const RoomCard = ({
                 </AlertDialogTitle>
               </AlertDialogHeader>
               <AlertDialogDescription>
-                <div className="content mt-5 h-full w-full p-4 md:mx-20">
-                  <Image src={roomImage} width={1080} height={920} />
+                <div className="content mt-5 h-full w-full p-4">
+                  <img src={roomImage} alt="room" />
                 </div>
               </AlertDialogDescription>
             </AlertDialogContent>
           </AlertDialog>
 
+          {/* Room Detail */}
           <section className="room-detail flex flex-col lg:justify-between">
-            <div className="flex-col lg:flex">
-              <div className="lg:w-1/2">
-                <Link href={{ pathname: `/room_detail/${roomItem}` }}>
-                  <h1 className="cursor-pointer">{roomName}</h1>
-                </Link>
-                <p className="font-sans text-base font-normal text-[#646D89]">
-                  {roomGuests} Guests per room | {roomBedType} | {roomSize}
+            <div className=" flex flex-row justify-between md:w-[577px]">
+              <div className="right-content w-1/2 pt-4">
+                <h4
+                  className="cursor-pointer"
+                  onClick={() => router.push(`/room_detail/${roomItem}`)}
+                >
+                  {roomName}
+                </h4>
+                <p className="body1 text-[#646D89]">
+                  {roomGuests} Guests | {roomBedType} | {roomSize} sqm
                 </p>
-                <p className="font-sans text-base font-normal text-[#646D89]">
-                  {roomDesc}
+                <p className="body1 mt-8 text-[#646D89]">
+                  {roomDesc.slice(0, 150)} Lorem ipsum dolor sit amet
+                  consectetur adipisicing elit. Reiciendis earum eum aliquid
+                  blanditiis amet velit, sapiente soluta fuga odio et repellat
+                  molestiae illum.
+                </p>
+                <p className="body2 mt-4 text-[#c8ccd8]">
+                  Available Room : {roomAvailable}
                 </p>
               </div>
-              <h1>availableRoom = {roomAvailable}</h1>
-              <div className="pt-5 lg:flex lg:w-1/2 lg:flex-col lg:items-end lg:pt-0">
+
+              <div className="left-content flex flex-col pl-6 pt-4 lg:items-end ">
                 <p className="text-left font-sans text-base font-normal text-[#646D89] line-through">
-                  THB {roomPrice}
+                  THB {roomPrice.toLocaleString()}
                 </p>
                 <h5>THB {roomPromotionPrice}</h5>
                 <p className="font-sans text-base font-normal text-[#646D89] lg:text-right">
@@ -124,6 +137,8 @@ export const RoomCard = ({
                 </p>
               </div>
             </div>
+
+            {/* Popup Room Detial */}
             <div className="flex cursor-pointer items-center justify-center gap-5 pt-5 lg:items-center lg:justify-end">
               <AlertDialog>
                 <AlertDialogTrigger>
@@ -151,17 +166,17 @@ export const RoomCard = ({
                       <div className="px-5 md:px-0">
                         <Carousel>
                           <CarouselContent>
-                            <CarouselItem className="basis-1/3">
-                              <Image src={BG} />
+                            <CarouselItem className="basis-2/3">
+                              <img src={roomImage} alt="room" />
                             </CarouselItem>
-                            <CarouselItem className="basis-1/3">
-                              <Image src={BG} />
+                            <CarouselItem className="basis-2/3">
+                              <img src={roomImage} alt="room" />
                             </CarouselItem>
-                            <CarouselItem className="basis-1/3">
-                              <Image src={BG} />
+                            <CarouselItem className="basis-2/3">
+                              <img src={roomImage} alt="room" />
                             </CarouselItem>
-                            <CarouselItem className="basis-1/3">
-                              <Image src={BG} />
+                            <CarouselItem className="basis-2/3">
+                              <img src={roomImage} alt="room" />
                             </CarouselItem>
                           </CarouselContent>
                           <CarouselNext />
@@ -177,6 +192,7 @@ export const RoomCard = ({
                             {roomDesc}
                           </p>
                         </div>
+                        {/* Room Amenities */}
                         <div className="py-5">
                           <h5 className="text-black">Room Amenities</h5>
                           <div className="flex flex-col justify-between gap-6 p-4 md:flex-row">
@@ -210,7 +226,7 @@ export const RoomCard = ({
                   </AlertDialogDescription>
                 </AlertDialogContent>
               </AlertDialog>
-
+              {/* Booking Button */}
               <PrimaryBtn btnName="Book Now" handleClick={handleBooking} />
             </div>
           </section>
