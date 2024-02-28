@@ -16,7 +16,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const columns = [
+const columnstable = [
   {
     id: "roomMainImage",
     label: "Image",
@@ -70,36 +70,59 @@ const columns = [
 
 const RoomType = () => {
   const router = useRouter();
+  const [columns, setColumns] = React.useState([...columnstable]);
   const [search, setSearch] = React.useState("");
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [rows, setRows] = useState([]);
+  const [highesPage, setHighesPage] = React.useState(0);
+  const [newPage, setNewPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rows, setRows] = React.useState([]);
 
-  const fetchData = async () => {
+  const [totalPage, setTotalPage] = React.useState(0);
+  const fetchData = async (newPage) => {
     try {
       toast.info("Fetching Room Data...", {
         position: "top-center",
         autoClose: false,
       });
-      const res = await axios.get(`/api/admin/room_prop?keywords=${search}`);
+      const res = await axios.get(
+        `/api/admin/room_prop?keywords=${search}&limit=${rowsPerPage}&offset=${newPage}`,
+      );
       const data = res.data;
-      setRows(data.data);
+
+      setRows([...rows, ...data.data]);
+      setTotalPage(data.totalPage);
+      setColumns([...columnstable]);
     } catch (e) {
       console.log(e);
       toast.error("Failed to fetch Room Data. Please try again later.", {
         position: "top-center",
+        newPage,
       });
     } finally {
       toast.dismiss();
     }
   };
-
   useEffect(() => {
-    fetchData();
-  }, [search]);
+    if (newPage === page) {
+      setPage(newPage);
+      fetchData(newPage);
+    }
+    if (newPage > page && newPage <= highesPage) {
+      setPage(newPage);
+    }
+    if (newPage > page && newPage > highesPage) {
+      setHighesPage(newPage);
+      setPage(newPage);
+      fetchData(newPage);
+    }
+    if (newPage < page) {
+      setPage(newPage);
+    }
+  }, [search, newPage]);
 
   const handleChangePage = (_event, newPage) => {
-    setPage(newPage);
+    setNewPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -171,8 +194,7 @@ const RoomType = () => {
                                     <img
                                       src={value}
                                       alt="room"
-                                      width={75}
-                                      height={75}
+                                      className="h-20 w-20 rounded-md object-cover"
                                     />
                                   </div>
                                 ) : column.id === "size" ? (
@@ -202,9 +224,9 @@ const RoomType = () => {
               </Table>
             </TableContainer>
             <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
+              rowsPerPageOptions={[10, 25, 50, 100]}
               component="div"
-              count={rows.length}
+              count={totalPage}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
