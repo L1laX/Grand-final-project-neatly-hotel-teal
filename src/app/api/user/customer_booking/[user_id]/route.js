@@ -9,41 +9,37 @@ export async function GET(request, { params: { user_id } }) {
   //   include:{userProfile:true}
   // });
   //const {name} = await request.json()
-    const searchParams = new URLSearchParams(new URL(request.url).search);
-    const roomName = searchParams.get("roomName");
-    const allRoomId = searchParams.get("allRoomId").split(',');
+  const searchParams = new URLSearchParams(new URL(request.url).search);
+  const roomName = searchParams.get("roomName");
+  const allRoomId = searchParams.get("allRoomId").split(",");
 
-    // await prisma.room.updateMany({
-    //   where: {
-    //     status: "Vacant",
-    //     id: {
-    //       in: allRoomId
-    //     }
-    //   },
-    //   data: { status: "Booking" },
-    // });
-    console.log(user_id)
-    const customerBooking = await prisma.user.findUnique({
-      where: {
-        id: user_id,
+  await prisma.room.updateMany({
+    where: {
+      id: {
+        in: allRoomId,
       },
-      include:{
-        userProfile:true
-      }
     },
-  );
+    data: { userBooking_id: user_id },
+  });
+  console.log(user_id);
+  const customerBooking = await prisma.user.findUnique({
+    where: {
+      id: user_id,
+    },
+    include: {
+      userProfile: true,
+    },
+  });
 
- 
+  const promotionCode = await prisma.promotion.findMany({
+    where: {
+      name: roomName,
+    },
+  });
 
-    const promotionCode = await prisma.promotion.findMany({
-      where: {
-        name: roomName
-      }
-    })
-  
-    console.log(customerBooking);
-    return NextResponse.json({
-
+  console.log(customerBooking);
+  return NextResponse.json(
+    {
       message: "Fetching user_id data complete!",
       data: customerBooking,
       promotionCode: promotionCode,
@@ -108,4 +104,3 @@ export async function GET(request, { params: { user_id } }) {
 //     );
 //   }
 // }
-

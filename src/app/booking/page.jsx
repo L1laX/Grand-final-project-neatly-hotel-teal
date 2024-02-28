@@ -30,8 +30,8 @@ export default function StepperController({ searchParams }) {
         start: new Date(searchParams.from),
         end: new Date(searchParams.to),
       }).length - 1,
-    checkInDate: new Date(new Date(searchParams.from).setUTCHours(0, 0, 0, 0)),
-    checkOutDate: new Date(new Date(searchParams.to).setUTCHours(0, 0, 0, 0)),
+    checkInDate: new Date(new Date(searchParams.from).setHours(0, 0, 0, 0)),
+    checkOutDate: new Date(new Date(searchParams.to).setHours(0, 0, 0, 0)),
     //roomReserve:searchParams.room,
     guestCount: searchParams.guest,
     allRoomId: searchParams.allRoomId,
@@ -58,7 +58,7 @@ export default function StepperController({ searchParams }) {
     });
     setOurPromotionCode([...result.data.promotionCode]);
   };
-
+  console.log(values, "values");
   const [request, setRequest] = useState({});
   const [promotionCode, setPromotionCode] = useState("");
   const getRequest = (e) => {

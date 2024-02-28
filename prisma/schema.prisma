@@ -48,8 +48,7 @@ model room {
   size                 String
   bedType              String
   status               String
-  checkInDate          DateTime?              @db.Timestamptz(3)
-  checkOutDate         DateTime?              @db.Timestamptz(3)
+  userBooking_id       String?
   guests               Int
   description          String
   roomMainImage        String

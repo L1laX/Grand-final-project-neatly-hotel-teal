@@ -11,6 +11,7 @@ const Modal = ({
   modalContent,
   cancelButton,
   confirmButton,
+  isCancelHidden,
 }) => {
   if (!showModal) return null;
 
@@ -19,7 +20,10 @@ const Modal = ({
       <div className="rounded-md bg-white p-6 md:w-[631px]">
         <div className="head-text flex flex-row justify-between py-4">
           <h4 className=" ">{modalTitle}</h4>
-          <button onClick={handleCancel}>
+          <button
+            className={`${isCancelHidden ? "hidden" : null}`}
+            onClick={handleCancel}
+          >
             <IoClose />
           </button>
         </div>
@@ -29,10 +33,12 @@ const Modal = ({
           <p className="body1 text-[#646d89]">{modalContent}</p>
         </div>
         <div className="my-6 flex justify-end gap-5">
-          <SecondaryBtn
-            btnName={`${cancelButton}`}
-            handleClick={handleCancel}
-          ></SecondaryBtn>
+          <div className={`${isCancelHidden ? "hidden" : null}`}>
+            <SecondaryBtn
+              btnName={`${cancelButton}`}
+              handleClick={handleCancel}
+            ></SecondaryBtn>
+          </div>
           <PrimaryBtn
             btnName={`${confirmButton}`}
             handleClick={handleConfirm}
