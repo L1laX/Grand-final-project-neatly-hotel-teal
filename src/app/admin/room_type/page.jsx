@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { set } from "date-fns";
 
 const columnstable = [
   {
@@ -72,14 +73,15 @@ const RoomType = () => {
   const router = useRouter();
   const [columns, setColumns] = React.useState([...columnstable]);
   const [search, setSearch] = React.useState("");
+  const [oldSearch, setOldSearch] = React.useState("");
   const [page, setPage] = React.useState(0);
-  const [highesPage, setHighesPage] = React.useState(0);
+  const [highestPage, setHighestPage] = React.useState(0);
   const [newPage, setNewPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [rows, setRows] = React.useState([]);
-
+  const [newRowsPerPage, setNewRowsPerPage] = React.useState(10);
   const [totalPage, setTotalPage] = React.useState(0);
-  const fetchData = async (newPage) => {
+  const fetchData = async (isNew) => {
     try {
       toast.info("Fetching Room Data...", {
         position: "top-center",
@@ -89,38 +91,49 @@ const RoomType = () => {
         `/api/admin/room_prop?keywords=${search}&limit=${rowsPerPage}&offset=${newPage}`,
       );
       const data = res.data;
-
-      setRows([...rows, ...data.data]);
+      isNew ? setRows([...data.data]) : setRows([...rows, ...data.data]);
       setTotalPage(data.totalPage);
       setColumns([...columnstable]);
+      toast.dismiss();
     } catch (e) {
       console.log(e);
       toast.error("Failed to fetch Room Data. Please try again later.", {
         position: "top-center",
         newPage,
       });
-    } finally {
-      toast.dismiss();
     }
   };
-  useEffect(() => {
-    if (newPage === page) {
-      setPage(newPage);
-      fetchData(newPage);
-    }
-    if (newPage > page && newPage <= highesPage) {
-      setPage(newPage);
-    }
-    if (newPage > page && newPage > highesPage) {
-      setHighesPage(newPage);
-      setPage(newPage);
-      fetchData(newPage);
-    }
-    if (newPage < page) {
-      setPage(newPage);
-    }
-  }, [search, newPage]);
 
+  useEffect(() => {
+    if (newRowsPerPage !== rowsPerPage) {
+      setNewRowsPerPage(rowsPerPage);
+      setHighestPage(0);
+      fetchData("new");
+    } else if (newPage > page && newPage <= highestPage) {
+      setPage(newPage);
+    } else if (newPage > page && newPage > highestPage) {
+      setHighestPage(newPage);
+      setPage(newPage);
+      fetchData();
+    } else if (newPage < page) {
+      setPage(newPage);
+    } else if (search === "" && oldSearch !== "") {
+      setOldSearch("");
+      setHighestPage(0);
+      setPage(0);
+      setNewPage(0);
+      fetchData("new");
+    } else if (newPage === page && !search) {
+      setPage(newPage);
+      fetchData();
+    } else if (search) {
+      setOldSearch(search);
+      setHighestPage(0);
+      setPage(0);
+      setNewPage(0);
+      fetchData("new");
+    }
+  }, [search, newPage, rowsPerPage]);
   const handleChangePage = (_event, newPage) => {
     setNewPage(newPage);
   };

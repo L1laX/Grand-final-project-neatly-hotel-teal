@@ -56,8 +56,6 @@ export const RoomCard = ({
         return name;
     }
   };
-
-  console.log(roomPromotionPrice, "roomPromotionPrice");
   const handleBooking = () => {
     const price = roomPromotionPrice ? roomPromotionPrice : roomPrice;
     const queryString = new URLSearchParams(dateRoomGuest).toString();
@@ -75,8 +73,6 @@ export const RoomCard = ({
       session?.user?.id +
       "&roomPrice=" +
       price;
-
-    console.log(url);
     router.push(url);
   };
   return (

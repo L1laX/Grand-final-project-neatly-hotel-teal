@@ -9,7 +9,8 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import Modal from "@/components/common/PopupModal";
-import { set } from "date-fns";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const page = ({ params: { room_id } }) => {
   const router = useRouter();
@@ -128,7 +129,10 @@ const page = ({ params: { room_id } }) => {
     };
     setErrors({ ...newErrors });
     if (Object.values(newErrors).includes(true)) return alert("Form Error");
-    alert("Form Submitted");
+    toast.info("Updating Room ...", {
+      position: "top-center",
+      autoClose: 1000,
+    });
     const roomMainImage = await checkpicture(values.roomMainImage);
     const sendData = {
       ...values,
@@ -143,8 +147,12 @@ const page = ({ params: { room_id } }) => {
     }
     const result = await axios.put(`/api/admin/room_prop/${room_id}`, sendData);
     if (result.status === 200) {
-      alert("Data Updated");
-      router.push("/admin/room_type");
+      toast.success("Room Updated Successfully!", {
+        position: "top-center",
+      });
+      setTimeout(() => {
+        router.push("/admin/room_type");
+      }, 1000);
     }
   };
 
@@ -171,14 +179,23 @@ const page = ({ params: { room_id } }) => {
   };
 
   const getData = async () => {
+    toast.info("Fetching Room Data...", {
+      position: "top-center",
+      autoClose: false,
+    });
     try {
       const result = await axios.get(`/api/admin/room_prop/${room_id}`);
       const data = result.data;
       setValues(data.data);
       setOldMainImage(data.data.roomMainImage);
       setOldGallery(data.data.roomGallery);
+      toast.dismiss();
     } catch (e) {
       console.log(e);
+      toast.error("Failed to fetch Room Data. Please try again later.", {
+        position: "top-center",
+        newPage,
+      });
     }
   };
   useEffect(() => {
@@ -230,6 +247,7 @@ const page = ({ params: { room_id } }) => {
         cancelButton="Cancle"
         confirmButton="Confirm Cancle and Refund"
       />
+      <ToastContainer position="top-center" />
     </div>
   );
 };

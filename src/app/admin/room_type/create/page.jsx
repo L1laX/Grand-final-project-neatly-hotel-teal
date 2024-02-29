@@ -1,5 +1,5 @@
 "use client";
-
+import { ToastContainer, toast } from "react-toastify";
 import React from "react";
 import Sidebar from "@/components/navbar/SidebarAdmin";
 import NavBar from "@/components/navbar/NavbarAdmin";
@@ -95,7 +95,10 @@ const crateRoomType = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    toast.info("Checking Data...", {
+      position: "top-center",
+      autoClose: 1000,
+    });
     const newErrors = {
       mainImage: !values.roomMainImage,
       name: !values.name,
@@ -108,28 +111,28 @@ const crateRoomType = () => {
       roomAmenity: values.roomAmenity.length < 1 || !values.roomAmenity[0],
       promotionPrice: !values.promotionPrice && isPromotion,
     };
-
     setErrors({ ...newErrors });
-
     if (Object.values(newErrors).includes(true)) return alert("Form Error");
-    alert("Form Submitted");
-    console.log(1);
+    toast.info("Creating Room ...", {
+      position: "top-center",
+      autoClose: 1000,
+    });
     const uploadMainImage = await uploadImage(values.roomMainImage);
-    console.log(2);
     const uploadGalleryImage = await uploadImage(values.roomGallery);
-    console.log(3);
     const newValues = {
       ...values,
       roomMainImage: uploadMainImage[0],
       roomGallery: uploadGalleryImage,
     };
-    console.log(4);
-    console.log(5);
+
     const res = await axios.post("/api/admin/room_prop", newValues);
     if (res.status === 200) {
-      alert("Form Submitted");
-      console.log(6);
-      return router.push("/admin/room_type");
+      toast.success("Room Created Successfully!", {
+        position: "top-center",
+      });
+      setTimeout(() => {
+        router.push("/admin/room_type");
+      }, 1000);
     }
   };
 
@@ -157,6 +160,7 @@ const crateRoomType = () => {
           />
         </section>
       </div>
+      <ToastContainer position="top-center" />
     </div>
   );
 };

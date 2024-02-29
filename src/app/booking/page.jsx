@@ -4,17 +4,24 @@ import FormInformation from "@/components/common/FormInformation";
 import FormSpecialReq from "@/components/common/FormSpecialReq";
 import FormPayment from "@/components/common/FormPayment";
 import axios from "axios";
-import { format, addDays, eachDayOfInterval } from "date-fns";
-import BookingIcon from "@/asset/icons/booking.svg";
-import Image from "next/image";
+import { format, addDays, eachDayOfInterval, set } from "date-fns";
+import Timeout from "@/components/common/Timeout";
 import { HiOutlineBriefcase } from "react-icons/hi";
-
+import { ToastContainer, toast } from "react-toastify";
 import SubmitTotal from "@/components/common/SubmitTotal";
+import { useRouter } from "next/navigation";
+
 export default function StepperController({ searchParams }) {
   // console.log(new Date(searchParams.from))
   // const datesInRange = eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) });
+  const router = useRouter();
   const [ourPromotionCode, setOurPromotionCode] = useState([]);
   const [currentStep, setCurrentStep] = useState(1);
+  const sendValueToRoomDetails = {
+    dateString: { to: searchParams.to, from: searchParams.from },
+    roomAndGuestString: { room: searchParams.room, guest: searchParams.guest },
+  };
+  console.log(sendValueToRoomDetails);
   const [values, setValues] = useState({
     dateOfBirth: "",
     email: "",
@@ -48,17 +55,47 @@ export default function StepperController({ searchParams }) {
       searchParams.room,
   });
   const getUserData = async () => {
-    const result = await axios.get(
-      `/api/user/customer_booking/${searchParams.userId}?roomName=${searchParams.roomName}&allRoomId=${searchParams.allRoomId}`,
-    );
-    setValues({
-      ...values,
-      ...result?.data?.data,
-      ...result?.data?.data?.userProfile,
-    });
-    setOurPromotionCode([...result.data.promotionCode]);
+    try {
+      const id = toast.loading("Loading user data...");
+      const res = await axios.get(
+        `/api/user/customer_booking/${searchParams.userId}/checkStatus`,
+      );
+      const checkTimeOut = [...res.data.checkTimeOut];
+      const allRoomId = values?.allRoomId.split(",");
+      const checked = allRoomId.map((item) => checkTimeOut.includes(item));
+      if (checked.includes(true)) {
+        toast.update(id, {
+          render: "This room is not available. Please try again later.",
+          type: "error",
+          isLoading: false,
+        });
+        return setTimeout(() => {
+          router.push(`/room_detail`);
+        }, 1000);
+      }
+      const result = await axios.get(
+        `/api/user/customer_booking/${searchParams.userId}?roomName=${searchParams.roomName}&allRoomId=${searchParams.allRoomId}`,
+      );
+      setValues({
+        ...values,
+        ...result?.data?.data,
+        ...result?.data?.data?.userProfile,
+      });
+      setOurPromotionCode([...result.data.promotionCode]);
+
+      toast.update(id, {
+        render: "User data loaded",
+        type: "success",
+        isLoading: false,
+      });
+      setTimeout(() => {
+        toast.dismiss(id);
+      }, 2000);
+    } catch (e) {
+      console.log(e);
+    }
   };
-  console.log(values, "values");
+
   const [request, setRequest] = useState({});
   const [promotionCode, setPromotionCode] = useState("");
   const getRequest = (e) => {
@@ -151,52 +188,11 @@ export default function StepperController({ searchParams }) {
   //   }
   // };
   // create customer_booking_id : POST /api/user/customer_booking
-  const reservedRoom = async () => {
-    try {
-      // Check if all required fields are provided
-      // if (!values.customerName) throw new Error("Customer name is required");
-      // if (!values.email) throw new Error("Customer email is required");
-      // if (!values.id_number) throw new Error("Customer ID number is required");
-      // if (!values.country) throw new Error("Customer country is required");
-      // if (!values.payment_id) throw new Error("Payment type is required");
-
-      const bookingData = {
-        customerName: values.name,
-        customerEmail: values.email,
-        customer_id_number: values.id_number,
-        customerCountry: values.country,
-        // customerDateOfBirth: values.dateOfBirth
-        //   ? new Date(values.dateOfBirth).toISOString()
-        //   : "1900-01-01T00:00:00.000Z",
-        customerDateOfBirth: new Date(values.dateOfBirth),
-        paymentType: values.payment_id,
-        paymentStatus: values.paymentStatus || "Pending",
-
-        user_id: values.user_id,
-        checkInDate: new Date(values.checkInDate),
-        checkOutDate: new Date(values.checkOutDate),
-        totalPrice: values.totalPrice,
-      };
-
-      // Create customer booking in the database
-      const response = await axios.post("/api/test1", bookingData);
-      console.log("Customer booking created:", response.data);
-
-      // Handle success
-      alert("Booking successful");
-
-      // Redirect or perform any other action as needed
-    } catch (error) {
-      console.error("Error reserving room:", error);
-      // Handle error
-      alert(error.message);
-    }
-  };
 
   useEffect(() => {
     getUserData();
   }, []);
-  console.log(values, "values");
+
   return (
     <>
       {currentStep !== 4 ? (
@@ -251,6 +247,7 @@ export default function StepperController({ searchParams }) {
                 </div>
               )}
             </div>
+            <Timeout />
             <hr className=" my-10" />
           </div>
           {/* Conditional rendering Form Stepper */}
@@ -264,6 +261,7 @@ export default function StepperController({ searchParams }) {
                   values={values}
                   getCountry={getCountry}
                   getdateOfBirth={getdateOfBirth}
+                  searchParams={searchParams}
                 />
               )}
               {currentStep === 2 && (
@@ -367,6 +365,7 @@ export default function StepperController({ searchParams }) {
           <SubmitTotal values={values} />
         </div>
       )}
+      <ToastContainer containerId="id" />
     </>
   );
 }
