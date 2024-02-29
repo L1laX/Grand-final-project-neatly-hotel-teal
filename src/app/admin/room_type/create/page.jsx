@@ -1,5 +1,4 @@
 "use client";
-import { ToastContainer, toast } from "react-toastify";
 import React from "react";
 import Sidebar from "@/components/navbar/SidebarAdmin";
 import NavBar from "@/components/navbar/NavbarAdmin";
@@ -9,6 +8,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { v4 as uuidv4 } from "uuid";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const crateRoomType = () => {
   const router = useRouter();
@@ -95,10 +96,11 @@ const crateRoomType = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.info("Checking Data...", {
+    const toasty = toast.info("Checking Data...", {
       position: "top-center",
       autoClose: 1000,
     });
+
     const newErrors = {
       mainImage: !values.roomMainImage,
       name: !values.name,
@@ -112,9 +114,15 @@ const crateRoomType = () => {
       promotionPrice: !values.promotionPrice && isPromotion,
     };
     setErrors({ ...newErrors });
-    if (Object.values(newErrors).includes(true)) return alert("Form Error");
-    toast.info("Creating Room ...", {
-      position: "top-center",
+    if (Object.values(newErrors).includes(true))
+      return toast.update(toasty, {
+        render: "Please fill in all the required fields",
+        type: "error",
+        autoClose: 3000,
+      });
+    toast.update(toasty, {
+      render: "Creating Room ...",
+      type: "info",
       autoClose: 1000,
     });
     const uploadMainImage = await uploadImage(values.roomMainImage);
@@ -127,8 +135,10 @@ const crateRoomType = () => {
 
     const res = await axios.post("/api/admin/room_prop", newValues);
     if (res.status === 200) {
-      toast.success("Room Created Successfully!", {
-        position: "top-center",
+      toast.update(toasty, {
+        render: "Room Created",
+        type: "success",
+        autoClose: 1000,
       });
       setTimeout(() => {
         router.push("/admin/room_type");

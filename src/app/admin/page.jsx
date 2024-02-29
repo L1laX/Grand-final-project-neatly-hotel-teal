@@ -14,10 +14,23 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { set } from "date-fns";
-
+const columnstable = [
+  {
+    id: "customerName",
+    label: "Customer Name",
+    minWidth: 170,
+    align: "center",
+  },
+  { id: "guestCount", label: "Guest(s)", minWidth: 100, align: "center" },
+  { id: "roomType", label: "Room Type", minWidth: 170, align: "center" },
+  { id: "totalPrice", label: "Total Price", minWidth: 170, align: "center" },
+  { id: "bedType", label: "Bed Type", minWidth: 170, align: "center" },
+  { id: "checkInDate", label: "Check-in", minWidth: 170, align: "center" },
+  { id: "checkOutDate", label: "Check-out", minWidth: 170, align: "center" },
+];
 function CustomerBooking() {
   const router = useRouter();
+  const [columns, setColumns] = React.useState([...columnstable]);
   const [search, setSearch] = useState("");
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
@@ -45,12 +58,12 @@ function CustomerBooking() {
         autoClose: false,
       });
       const res = await axios.get(
-        `/api/admin/customer_booking?keywords=${search}`,
+        `/api/admin/customer_booking?keywords=${search}&page=${newPage}&pageSize=${newRowsPerPage}`,
       );
       const data = res.data;
       isNew ? setRows([...data.data]) : setRows([...rows, ...data.data]);
       setTotalRows(data.totalRows);
-
+      setColumns([...columnstable]);
       toast.dismiss();
     } catch (e) {
       console.log(e);
@@ -60,7 +73,7 @@ function CustomerBooking() {
       });
     }
   };
-
+  console.log(rows);
   useEffect(() => {
     if (newRowsPerPage !== rowsPerPage) {
       setNewRowsPerPage(rowsPerPage);
@@ -104,21 +117,6 @@ function CustomerBooking() {
   const handleRowClick = (id) => {
     router.push(`/admin/booking/${id}`);
   };
-
-  const columns = [
-    {
-      id: "customerName",
-      label: "Customer Name",
-      minWidth: 170,
-      align: "center",
-    },
-    { id: "guestCount", label: "Guest(s)", minWidth: 100, align: "center" },
-    { id: "roomType", label: "Room Type", minWidth: 170, align: "center" },
-    { id: "totalPrice", label: "Total Price", minWidth: 170, align: "center" },
-    { id: "bedType", label: "Bed Type", minWidth: 170, align: "center" },
-    { id: "checkInDate", label: "Check-in", minWidth: 170, align: "center" },
-    { id: "checkOutDate", label: "Check-out", minWidth: 170, align: "center" },
-  ];
 
   return (
     <div className="flex flex-row bg-gray-100">

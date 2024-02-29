@@ -201,7 +201,9 @@ const RoomType = () => {
                                 typeof value === "number" &&
                                 (column.id === "pricePerNight" ||
                                   column.id === "promotionPrice") ? (
-                                  value.toLocaleString() + ".00"
+                                  value.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                  })
                                 ) : column.id === "roomMainImage" ? (
                                   <div className="image flex w-full justify-center">
                                     <img

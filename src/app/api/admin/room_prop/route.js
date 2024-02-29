@@ -6,7 +6,6 @@ export async function GET(request) {
   const keywords = searchParams.get("keywords");
   const limit = searchParams.get("limit");
   const offset = searchParams.get("offset");
-  console.log(offset);
   const query = keywords
     ? {
         where: {
@@ -35,7 +34,7 @@ export async function GET(request) {
 
   try {
     const result = await prisma.room.findMany(query);
-    const totalPage = Math.ceil(await prisma.room.count(pageQuery));
+    const totalPage = await prisma.room.count(pageQuery);
 
     return NextResponse.json({
       message: "GET Methode success",

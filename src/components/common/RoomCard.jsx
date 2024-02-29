@@ -93,8 +93,8 @@ export const RoomCard = ({
             <AlertDialogContent className="h-3/4 w-2/3">
               <AlertDialogHeader>
                 <AlertDialogTitle>
-                  <div className="flex flex-row justify-between p-4 md:mx-4">
-                    <h5> {roomName}</h5>
+                  <div className="flex h-14 flex-row justify-between p-4 md:mx-4">
+                    <h5>{roomName}</h5>
                     <AlertDialogCancel>
                       <Image
                         className="cursor-pointer"
@@ -135,25 +135,42 @@ export const RoomCard = ({
                   molestiae illum.
                 </p>
                 <p className="body2 mt-4 text-[#c8ccd8]">
-                  Available Room : {roomAvailable}
+                  Available Room :{" "}
+                  <span className="cursor-default text-lg text-orange-500 hover:text-orange-300">
+                    {" "}
+                    {roomAvailable}
+                  </span>
                 </p>
               </div>
 
               <div className="left-content flex flex-col pl-6 pt-4 lg:items-end ">
                 {roomPromotionPrice ? (
-                  <div>
+                  <div className=" flex flex-col items-end">
                     <p className="text-left font-sans text-base font-normal text-[#646D89] line-through">
-                      THB {roomPrice.toLocaleString()}
+                      THB{" "}
+                      {roomPrice?.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      })}
                     </p>
-                    <h5>THB {roomPromotionPrice?.toLocaleString()}</h5>
-                    <p className="font-sans text-base font-normal text-[#646D89] lg:text-right">
+                    <h5>
+                      THB{" "}
+                      {roomPromotionPrice?.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      })}
+                    </h5>
+                    <p className="mt-6 font-sans text-base font-normal text-[#646D89] lg:text-right ">
                       Per Night <br /> (Including Taxes & Fees)
                     </p>
                   </div>
                 ) : (
-                  <div>
-                    <h5>THB {roomPrice?.toLocaleString()}</h5>
-                    <p className="font-sans text-base font-normal text-[#646D89] lg:text-right">
+                  <div className=" mb-5 flex flex-col items-end">
+                    <h5>
+                      THB{" "}
+                      {roomPrice?.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      })}
+                    </h5>
+                    <p className="mt-6 font-sans text-base font-normal text-[#646D89] lg:text-right">
                       Per Night <br /> (Including Taxes & Fees)
                     </p>
                   </div>

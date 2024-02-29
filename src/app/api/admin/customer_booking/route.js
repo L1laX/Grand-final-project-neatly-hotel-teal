@@ -3,10 +3,9 @@ import { prisma } from "@/lib/prisma.js";
 export async function GET(request) {
   const searchParams = new URL(request.url).searchParams;
   const keywords = searchParams.get("keywords");
-  const page = parseInt(searchParams.get("page"), 10) || 0;
-  const pageSize = parseInt(searchParams.get("pageSize"), 10) || 10;
+  const page = parseInt(searchParams.get("page")) || 0;
+  const pageSize = parseInt(searchParams.get("pageSize")) || 10;
   const skip = page * pageSize;
-
   try {
     // Defining the whereClause based on keywords
     const whereClause = {};
