@@ -137,7 +137,7 @@ function BookingDetail({ params: { booking_id } }) {
             buttonName={"Update"}
             notSearch={true}
             backarrow={true}
-            linkTo={`/admin/booking`}
+            linkTo={`/admin/`}
           />
           <div
             aria-label="Booking Details"

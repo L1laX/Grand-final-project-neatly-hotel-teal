@@ -5,6 +5,7 @@ import Modal from "@/components/common/PopupModal";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import axios from "axios";
+import DateOnlySelector from "@/components/ui/testDatePicker";
 
 const ChangeDate = ({ params }) => {
   const router = useRouter();
@@ -81,7 +82,12 @@ const ChangeDate = ({ params }) => {
             {/* Changing Date */}
             <section className="changedate-container mt-6 rounded-md bg-white p-4">
               <p className=" font-semibold text-[#424C6B]">Change Date</p>
-              <div className="datepicker mt-4">fff</div>
+              <div className="datepicker mt-4">
+                <DateOnlySelector
+                  // handleDateChange={(date) => console.log(date)}
+                  checkInDate={changeDate.checkInDate}
+                />
+              </div>
             </section>
           </div>
         </div>

@@ -26,6 +26,7 @@ function CustomerBooking() {
   const [newRowsPerPage, setNewRowsPerPage] = useState(10);
   const [highestPage, setHighestPage] = React.useState(0);
   const [newPage, setNewPage] = React.useState(0);
+  const [oldSearch, setOldSearch] = React.useState("");
 
   const formatDate = (dateString) => {
     const options = {
@@ -37,24 +38,29 @@ function CustomerBooking() {
     return new Date(dateString).toLocaleDateString("en-GB", options);
   };
 
-  const fetchData = async (isNew, newPage) => {
-    toast.info("Fetching data...", { position: "top-center", autoClose: 5000 });
-
+  const fetchData = async (isNew) => {
     try {
-      const { data } = await axios.get("/api/admin/customer_booking", {
-        params: { keywords: search, page: newPage, pageSize: rowsPerPage },
+      toast.info("Fetching Room Data...", {
+        position: "top-center",
+        autoClose: false,
       });
-
+      const res = await axios.get(
+        `/api/admin/customer_booking?keywords=${search}`,
+      );
+      const data = res.data;
       isNew ? setRows([...data.data]) : setRows([...rows, ...data.data]);
-      console.log(data);
       setTotalRows(data.totalRows);
+
       toast.dismiss();
-    } catch (error) {
-      toast.error("Failed to fetch data. Please try again later.", {
-        position: "bottom-center",
+    } catch (e) {
+      console.log(e);
+      toast.error("Failed to fetch Room Data. Please try again later.", {
+        position: "top-center",
+        newPage,
       });
     }
   };
+
   useEffect(() => {
     if (newRowsPerPage !== rowsPerPage) {
       setNewRowsPerPage(rowsPerPage);
@@ -65,12 +71,24 @@ function CustomerBooking() {
     } else if (newPage > page && newPage > highestPage) {
       setHighestPage(newPage);
       setPage(newPage);
-      fetchData("", newPage);
+      fetchData();
     } else if (newPage < page) {
       setPage(newPage);
-    } else if (newPage === page) {
+    } else if (search === "" && oldSearch !== "") {
+      setOldSearch("");
+      setHighestPage(0);
+      setPage(0);
+      setNewPage(0);
+      fetchData("new");
+    } else if (newPage === page && !search) {
       setPage(newPage);
       fetchData();
+    } else if (search) {
+      setOldSearch(search);
+      setHighestPage(0);
+      setPage(0);
+      setNewPage(0);
+      fetchData("new");
     }
   }, [search, newPage, rowsPerPage]);
 

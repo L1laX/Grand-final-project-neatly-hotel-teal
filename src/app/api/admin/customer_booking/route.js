@@ -1,61 +1,53 @@
 import { prisma } from "@/lib/prisma.js";
-import { NextResponse } from "next/server";
 
 export async function GET(request) {
   const searchParams = new URL(request.url).searchParams;
   const keywords = searchParams.get("keywords");
   const page = parseInt(searchParams.get("page"), 10) || 0;
-  const pageSize = parseInt(searchParams.get("pageSize"), 10) || 10; // Adjusted default pageSize to 10 for practicality
+  const pageSize = parseInt(searchParams.get("pageSize"), 10) || 10;
   const skip = page * pageSize;
-  console.log("Hello");
-  console.log("Fetching customer bookings:", {
-    keywords,
-    page,
-    pageSize,
-    skip,
-  });
 
   try {
-    const [customerBookings, totalRows] = await prisma.$transaction([
-      prisma.customerBooking.findMany({
-        skip,
-        take: pageSize,
-        include: {
-          user: true, // Simplify if detailed user info is not required
-          customerBooking_room: {
-            include: {
-              room: true, // Simplify if detailed room info is not required
-            },
+    // Defining the whereClause based on keywords
+    const whereClause = {};
+    if (keywords) {
+      whereClause.OR = [
+        { customerName: { contains: keywords, mode: "insensitive" } },
+        // Add other fields you want to search by, for example:
+        // { 'user.email': { contains: keywords, mode: "insensitive" } }
+      ];
+    }
+
+    // Fetching filtered and paginated customer bookings
+    const customerBookings = await prisma.customerBooking.findMany({
+      skip,
+      take: pageSize,
+      include: {
+        user: true,
+        customerBooking_room: {
+          include: {
+            room: true,
           },
-          bookingRequest: true,
         },
-        where: {
-          OR: keywords
-            ? [
-                { customerName: { contains: keywords, mode: "insensitive" } },
-                // Add more search conditions here if necessary
-              ]
-            : undefined,
-        },
-      }),
-      prisma.customerBooking.count({
-        where: {
-          OR: keywords
-            ? [
-                { customerName: { contains: keywords, mode: "insensitive" } },
-                // Add more count conditions here if necessary
-              ]
-            : undefined,
-        },
-      }),
-    ]);
+        bookingRequest: true,
+      },
+      where: whereClause,
+    });
+
+    // Counting the total rows for the given search criteria
+    const totalRows = await prisma.customerBooking.count({
+      where: whereClause,
+    });
+
+    // Calculating the total number of pages
+    const totalPages = Math.ceil(totalRows / pageSize);
 
     return new Response(
       JSON.stringify({
         success: true,
         data: customerBookings,
         totalRows,
-
+        totalPages,
         currentPage: page,
         pageSize,
       }),
