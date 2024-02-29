@@ -7,7 +7,7 @@ export async function GET(request) {
   const page = parseInt(searchParams.get("page"), 10) || 0;
   const pageSize = parseInt(searchParams.get("pageSize"), 10) || 10; // Adjusted default pageSize to 10 for practicality
   const skip = page * pageSize;
-
+  console.log("Hello");
   console.log("Fetching customer bookings:", {
     keywords,
     page,
@@ -50,14 +50,12 @@ export async function GET(request) {
       }),
     ]);
 
-    const totalPages = Math.ceil(totalRows / pageSize);
-
     return new Response(
       JSON.stringify({
         success: true,
         data: customerBookings,
         totalRows,
-        totalPages,
+
         currentPage: page,
         pageSize,
       }),
