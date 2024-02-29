@@ -53,6 +53,8 @@ export default function BookingCard({
 }) {
   const router = useRouter();
 
+  console.log("Checkin:", customerCheckin);
+  console.log("Checkout:", customerCheckout);
   return (
     <div className="mb-10 flex w-full flex-col ">
       <p className=" text-sm text-[#9AA1B9]">
