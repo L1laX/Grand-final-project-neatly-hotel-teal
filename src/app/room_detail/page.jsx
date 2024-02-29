@@ -128,6 +128,7 @@ export default function RoomDetail({ searchParams }) {
             />
           ))
         ) : (
+          // Loading
           <div className="flex flex-col items-center">
             <div role="status">
               <svg
