@@ -42,7 +42,6 @@ const HotelInfo = () => {
           const { data: imageData, error: imageError } = await supabase.storage
             .from("logo")
             .download(firstHotel.image);
-
           if (!imageError) {
             const imageUrl = URL.createObjectURL(new Blob([imageData]));
             setHotelLogoPreview(imageUrl);

@@ -10,6 +10,7 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import Modal from "@/components/common/PopupModal";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const page = ({ params: { room_id } }) => {
   const router = useRouter();

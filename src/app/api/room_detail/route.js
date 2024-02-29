@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export async function GET(req, res) {
   const url = new URL(req.url);
@@ -106,7 +108,8 @@ export async function GET(req, res) {
   const checkBookingStatus = await prisma.room.updateMany({
     where: {
       last_updated_at: {
-        lte: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+        // lte: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+        lte: new Date(Date.now() - 15 * 60 * 1000),
       },
     },
     data: { userBooking_id: null },

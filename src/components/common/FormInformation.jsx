@@ -3,7 +3,10 @@ import { Input } from "@/components/ui/input";
 import DatePicker from "@/components/common/DatePicker";
 import Country from "@/components/common/Country";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
-
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 // Step 1 : FormInformation
 const FormInformation = ({
   nextStep,
@@ -11,7 +14,10 @@ const FormInformation = ({
   values,
   getCountry,
   getdateOfBirth,
+
 }) => {
+ 
+  const router = useRouter();
   const [errors, setErrors] = useState({});
 
   const validateDateofBirth = (date) => {
@@ -30,13 +36,12 @@ const FormInformation = ({
     }));
     return errors.dateOfBirth;
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const email = values?.email.split(".");
     const lastedEmail = email[email.length - 1];
     const validEmailRegex =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    console.log(values);
     const error = {
       fullName: !values?.name,
       dateOfBirth: validateDateofBirth(values?.dateOfBirth),
@@ -59,8 +64,22 @@ const FormInformation = ({
     ) {
       return;
     }
-
-    nextStep();
+    const res = await axios(
+      `/api/user/customer_booking/${values?.user_id}/checkStatus`,
+    );
+    const checkRoomsId = [...res.data.data];
+    const allRoomId = values?.allRoomId.split(",");
+    const result = allRoomId.map((item) => checkRoomsId.includes(item));
+    if (result.includes(true)) {
+      return nextStep();
+    }
+    toast.error("This room is not available. Please try again later.", {
+      position: "top-center",
+      autoClose: 2000,
+    });
+    setTimeout(() => {
+      router.back();
+    }, 2000);
   };
 
   return (
@@ -157,6 +176,7 @@ const FormInformation = ({
         <button className=""></button>
         <PrimaryBtn btnName="Next" handleClick={handleSubmit}></PrimaryBtn>
       </div>
+      <ToastContainer position="top-center" />
     </form>
   );
 };

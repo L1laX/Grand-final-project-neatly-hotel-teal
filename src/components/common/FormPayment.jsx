@@ -217,14 +217,12 @@ export default function FormPayment({
     clientSecret,
     appearance,
   };
-  console.log(values);
   const checkPromotion = (userPromotionCode) => {
     const applyPromotion = ourPromotionCode.find(
       (item) =>
         item.promotionCode.toLowerCase() === userPromotionCode.toLowerCase(),
     );
     if (applyPromotion) {
-      console.log("applyed!");
       const newTotalPrice = values.totalPrice - applyPromotion.discount;
       console.log(newTotalPrice);
       const newValue = {
@@ -232,7 +230,6 @@ export default function FormPayment({
         discount: applyPromotion.discount,
         totalPrice: newTotalPrice,
       };
-      console.log(newValue, "newValue Naja");
       setIsPromotion(true);
       setValues({ ...newValue });
       setDisplayCode(userPromotionCode);

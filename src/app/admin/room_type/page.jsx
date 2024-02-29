@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { set } from "date-fns";
 
 const columnstable = [
   {
@@ -72,6 +73,7 @@ const RoomType = () => {
   const router = useRouter();
   const [columns, setColumns] = React.useState([...columnstable]);
   const [search, setSearch] = React.useState("");
+  const [oldSearch, setOldSearch] = React.useState("");
   const [page, setPage] = React.useState(0);
   const [highestPage, setHighestPage] = React.useState(0);
   const [newPage, setNewPage] = React.useState(0);
@@ -115,9 +117,21 @@ const RoomType = () => {
       fetchData();
     } else if (newPage < page) {
       setPage(newPage);
-    } else if (newPage === page) {
+    } else if (search === "" && oldSearch !== "") {
+      setOldSearch("");
+      setHighestPage(0);
+      setPage(0);
+      setNewPage(0);
+      fetchData("new");
+    } else if (newPage === page && !search) {
       setPage(newPage);
       fetchData();
+    } else if (search) {
+      setOldSearch(search);
+      setHighestPage(0);
+      setPage(0);
+      setNewPage(0);
+      fetchData("new");
     }
   }, [search, newPage, rowsPerPage]);
   const handleChangePage = (_event, newPage) => {

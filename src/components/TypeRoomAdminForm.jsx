@@ -3,7 +3,6 @@ import React, { useRef } from "react";
 import UploadPic from "@/asset/input/photo.svg";
 import UploadPicSmall from "@/asset/input/uploadSmallPhoto.svg";
 import Image from "next/legacy/image";
-import { useState } from "react";
 import DragIcon from "@/asset/input/dragicon.svg";
 import SecondaryBtn from "./common/SecondaryBtn";
 import { orange } from "@mui/material/colors";
