@@ -3,12 +3,21 @@
 import React from "react";
 import Modal from "./PopupModal";
 import { useRouter } from "next/navigation";
+import { set } from "date-fns";
 const Timeout = () => {
-  const oldCountDown = window.localStorage.getItem("countDown");
-  const [countDown, setCountDown] = React.useState(oldCountDown || 60 * 15);
+  let oldCountDown = null;
+  React.useEffect(() => {
+    oldCountDown = window.localStorage.getItem("countDown");
+    if (oldCountDown) {
+      oldCountDown = parseInt(oldCountDown);
+      setCountDown(oldCountDown);
+    }
+  }, []);
+  const [countDown, setCountDown] = React.useState(60 * 15);
   const [runTimer, setRunTimer] = React.useState(true);
   const [showModal, setShowModal] = React.useState(false);
   const router = useRouter();
+
   React.useEffect(() => {
     if (runTimer) {
       let timerId;
