@@ -6,7 +6,7 @@ import DateOnlySelector from "@/components/ui/testDatePicker"; // Ensure this pa
 function Page() {
   return (
     <div>
-      <DateOnlySelector handleDateChange={(date) => console.log(date)} />
+      {/* <DateOnlySelector handleDateChange={(date) => console.log(date)} /> */}
     </div>
   );
 }
