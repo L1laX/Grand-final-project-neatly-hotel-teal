@@ -11,7 +11,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { usePathname, useSearchParams } from "next/navigation";
 
 export default function RoomDetail({ searchParams }) {
- 
   const initialDate = searchParams.dateString
     ? JSON.parse(searchParams.dateString)
     : {
@@ -54,6 +53,7 @@ export default function RoomDetail({ searchParams }) {
   };
 
   useEffect(() => {
+    window.localStorage.removeItem("countDown");
     getRoomList();
   }, []);
 
