@@ -1,6 +1,6 @@
 import React from "react";
 import { format, addDays, eachDayOfInterval } from "date-fns";
-import PrimaryBtn from "./PrimaryBtn";
+import PrimaryBtn from "@/components/common/PrimaryBtn";
 import { useRouter } from "next/navigation";
 
 const SubmitTotal = ({ values }) => {

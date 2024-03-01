@@ -1,8 +1,6 @@
 import React from "react";
 import Image from "next/legacy/image";
 import CloseIcon from "@/asset/icons/close-outline.svg";
-import BG from "@/asset/background/login-page/bg.png";
-import SuperiorGardenView from "/src/asset/homepage/Superior-Garden-View.jpg";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import {
   AlertDialog,
@@ -26,10 +24,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { addDays, format } from "date-fns";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import Modal from "@/components/common/PopupModal";
+import { format, set } from "date-fns";
+import { useState } from "react";
 export default function BookingCard({
   bookingId,
   roomName,
@@ -50,8 +48,10 @@ export default function BookingCard({
   handleDelete,
   bedType,
   roomList,
+  withinTwoFourHrs,
 }) {
   const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
 
   console.log("Checkin:", customerCheckin);
   console.log("Checkout:", customerCheckout);
@@ -60,9 +60,9 @@ export default function BookingCard({
       <p className=" text-sm text-[#9AA1B9]">
         Booking ID: {bookingId.slice(0, 13)}*****
       </p>
+
       <div className="flex flex-col items-center md:flex-row md:items-start">
         {/* Image */}
-
         <div className="relative rounded-md">
           <img
             className="h-[320px] w-[453px] rounded-md object-cover"
@@ -180,35 +180,27 @@ export default function BookingCard({
         </div>
       </div>
 
-      {/* Button */}
+      {/* Cancel Booking Button */}
       <div className="mt-4 flex w-full items-center justify-between max-sm:flex-col">
         <div>
-          {paymentStatus === "canceled" ? (
+          {withinTwoFourHrs ? (
             <button
               className="visitlink"
-              disabled={true}
-              onClick={() =>
-                router.push(
-                  `/user/${userId}/booking_history/${bookingId}/cancel`,
-                )
-              }
+              disabled={false}
+              onClick={() => setShowModal(true)}
             >
               Cancel Booking
             </button>
           ) : (
             <button
               className="visitlink"
-              disabled={false}
-              onClick={() =>
-                router.push(
-                  `/user/${userId}/booking_history/${bookingId}/cancel`,
-                )
-              }
+              disabled={true}
+              onClick={() => setShowModal(true)}
             >
               Cancel Booking
             </button>
           )}
-          {/* delete */}
+          {/* Delete Button : เดี๊ยวcommentออก */}
           <button className="visitlink ml-4" onClick={handleDelete}>
             delete
           </button>
@@ -273,8 +265,8 @@ export default function BookingCard({
                       <div className="content-detail divide-y-2 divide-gray-300 p-4">
                         <div className="py-5">
                           <p className="font-sans text-base font-normal text-[#646D89]">
-                            {customerRoom.room.guests} Guests |
-                            {customerRoom.room.bedType} |
+                            {customerRoom.room.guests} Guests |{" "}
+                            {customerRoom.room.bedType} |{" "}
                             {customerRoom.room.size} sqm
                           </p>
                           <p className="font-sans text-base font-normal text-[#646D89]">
@@ -318,9 +310,9 @@ export default function BookingCard({
           ))}
           {/* Change Date Button */}
           <div className="max-sm:pb-3">
-            {paymentStatus === "canceled" ? (
+            {withinTwoFourHrs ? (
               <PrimaryBtn
-                disabled={true}
+                disabled={false}
                 btnName="Change Date"
                 handleClick={() =>
                   router.push(
@@ -330,7 +322,7 @@ export default function BookingCard({
               />
             ) : (
               <PrimaryBtn
-                disabled={false}
+                disabled={true}
                 btnName="Change Date"
                 handleClick={() =>
                   router.push(
@@ -343,6 +335,22 @@ export default function BookingCard({
         </div>
       </div>
       <hr className="mt-10 w-full border-[1.75px]" />
+
+      {/* Popup for Cancel Booking */}
+      <Modal
+        showModal={showModal}
+        handleCancel={() =>
+          router.push(`/user/${userId}/booking_history/${bookingId}/refund`)
+        }
+        handleConfirm={() => {
+          setShowModal(false);
+        }}
+        handleClose={() => setShowModal(false)}
+        modalTitle="Cancel Booking"
+        modalContent="Are you sure you would like to cancel this booking?"
+        cancelButton="Yes, I want to cancel and request a refund"
+        confirmButton="No, Don't cancel"
+      />
     </div>
   );
 }

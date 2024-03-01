@@ -82,16 +82,16 @@ const RefundBooking = ({ params }) => {
               </p>
             </div>
             <div className="right flex flex-col">
-              <p className=" body1 mb-10 text-[#9aa1b9]">
+              <p className=" body1 text-[#9aa1b9]">
                 Booking date: {refundBooking?.created_at}
               </p>
-              <p className=" text-right">Total Refund</p>
+              <p className=" mt-14 text-right">Total Refund</p>
               <h5 className=" text-right">THB {refundBooking?.totalPrice}</h5>
             </div>
           </div>
         </div>
         <hr />
-        {/* Button */}
+        {/* Back Button and Cancel and Refund this Booking */}
         <div className="button flex flex-row justify-between md:my-10">
           <button
             className="visitlink"
@@ -100,7 +100,7 @@ const RefundBooking = ({ params }) => {
             Back
           </button>
           <PrimaryBtn
-            btnName="Cancel this Booking"
+            btnName="Cancel and Refund this Booking"
             handleClick={handleConfirmCancel}
           ></PrimaryBtn>
         </div>
@@ -111,6 +111,7 @@ const RefundBooking = ({ params }) => {
         showModal={showModal}
         handleCancel={handleCancel}
         handleConfirm={() => getRefundOrder(booking_id)}
+        handleClose={() => setShowModal(false)}
         modalTitle="Cancel and Refund this Booking"
         modalContent="Are you sure you want to cancel this booking and request a refund?"
         cancelButton="Cancel"
