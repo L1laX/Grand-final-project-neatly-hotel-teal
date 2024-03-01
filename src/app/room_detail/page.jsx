@@ -53,6 +53,7 @@ export default function RoomDetail({ searchParams }) {
   };
 
   useEffect(() => {
+    window.localStorage.removeItem("countDown");
     getRoomList();
   }, []);
 

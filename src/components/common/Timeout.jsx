@@ -27,9 +27,9 @@ const Timeout = () => {
       return () => clearInterval(timerId);
     }
   }, [runTimer]);
-  setTimeout(() => {
+
     window.localStorage.setItem("countDown", countDown);
-  }, 3000);
+
 
   React.useEffect(() => {
     if (countDown < 0 && runTimer) {
