@@ -6,8 +6,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Sub } from "@radix-ui/react-dropdown-menu";
-import SubmitTotal from "@/components/common/SubmitTotal";
 
 const BookingHistory = ({ params }) => {
   const router = useRouter();
@@ -42,6 +40,14 @@ const BookingHistory = ({ params }) => {
   useEffect(() => {
     getBookingHistory();
   }, []);
+
+  // check if booking is within 24 hours
+  const withinTwoFourHrs = (booking) => {
+    const now = new Date();
+    const bookingDate = new Date(booking.created_at);
+    const withinHours = (now - bookingDate) / (1000 * 60 * 60);
+    return withinHours < 24;
+  };
 
   return (
     <div className="flex justify-center">
@@ -79,6 +85,7 @@ const BookingHistory = ({ params }) => {
                 }
                 handleDelete={() => deleteBooking(booking.id)}
                 roomList={booking?.customerBooking_room}
+                withinTwoFourHrs={withinTwoFourHrs(booking)}
               />
             );
           })

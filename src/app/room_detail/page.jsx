@@ -11,7 +11,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { usePathname, useSearchParams } from "next/navigation";
 
 export default function RoomDetail({ searchParams }) {
- 
   const initialDate = searchParams.dateString
     ? JSON.parse(searchParams.dateString)
     : {
@@ -96,7 +95,7 @@ export default function RoomDetail({ searchParams }) {
     <main>
       {/* search-bar */}
       <div className="h-82 flex w-full justify-center rounded-lg bg-white shadow-lg md:h-44 lg:h-48 xl:h-56">
-        <div className="flex w-11/12 flex-col items-center justify-around gap-2 border-4 border-double border-indigo-600 py-4 md:flex-row md:gap-8 md:px-16 lg:gap-10">
+        <div className="flex w-11/12 flex-col items-center justify-around gap-2 py-4 md:flex-row md:gap-8 md:px-16 lg:gap-10">
           <DateRangeRoomGuest
             handleDateRangeRoomGuest={{
               calendarDesign: "h-10 sm:h-14 w-56 sm:w-full",

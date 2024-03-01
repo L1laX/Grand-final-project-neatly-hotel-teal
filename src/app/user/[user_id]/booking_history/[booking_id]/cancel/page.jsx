@@ -117,6 +117,7 @@ const CancelBooking = ({ params }) => {
         showModal={showModal}
         handleCancel={handleCancel}
         handleConfirm={() => deleteBookingOrder(booking_id)}
+        handleClose={() => setShowModal(false)}
         modalTitle="Cancel Booking "
         modalContent="Are you sure you want to Cancel this Booking?"
         cancelButton="Cancel"

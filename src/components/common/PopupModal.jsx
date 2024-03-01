@@ -7,6 +7,7 @@ const Modal = ({
   showModal,
   handleCancel,
   handleConfirm,
+  handleClose,
   modalTitle,
   modalContent,
   cancelButton,
@@ -17,12 +18,12 @@ const Modal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="rounded-md bg-white p-6 md:w-[631px]">
+      <div className="rounded-md bg-white p-4 md:w-[631px]">
         <div className="head-text flex flex-row justify-between py-4">
           <h4 className=" ">{modalTitle}</h4>
           <button
             className={`${isCancelHidden ? "hidden" : null}`}
-            onClick={handleCancel}
+            onClick={handleClose}
           >
             <IoClose />
           </button>
