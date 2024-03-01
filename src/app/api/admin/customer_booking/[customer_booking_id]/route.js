@@ -8,52 +8,20 @@ export async function GET(request, { params: { customer_booking_id } }) {
         id: customer_booking_id,
       },
       include: {
-        user: {
-          select: {
-            id: true,
-            email: true,
-            username: true,
-            role: true,
-            image: true,
-            created_at: true,
-            updated_at: true,
-            emailVerified: true,
-            name: true,
-            userProfile: true,
-          },
-        },
+        user: true,
         customerBooking_room: {
           include: {
-            room: {
-              select: {
-                name: true,
-                size: true,
-                bedType: true,
-                status: true,
-                checkInDate: true,
-                checkOutDate: true,
-                guests: true,
-                description: true,
-                roomMainImage: true,
-                pricePerNight: true,
-                promotionPrice: true,
-                created_at: true,
-                last_updated_at: true,
-                roomAmenity: true,
-                roomGallery: true,
-              },
-            },
+            room: true,
           },
         },
         bookingRequest: true,
       },
-
     });
 
     if (!customerBooking) {
       return NextResponse.error("Customer booking not found", { status: 404 });
     }
-
+    console.log(customerBooking);
     const rooms = customerBooking.customerBooking_room.map((bookingRoom) => ({
       name: bookingRoom.room.name,
       size: bookingRoom.room.size,
@@ -70,6 +38,7 @@ export async function GET(request, { params: { customer_booking_id } }) {
       last_updated_at: bookingRoom.room.last_updated_at,
       roomAmenity: bookingRoom.room.roomAmenity,
       roomGallery: bookingRoom.room.roomGallery,
+      totalPrice: bookingRoom.totalPrice,
     }));
 
     return NextResponse.json({

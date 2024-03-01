@@ -4,7 +4,7 @@ import axios from "axios";
 import Sidebar from "@/components/navbar/SidebarAdmin";
 import NavBar from "@/components/navbar/NavbarAdmin";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-
+import { useRouter } from "next/navigation";
 import {
   Paper,
   Table,
@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { fetchData } from "next-auth/client/_utils";
 
 const orangeTheme = createTheme({
   palette: {
@@ -57,6 +58,7 @@ const orangeTheme = createTheme({
 });
 
 function Promotion() {
+  const router = useRouter();
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -70,21 +72,19 @@ function Promotion() {
   });
 
   console.log("data:", data);
+  const fetchData = async () => {
+    try {
+      const res = await axios.get("/api/admin/promotion");
+      if (res.status !== 200) throw new Error("Failed to fetch");
+      const promotions = res.data.data.promotions;
+      console.log("promotions:", promotions);
+      setData(promotions);
+    } catch (error) {
+      console.error("Failed to load data:", error);
+      toast.error("Failed to load data.");
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get("/api/admin/promotion");
-        if (res.status !== 200) throw new Error("Failed to fetch");
-
-        const promotions = res.data.data.promotions;
-        console.log("promotions:", promotions);
-
-        setData(promotions);
-      } catch (error) {
-        console.error("Failed to load data:", error);
-        toast.error("Failed to load data.");
-      }
-    };
     fetchData();
   }, []);
 
@@ -116,10 +116,15 @@ function Promotion() {
         "/api/admin/promotion/create",
         promotionData,
       );
-
+      console.log(response);
       if (response.status === 201) {
         console.log("Promotion added:", response.data);
         toast.success("Promotion added successfully");
+        setOpen(false);
+        fetchData();
+        return;
+      } else if (response.status === 400) {
+        toast.error("Failed to add promotion: " + response.data.message);
       } else {
         toast.error("Failed to create promotion");
       }
@@ -184,8 +189,11 @@ function Promotion() {
             backarrow={false}
           />
           <div className="flex flex-row justify-center bg-slate-50 p-16 leading-[150%] text-slate-400">
-            <Paper sx={{ width: "100%", overflow: "hidden" }}>
-              <TableContainer sx={{ maxHeight: 440 }}>
+            <Paper
+              sx={{ width: "100%", height: "100%", overflow: "hidden" }}
+              className="ml-10 "
+            >
+              <TableContainer sx={{ maxHeight: "100vh" }}>
                 <Table stickyHeader aria-label="promotion table">
                   <TableHead>
                     <TableRow>

@@ -141,7 +141,7 @@ const Dropdown = ({ status, row, onStatusUpdate }) => {
       <button
         id="dropdownDefault"
         data-dropdown-toggle="dropdown"
-        className=""
+        className="flex w-full items-center justify-center"
         type="button"
         onClick={handleToggleDropdown}
       >
@@ -150,7 +150,7 @@ const Dropdown = ({ status, row, onStatusUpdate }) => {
       {dropdownVisible && (
         <div
           id="dropdown"
-          className="absolute z-10 w-56 rounded-lg bg-white p-3 shadow dark:bg-gray-700"
+          className="absolute left-0  z-10 w-56 rounded-lg bg-white p-3 shadow dark:bg-gray-700"
           style={{
             top: "100%",
             maxHeight: "200px",

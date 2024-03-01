@@ -23,19 +23,28 @@ const RoomTableRow = ({ row, columns, onStatusUpdate }) => (
     key={row.id}
     className="cursor-pointer"
   >
-    {columns.map((column) => (
-      <TableCell
-        key={column.id}
-        align={column.align}
-        className="break-all text-center"
-      >
-        {column.render
-          ? column.render(row[column.id], row, onStatusUpdate)
-          : column.format && typeof row[column.id] === "number"
-            ? column.format(row[column.id])
-            : row[column.id]}
-      </TableCell>
-    ))}
+    {columns.map((column) => {
+      let value = row[column.id];
+      if (column.id === "status") {
+        return (
+          <StatusDropdownCell
+            key={column.id}
+            status={value}
+            row={row}
+            onStatusUpdate={onStatusUpdate}
+          />
+        );
+      }
+      return (
+        <TableCell
+          key={column.id}
+          align={column.align}
+          className="overflow-visible break-all"
+        >
+          {value}
+        </TableCell>
+      );
+    })}
   </TableRow>
 );
 
@@ -44,85 +53,85 @@ const statusItems = [
     value: "vacant",
     label: "Vacant",
     style:
-      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap  bg-slate-100",
+      " w-fit justify-center px-3 pt-1 w-fit text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap bg-slate-100",
   },
   {
     value: "occupied",
     label: "Occupied",
     style:
-      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-blue-800 whitespace-nowrap bg-indigo-100 rounded",
+      " w-fit justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-blue-800 whitespace-nowrap bg-indigo-100 rounded",
   },
   {
     value: "assignClean",
     label: "Assign Clean",
     style:
-      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap bg-cyan-50 rounded",
+      " w-fit justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap bg-cyan-50 rounded",
   },
   {
     value: "assignDirty",
     label: "Assign Dirty",
     style:
-      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-red-800 whitespace-nowrap bg-rose-100 rounded",
+      " w-fit justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-red-800 whitespace-nowrap bg-rose-100 rounded",
   },
   {
     value: "vacantClean",
     label: "Vacant Clean",
     style:
-      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap bg-cyan-50 rounded",
+      " w-fit justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap bg-cyan-50 rounded",
   },
   {
     value: "vacantCleanInspected",
     label: "Vacant Clean Inspected",
     style:
-      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-yellow-800 whitespace-nowrap bg-yellow-50 rounded",
+      " w-fit justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-yellow-800 whitespace-nowrap bg-yellow-50 rounded",
   },
   {
     value: "vacantCleanPickUp",
     label: "Vacant Clean Pick Up",
     style:
-      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap bg-cyan-50 rounded",
+      " w-fit justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-emerald-800 whitespace-nowrap bg-cyan-50 rounded",
   },
   {
     value: "occupiedClean",
     label: "Occupied Clean",
     style:
-      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-blue-800 whitespace-nowrap bg-indigo-100 rounded",
+      " w-fit justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-blue-800 whitespace-nowrap bg-indigo-100 rounded",
   },
   {
     value: "occupiedCleanInspected",
     label: "Occupied Clean Inspected",
     style:
-      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-yellow-800 whitespace-nowrap bg-yellow-50 rounded",
+      "w-fit justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-yellow-800 whitespace-nowrap bg-yellow-50 rounded",
   },
   {
     value: "occupiedDirty",
     label: "Occupied Dirty",
     style:
-      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-red-800 whitespace-nowrap bg-rose-100 rounded",
+      "w-fit justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-red-800 whitespace-nowrap bg-rose-100 rounded",
   },
   {
     value: "outOfOrder",
     label: "Out of Order",
     style:
-      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-gray-500 whitespace-nowrap rounded bg-slate-100",
+      "w-fit justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-gray-500 whitespace-nowrap rounded bg-slate-100",
   },
   {
     value: "outOfService",
     label: "Out of Service",
     style:
-      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-gray-500 whitespace-nowrap rounded bg-slate-100",
+      "w-fit justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-gray-500 whitespace-nowrap rounded bg-slate-100",
   },
   {
     value: "outOfInventory",
     label: "Out of Inventory",
     style:
-      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-gray-500 whitespace-nowrap rounded bg-slate-100",
+      "w-fit justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-gray-500 whitespace-nowrap rounded bg-slate-100",
   },
   {
     value: "Booking",
     label: "Booking",
     style:
-      "justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-yellow-500 whitespace-nowrap rounded bg-slate-100",
+      "w-fit justify-center px-3 pt-1 text-sm font-medium tracking-tight leading-5 text-justify text-yellow-500 whitespace-nowrap rounded bg-slate-100",
   },
 ];
 
@@ -130,15 +139,17 @@ const StatusDropdownCell = ({ status, row, onStatusUpdate }) => {
   const statusItem = statusItems.find((item) => item.label === status);
 
   return (
-    <TableCell align="center">
+    <TableCell align="center" className="flex justify-center">
       {statusItem && (
-        <div className={statusItem.style}>
-          <Dropdown
-            status={status}
-            row={row}
-            onStatusUpdate={onStatusUpdate}
-            className="text-center "
-          />
+        <div className="">
+          <div className={statusItem.style}>
+            <Dropdown
+              status={status}
+              row={row}
+              onStatusUpdate={onStatusUpdate}
+              className=" flex justify-center"
+            />
+          </div>
         </div>
       )}
     </TableCell>
@@ -151,6 +162,7 @@ const RoomManagement = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchInput, setSearchInput] = useState("");
   const [rows, setRows] = useState([]);
+  console.log(rows, "rows");
   const fetchData = async () => {
     try {
       toast.info("Fetching Room Data...", {
@@ -264,8 +276,8 @@ const RoomManagement = () => {
         <NavBarAdmin navName={"Room Management"} setFilteredResults={setRows} />
         <div className="room-type-table ml-8 mr-7 mt-16 flex items-center justify-center">
           <Paper
-            sx={{ width: "100%", height: "100%", overflow: "hidden" }}
-            className="ml-10"
+            sx={{ width: "100%", height: "100%", overflow: "visible" }}
+            className="ml-10 "
           >
             <TableContainer sx={{ maxH: "100vh" }}>
               <Table stickyHeader aria-label="sticky table">

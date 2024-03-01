@@ -3,7 +3,7 @@ import Timeout from "@/components/common/Timeout";
 const page = () => {
   return (
     <div>
-      <Timeout />
+     Hello
     </div>
   );
 };

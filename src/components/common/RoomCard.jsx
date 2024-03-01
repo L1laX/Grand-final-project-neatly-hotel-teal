@@ -3,15 +3,12 @@
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import Image from "next/image";
 import CloseIcon from "@/asset/icons/close-outline.svg";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
@@ -24,7 +21,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useSession } from "next-auth/react";
-
+import { useState } from "react";
+import { set } from "date-fns";
 export const RoomCard = ({
   roomItem,
   roomName,
@@ -56,8 +54,6 @@ export const RoomCard = ({
         return name;
     }
   };
-
-  console.log(roomPromotionPrice, "roomPromotionPrice");
   const handleBooking = () => {
     const price = roomPromotionPrice ? roomPromotionPrice : roomPrice;
     const queryString = new URLSearchParams(dateRoomGuest).toString();
@@ -75,52 +71,44 @@ export const RoomCard = ({
       session?.user?.id +
       "&roomPrice=" +
       price;
-
-    console.log(url);
     router.push(url);
   };
+
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const toggleFullScreen = () => {
+    setIsFullScreen(!isFullScreen);
+  };
+
   return (
     <div>
       <div className={roomItem}>
-        <div className="room-card flex flex-col justify-center gap-12 px-5 py-10 lg:flex-row">
-          {/* Image and Image Popup */}
-          <AlertDialog>
-            <AlertDialogTrigger>
-              <div className="cursor-pointer rounded-md bg-slate-200">
-                <img
-                  src={roomImage}
-                  className="h-[320px] w-[453px] rounded-md object-cover"
-                  alt="roomImage"
-                />
-              </div>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="h-3/4 w-2/3">
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  <div className="flex flex-row justify-between p-4 md:mx-4">
-                    <h5> {roomName}</h5>
-                    <AlertDialogCancel>
-                      <Image
-                        className="cursor-pointer"
-                        src={CloseIcon}
-                        width={20}
-                        height={20}
-                      />
-                    </AlertDialogCancel>
-                  </div>
-                </AlertDialogTitle>
-              </AlertDialogHeader>
-              <AlertDialogDescription>
-                <div className="content mt-5 h-full w-full p-4">
-                  <img src={roomImage} alt="room" />
-                </div>
-              </AlertDialogDescription>
-            </AlertDialogContent>
-          </AlertDialog>
+        <div className="room-card flex flex-col items-start justify-center gap-12 px-5 py-10 lg:flex-row">
+          {/* Image and Popup Image  */}
+          <div className="cursor-pointer rounded-md bg-slate-200">
+            <img
+              src={roomImage}
+              className="h-[320px] w-[453px] rounded-md object-cover"
+              alt="roomImage"
+              onClick={() => toggleFullScreen()}
+            />
+          </div>
+
+          {isFullScreen && (
+            <div
+              className="Popup-image fixed inset-0 z-50 flex items-center justify-center bg-slate-400 bg-opacity-25 backdrop-blur-sm"
+              onClick={() => setIsFullScreen(false)}
+            >
+              <img
+                className="max-h-full max-w-full"
+                src={roomImage}
+                alt="room"
+              />
+            </div>
+          )}
 
           {/* Room Detail */}
-          <section className="room-detail flex flex-col lg:justify-between">
-            <div className=" flex flex-row justify-between md:w-[577px]">
+          <section className="room-detail flex w-2/3 flex-col lg:justify-between ">
+            <div className=" flex flex-row justify-between">
               <div className="right-content w-1/2 pt-4">
                 <h4
                   className="cursor-pointer"
@@ -139,25 +127,42 @@ export const RoomCard = ({
                   molestiae illum.
                 </p>
                 <p className="body2 mt-4 text-[#c8ccd8]">
-                  Available Room : {roomAvailable}
+                  Available Room :{" "}
+                  <span className="cursor-default text-lg text-orange-500 hover:text-orange-300">
+                    {" "}
+                    {roomAvailable}
+                  </span>
                 </p>
               </div>
 
               <div className="left-content flex flex-col pl-6 pt-4 lg:items-end ">
                 {roomPromotionPrice ? (
-                  <div>
+                  <div className=" flex flex-col items-end">
                     <p className="text-left font-sans text-base font-normal text-[#646D89] line-through">
-                      THB {roomPrice.toLocaleString()}
+                      THB{" "}
+                      {roomPrice?.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      })}
                     </p>
-                    <h5>THB {roomPromotionPrice?.toLocaleString()}</h5>
-                    <p className="font-sans text-base font-normal text-[#646D89] lg:text-right">
+                    <h5>
+                      THB{" "}
+                      {roomPromotionPrice?.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      })}
+                    </h5>
+                    <p className="mt-6 font-sans text-base font-normal text-[#646D89] lg:text-right ">
                       Per Night <br /> (Including Taxes & Fees)
                     </p>
                   </div>
                 ) : (
-                  <div>
-                    <h5>THB {roomPrice?.toLocaleString()}</h5>
-                    <p className="font-sans text-base font-normal text-[#646D89] lg:text-right">
+                  <div className=" mb-5 flex flex-col items-end">
+                    <h5>
+                      THB{" "}
+                      {roomPrice?.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      })}
+                    </h5>
+                    <p className="mt-6 font-sans text-base font-normal text-[#646D89] lg:text-right">
                       Per Night <br /> (Including Taxes & Fees)
                     </p>
                   </div>

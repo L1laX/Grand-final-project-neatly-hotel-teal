@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { addDays, format } from "date-fns";
 import { DateRangeRoomGuest } from "@/components/ui/DateRangeRoomGuest";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export default function RoomDetail({ searchParams }) {
   const initialDate = searchParams.dateString
@@ -21,7 +24,6 @@ export default function RoomDetail({ searchParams }) {
         room: 1,
         guest: 2,
       };
-
   const [rooms, setRooms] = useState([]);
   // const [date, setDate] = useState(JSON.parse(searchParams.dateString));
   const [date, setDate] = useState(initialDate);
@@ -48,10 +50,6 @@ export default function RoomDetail({ searchParams }) {
       `/api/room_detail?checkin=${checkInDate}&checkout=${checkOutDate}&room=${roomAndGuest.room}&guest=${roomAndGuest.guest}`,
     );
     setRooms(result.data);
-    console.log(result.data);
-    console.log(rooms);
-    // console.log(checkIn)
-    // console.log(checkOut)
   };
 
   useEffect(() => {
@@ -59,7 +57,16 @@ export default function RoomDetail({ searchParams }) {
   }, []);
 
   const handleClickSearch = () => {
-    getRoomList();
+    const loading = toast.loading("Loading...");
+    setTimeout(() => {
+      getRoomList();
+      toast.update(loading, {
+        render: "Room List Updated!",
+        type: "success",
+        isLoading: false,
+        autoClose: 1000,
+      });
+    }, 500);
   };
 
   // console.log(date)
@@ -88,7 +95,7 @@ export default function RoomDetail({ searchParams }) {
     <main>
       {/* search-bar */}
       <div className="h-82 flex w-full justify-center rounded-lg bg-white shadow-lg md:h-44 lg:h-48 xl:h-56">
-        <div className="flex w-11/12 flex-col items-center justify-around gap-2 border-4 border-double border-indigo-600 py-4 md:flex-row md:gap-8 md:px-16 lg:gap-10">
+        <div className="flex w-11/12 flex-col items-center justify-around gap-2 py-4 md:flex-row md:gap-8 md:px-16 lg:gap-10">
           <DateRangeRoomGuest
             handleDateRangeRoomGuest={{
               calendarDesign: "h-10 sm:h-14 w-56 sm:w-full",
@@ -152,6 +159,7 @@ export default function RoomDetail({ searchParams }) {
           </div>
         )}
       </div>
+      <ToastContainer position="top-center" />
     </main>
   );
 }

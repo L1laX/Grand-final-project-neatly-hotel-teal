@@ -1,6 +1,11 @@
+"use client";
+
 import React from "react";
+import { useRouter } from "next/navigation";
+import PrimaryBtn from "@/components/common/PrimaryBtn";
 
 function SuccessRefund() {
+  const router = useRouter();
   return (
     <>
       <div className="result-order mx-10 my-20 flex flex-col items-center rounded-sm bg-[#2F3E35] xl:mx-[351px]">
@@ -23,10 +28,10 @@ function SuccessRefund() {
                 <p className=" body1 text-white">2 Guests</p>
               </h5>
 
-              <p className=" body1 mt-10 text-white">
+              <p className=" body1 mt-10 text-[#D5DFDA]">
                 Booking date: Tue, 16 Oct 2022
               </p>
-              <p className=" body1 text-white">
+              <p className=" body1 text-[#D5DFDA]">
                 Cancellation date: Tue, 16 Oct 2022
               </p>
             </div>
@@ -38,6 +43,18 @@ function SuccessRefund() {
           </div>
         </div>
       </div>
+
+      {/* Button */}
+      <section className="mx-10 my-10 xl:mx-[351px]">
+        <div className=" flex flex-row justify-center gap-10 ">
+          <PrimaryBtn
+            btnName="Back to Home"
+            handleClick={() => {
+              router.push(`/`);
+            }}
+          ></PrimaryBtn>
+        </div>
+      </section>
     </>
   );
 }

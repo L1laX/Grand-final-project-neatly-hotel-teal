@@ -36,8 +36,6 @@ function BookingDetail({ params: { booking_id } }) {
         toast.error("Failed to fetch Booking Details. Please try again.", {
           position: "top-center",
         });
-      } finally {
-        toast.dismiss();
       }
     };
 
@@ -139,7 +137,7 @@ function BookingDetail({ params: { booking_id } }) {
             buttonName={"Update"}
             notSearch={true}
             backarrow={true}
-            linkTo={`/admin/booking`}
+            linkTo={`/admin/`}
           />
           <div
             aria-label="Booking Details"
@@ -230,7 +228,10 @@ function BookingDetail({ params: { booking_id } }) {
                     <span>{bookingRoom.room.name}</span>
 
                     <span className="grow text-right font-semibold max-md:max-w-full">
-                      {bookingRoom.room.pricePerNight}
+                      {bookingRoom.room.pricePerNight.toLocaleString(
+                        undefined,
+                        { minimumFractionDigits: 2 },
+                      )}
                     </span>
                   </div>
                 ))}
@@ -244,7 +245,7 @@ function BookingDetail({ params: { booking_id } }) {
 
                 <div className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap">
                   <span>{"Promotion code"}</span>
-
+                  
                   <span className="grow text-right font-semibold max-md:max-w-full">
                     {discount || "0.00"}
                   </span>
@@ -255,16 +256,9 @@ function BookingDetail({ params: { booking_id } }) {
                     Total
                   </div>
                   <span className="flex-auto text-right text-xl font-semibold stacked-fractions tracking-tight">
-                    {customerBooking_room
-                      .reduce(
-                        (acc, cur) =>
-                          acc + cur.room.pricePerNight * stayDuration,
-                        0,
-                      )
-                      .toLocaleString("en-US", {
-                        style: "currency",
-                        currency: "THB",
-                      })}
+                    {totalPrice.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                    })}
                   </span>
                 </div>
               </form>

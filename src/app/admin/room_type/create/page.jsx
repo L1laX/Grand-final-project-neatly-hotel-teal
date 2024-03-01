@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import Sidebar from "@/components/navbar/SidebarAdmin";
 import NavBar from "@/components/navbar/NavbarAdmin";
@@ -9,6 +8,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { v4 as uuidv4 } from "uuid";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const crateRoomType = () => {
   const router = useRouter();
@@ -95,6 +96,10 @@ const crateRoomType = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const toasty = toast.info("Checking Data...", {
+      position: "top-center",
+      autoClose: 1000,
+    });
 
     const newErrors = {
       mainImage: !values.roomMainImage,
@@ -108,28 +113,36 @@ const crateRoomType = () => {
       roomAmenity: values.roomAmenity.length < 1 || !values.roomAmenity[0],
       promotionPrice: !values.promotionPrice && isPromotion,
     };
-
     setErrors({ ...newErrors });
-
-    if (Object.values(newErrors).includes(true)) return alert("Form Error");
-    alert("Form Submitted");
-    console.log(1);
+    if (Object.values(newErrors).includes(true))
+      return toast.update(toasty, {
+        render: "Please fill in all the required fields",
+        type: "error",
+        autoClose: 3000,
+      });
+    toast.update(toasty, {
+      render: "Creating Room ...",
+      type: "info",
+      autoClose: 1000,
+    });
     const uploadMainImage = await uploadImage(values.roomMainImage);
-    console.log(2);
     const uploadGalleryImage = await uploadImage(values.roomGallery);
-    console.log(3);
     const newValues = {
       ...values,
       roomMainImage: uploadMainImage[0],
       roomGallery: uploadGalleryImage,
     };
-    console.log(4);
-    console.log(5);
+
     const res = await axios.post("/api/admin/room_prop", newValues);
     if (res.status === 200) {
-      alert("Form Submitted");
-      console.log(6);
-      return router.push("/admin/room_type");
+      toast.update(toasty, {
+        render: "Room Created",
+        type: "success",
+        autoClose: 1000,
+      });
+      setTimeout(() => {
+        router.push("/admin/room_type");
+      }, 1000);
     }
   };
 
@@ -157,6 +170,7 @@ const crateRoomType = () => {
           />
         </section>
       </div>
+      <ToastContainer position="top-center" />
     </div>
   );
 };

@@ -14,13 +14,32 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-function Admin() {
-  const [search, setSearch] = useState("");
+const columnstable = [
+  {
+    id: "customerName",
+    label: "Customer Name",
+    minWidth: 170,
+    align: "center",
+  },
+  { id: "guestCount", label: "Guest(s)", minWidth: 100, align: "center" },
+  { id: "roomType", label: "Room Type", minWidth: 170, align: "center" },
+  { id: "totalPrice", label: "Total Price", minWidth: 170, align: "center" },
+  { id: "bedType", label: "Bed Type", minWidth: 170, align: "center" },
+  { id: "checkInDate", label: "Check-in", minWidth: 170, align: "center" },
+  { id: "checkOutDate", label: "Check-out", minWidth: 170, align: "center" },
+];
+function CustomerBooking() {
   const router = useRouter();
+  const [columns, setColumns] = React.useState([...columnstable]);
+  const [search, setSearch] = useState("");
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [totalRows, setTotalRows] = useState(0);
+  const [newRowsPerPage, setNewRowsPerPage] = useState(10);
+  const [highestPage, setHighestPage] = React.useState(0);
+  const [newPage, setNewPage] = React.useState(0);
+  const [oldSearch, setOldSearch] = React.useState("");
 
   const formatDate = (dateString) => {
     const options = {
@@ -32,76 +51,71 @@ function Admin() {
     return new Date(dateString).toLocaleDateString("en-GB", options);
   };
 
-  const fetchData = async () => {
+  const fetchData = async (isNew) => {
     try {
-      toast.info("Fetching data...", {
+      toast.info("Fetching Room Data...", {
         position: "top-center",
         autoClose: false,
       });
-
-      const response = await axios.get(
-        `/api/admin/customer_booking?keywords=${search}`,
+      const res = await axios.get(
+        `/api/admin/customer_booking?keywords=${search}&page=${newPage}&pageSize=${newRowsPerPage}`,
       );
-
-      const data = response.data;
-      setRows(data.data);
+      const data = res.data;
+      isNew ? setRows([...data.data]) : setRows([...rows, ...data.data]);
+      setTotalRows(data.totalRows);
+      setColumns([...columnstable]);
       toast.dismiss();
-    } catch (error) {
-      console.error("Error fetching data from API:", error.message);
-      toast.error("Failed to fetch data. Please try again later.", {
-        position: "bottom-center",
+    } catch (e) {
+      console.log(e);
+      toast.error("Failed to fetch Room Data. Please try again later.", {
+        position: "top-center",
+        newPage,
       });
     }
   };
-
+  console.log(rows);
   useEffect(() => {
-    fetchData();
-  }, [search]);
-
-  useEffect(() => {
-    console.log("Fetched Data:", rows);
-  }, [rows]);
+    if (newRowsPerPage !== rowsPerPage) {
+      setNewRowsPerPage(rowsPerPage);
+      setHighestPage(0);
+      fetchData("new");
+    } else if (newPage > page && newPage <= highestPage) {
+      setPage(newPage);
+    } else if (newPage > page && newPage > highestPage) {
+      setHighestPage(newPage);
+      setPage(newPage);
+      fetchData();
+    } else if (newPage < page) {
+      setPage(newPage);
+    } else if (search === "" && oldSearch !== "") {
+      setOldSearch("");
+      setHighestPage(0);
+      setPage(0);
+      setNewPage(0);
+      fetchData("new");
+    } else if (newPage === page && !search) {
+      setPage(newPage);
+      fetchData();
+    } else if (search) {
+      setOldSearch(search);
+      setHighestPage(0);
+      setPage(0);
+      setNewPage(0);
+      fetchData("new");
+    }
+  }, [search, newPage, rowsPerPage]);
 
   const handleChangePage = (_event, newPage) => {
-    setPage(newPage);
+    setNewPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
-    setPage(0);
+    setPage(0); // Reset to the first page when rows per page changes
   };
 
   const handleRowClick = (id) => {
     router.push(`/admin/booking/${id}`);
-  };
-
-  const columns = [
-    {
-      id: "customerName",
-      label: "Customer name",
-      minWidth: 100,
-      align: "center",
-    },
-    { id: "guestCount", label: "Guest(s)", minWidth: 100, align: "center" },
-    { id: "roomType", label: "Room Type", minWidth: 100, align: "center" },
-
-    {
-      id: "totalPrice",
-      label: "Amount",
-      minWidth: 100,
-      align: "center",
-    },
-    { id: "bedType", label: "Bed Type", minWidth: 100, align: "center" },
-    { id: "checkInDate", label: "Check-in", minWidth: 100, align: "center" },
-    { id: "checkOutDate", label: "Check-out", minWidth: 100, align: "center" },
-  ];
-
-  const calculateStayDuration = (checkInDate, checkOutDate) => {
-    const checkIn = new Date(checkInDate);
-    const checkOut = new Date(checkOutDate);
-    const millisecondsPerDay = 1000 * 60 * 60 * 24;
-    const duration = (checkOut - checkIn) / millisecondsPerDay;
-    return Math.max(duration, 1);
   };
 
   return (
@@ -144,8 +158,6 @@ function Admin() {
                         page * rowsPerPage + rowsPerPage,
                       )
                       .map((row) => {
-                        const roomDetails = row.customerBooking_room[0]?.room;
-
                         return (
                           <TableRow
                             key={row.id}
@@ -158,14 +170,25 @@ function Admin() {
                             {columns.map((column) => {
                               let value = row[column.id];
                               if (column.id === "roomType") {
-                                value = roomDetails?.name || "N/A";
+                                value =
+                                  row.customerBooking_room
+                                    .map((room) => room.room.name)
+                                    .join(", ") || "N/A";
                               } else if (column.id === "bedType") {
-                                value = roomDetails?.bedType || "N/A";
+                                value =
+                                  row.customerBooking_room
+                                    .map((room) => room.room.bedType)
+                                    .join(", ") || "N/A";
                               } else if (
                                 column.id === "checkInDate" ||
                                 column.id === "checkOutDate"
                               ) {
                                 value = formatDate(row[column.id]);
+                              } else if (column.id === "totalPrice") {
+                                value = row.totalPrice.toLocaleString("en-US", {
+                                  style: "currency",
+                                  currency: "USD", // Adjust currency code as necessary
+                                });
                               }
                               return (
                                 <TableCell key={column.id} align={column.align}>
@@ -181,9 +204,9 @@ function Admin() {
               </Table>
             </TableContainer>
             <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
+              rowsPerPageOptions={[10, 25, 50, 100]}
               component="div"
-              count={rows.length}
+              count={totalRows}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
@@ -197,4 +220,4 @@ function Admin() {
   );
 }
 
-export default Admin;
+export default CustomerBooking;
