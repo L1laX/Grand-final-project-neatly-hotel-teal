@@ -41,14 +41,6 @@ const BookingHistory = ({ params }) => {
     getBookingHistory();
   }, []);
 
-  // check if booking is within 24 hours
-  const withinTwoFourHrs = (booking) => {
-    const now = new Date();
-    const bookingDate = new Date(booking.created_at);
-    const withinHours = (now - bookingDate) / (1000 * 60 * 60);
-    return withinHours < 24;
-  };
-
   return (
     <div className="flex justify-center">
       <div className="flex w-11/12 max-w-[1980px] flex-col lg:w-5/6">
@@ -85,7 +77,6 @@ const BookingHistory = ({ params }) => {
                 }
                 handleDelete={() => deleteBooking(booking.id)}
                 roomList={booking?.customerBooking_room}
-                withinTwoFourHrs={withinTwoFourHrs(booking)}
               />
             );
           })
