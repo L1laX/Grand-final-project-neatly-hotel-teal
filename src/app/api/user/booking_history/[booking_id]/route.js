@@ -15,6 +15,33 @@ export async function GET(request, { params: { booking_id } }) {
       },
     });
 
+    const roomType = await prisma.room.findMany({
+      where: {
+        name: isBookingOrder.customerBooking_room[0].room.name,
+      },
+      include: {
+        customerBooking_room: { include: { customerBooking: true } },
+      },
+    });
+
+    let bookedRoom = roomType.reduce((acc, room) => {
+      let bookings = room.customerBooking_room.map(booking => booking.customerBooking);
+      return [...acc, ...bookings];
+    }, []);
+
+    bookedRoom = bookedRoom.map(room => {
+      return {
+        checkInDate: room.checkInDate,
+        checkOutDate: room.checkOutDate
+      };
+    });
+
+    //เอาเฉพาะปัจจุบันไปจนถึงอนาคต
+    bookedRoom = bookedRoom.filter(room => Date.parse(room.checkInDate) >= Date.now());
+
+    console.log(bookedRoom)
+
+    
     if (!isBookingOrder) {
       return NextResponse.json({
         status: 404,
@@ -25,6 +52,7 @@ export async function GET(request, { params: { booking_id } }) {
     return NextResponse.json({
       data: isBookingOrder,
       status: 200,
+      bookedRoom:bookedRoom,
       message: "Booking Order has been fetched",
     });
   } catch (error) {

@@ -124,7 +124,7 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
               <div className="flex flex-col justify-center">
                 <span className="mb-1">Room</span>
               </div>
-              <div className="flex w-32 justify-end border-4 border-double border-indigo-600">
+              <div className="flex w-32 justify-end">
                 <button
                   disabled={roomAndGuest.room <= 1 ? true : false}
                   className={
@@ -147,7 +147,7 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
                     <span className="mb-[2.75px] text-lg">-</span>
                   </div>
                 </button>
-                <div className="inline w-10 border-4 border-double border-indigo-600 text-center">
+                <div className="inline w-10 text-center">
                   {roomAndGuest.room}
                 </div>
                 <button
@@ -168,7 +168,7 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
               <div className="flex flex-col justify-center">
                 <span className="mb-1">Guest</span>
               </div>
-              <div className="flex w-32 justify-end border-4 border-double border-indigo-600">
+              <div className="flex w-32 justify-end">
                 <button
                   disabled={roomAndGuest.guest <= 1 ? true : false}
                   className={
@@ -193,7 +193,7 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
                     <span className="mb-[2.75px] text-lg">-</span>
                   </div>
                 </button>
-                <div className="inline w-10 border-4 border-double border-indigo-600 text-center">
+                <div className="inline w-10 text-center">
                   {roomAndGuest.guest}
                 </div>
                 <button
