@@ -3,8 +3,10 @@ import { format, addDays, eachDayOfInterval } from "date-fns";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import { useRouter } from "next/navigation";
 
-const SubmitTotal = ({ values }) => {
+const SubmitTotal = ({ values, request }) => {
   const router = useRouter();
+  console.log(request);
+  console.log(Object.keys(request));
   return (
     <>
       <div className="result-order mx-10 my-20 flex flex-col items-center rounded-sm bg-[#2F3E35] xl:mx-[351px]">
@@ -47,44 +49,55 @@ const SubmitTotal = ({ values }) => {
               {/* Room Name */}
               <ol className="body1 text-[#D5DFDA]">
                 <li className=" flex flex-row justify-between">
-                  Room Name
+                  <h5 className=" text-white">{values.roomName}</h5>
                   <h5 className=" text-white">2,500.00</h5>
                 </li>
               </ol>
 
               {/* Add-on Request */}
-              <div className="mt-4">
-                <p className="text-[#D5DFDA]">Add-on Request :</p>
-                *แสดงrequestและราคา
-                {/* {promotionCode === null ? (
-                        <ol className="body1 text-[#D5DFDA]">
-                <li className=" flex flex-row justify-between">
-                  Airport Transfer
-                  <h5 className=" text-white">500.00</h5>
-                </li>
-              </ol>
-                      ) : null} */}
-              </div>
+              {Object.keys(request).length ? (
+                <div className="mt-4">
+                  <p className="font-bold  text-white">Add-on Request :</p>
+                  <ol className="body1 mt-3 text-[#D5DFDA]">
+                    {Object.values(request).map((item, index) => {
+                      return (
+                        <li className=" flex flex-row justify-between">
+                          {Object.keys(request)[index]}
+                          <h5 className=" text-white">{item}</h5>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </div>
+              ) : null}
 
               {/* Promotion Code */}
-              <div className="mt-4">
-                <p className="text-[#D5DFDA]">Promotion Code :</p>
-                *แสดงcodeและราคา
-                {/* {promotionCode === null ? (
-                        <ol className="body1 text-[#D5DFDA]">
-                <li className=" flex flex-row justify-between">
-                  Airport Transfer
-                  <h5 className=" text-white">500.00</h5>
-                </li>
-              </ol>
-                      ) : null} */}
-              </div>
+              {values.promotionCode ? (
+                <div className="mt-4">
+                  <p className="font-bold text-white">Promotion Code :</p>
+
+                  <ol className="body1 text-[#D5DFDA]">
+                    <li className=" flex flex-row justify-between">
+                      {values.promotionCode}
+                      <h5 className=" text-white">
+                        {values.discount.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        })}
+                      </h5>
+                    </li>
+                  </ol>
+                </div>
+              ) : null}
             </div>
           </div>
 
           <div className="flex w-5/6 items-center justify-between py-6 ">
             <p className=" text-[#D5DFDA]">Total</p>
-            <h5 className=" text-[#FFFFFF]">{values.totalPrice}</h5>
+            <h5 className=" text-[#FFFFFF]">
+              {values.totalPrice.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              })}
+            </h5>
           </div>
         </div>
       </div>
