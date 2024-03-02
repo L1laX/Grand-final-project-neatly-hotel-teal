@@ -16,16 +16,16 @@ export async function middleware(request, { params }) {
   });
   const { pathname } = request.nextUrl;
   const { searchParams } = new URL(request.url);
-  console.log(id, "id");
-  console.log(token.id, "token");
   if (
-    (token && token.role === "admin" && pathname.startsWith("/user")) ||
+    token &&
+    token.role === "admin" &&
+    pathname.startsWith("/user") &&
     token.id !== id
   ) {
     return NextResponse.redirect(new URL("/", request.url));
   }
   if (!token && pathname.startsWith("/booking")) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
   if (token && token.role === "admin" && pathname.startsWith("/booking")) {
     return NextResponse.redirect(new URL("/", request.url));
