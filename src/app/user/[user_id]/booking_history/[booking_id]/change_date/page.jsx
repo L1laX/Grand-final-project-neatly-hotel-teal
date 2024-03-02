@@ -11,7 +11,6 @@ const ChangeDate = ({ params }) => {
   const router = useRouter();
   const { user_id, booking_id } = params;
   const [showModal, setShowModal] = useState(false);
-  const [inputChange, setInputChange] = useState([]);
   const [changeDate, setChangeDate] = useState([]);
   const [loading, setLoading] = useState(true);
   const [bookedDate, setBookedDate] = useState([]);
@@ -20,7 +19,6 @@ const ChangeDate = ({ params }) => {
     try {
       const res = await axios.get(`/api/user/booking_history/${booking_id}`);
       setChangeDate(res.data.data);
-      console.log(res.data.data);
       setBookedDate(res.data.bookedRoom);
       setLoading(false);
       console.log(res);
@@ -72,8 +70,6 @@ const ChangeDate = ({ params }) => {
                 </h3>
                 <p className=" font-semibold text-[#424C6B]">Booking Date</p>
                 <p className=" body1 mb-10 text-[#9aa1b9]">
-                  {changeDate?.checkInDate} - {changeDate?.checkOutDate} <br />
-                  {changeDate?.guestCount} Guests
                   {loading ? null : (
                     <>
                       {format(
@@ -93,7 +89,7 @@ const ChangeDate = ({ params }) => {
               </div>
               <p className=" body1 text-[#9aa1b9]">
                 Booking date:
-                {changeDate?.created_at}
+
                 {/* หรือจะใช้ loading เหมือนด้านบนก็ได้เหมือนกัน */}
                 {changeDate?.created_at
                   ? format(
@@ -104,10 +100,7 @@ const ChangeDate = ({ params }) => {
               </p>
             </section>
             {/* Changing Date */}
-            <section className="changedate-container mt-6 rounded-md bg-white p-4">
-              <p className=" font-semibold text-[#424C6B]">Change Date</p>
-              <div className="datepicker mt-4">fff</div>
-            </section>
+
             {loading ? null : (
               <section className="changedate-container mt-6 rounded-md bg-white p-4">
                 <p className=" font-semibold text-[#424C6B]">Change Date</p>

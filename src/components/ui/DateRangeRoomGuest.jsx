@@ -22,17 +22,19 @@ import {
 } from "@/components/ui/popover";
 
 export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
-
-// แบบนี้วันที่ -1
+  // แบบนี้วันที่ -1
   // const dateString = JSON.stringify({
   //   from: date.from?.toISOString(),
   //   to: date.to?.toISOString(),
   // });
-  
-  const { date,setDate,roomAndGuest,setRoomAndGuest,calendarDesign } = handleDateRangeRoomGuest;
+
+  const { date, setDate, roomAndGuest, setRoomAndGuest, calendarDesign } =
+    handleDateRangeRoomGuest;
 
   const dateString = JSON.stringify({
-    from: date?.from ? format(date?.from, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
+    from: date?.from
+      ? format(date?.from, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
+      : null,
     to: date?.to ? format(date?.to, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
   });
 
@@ -43,10 +45,10 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
 
   const sendValueToRoomDetails = {
     dateString,
-    roomAndGuestString
+    roomAndGuestString,
   };
-  console.log(sendValueToRoomDetails)
-  
+  console.log(sendValueToRoomDetails);
+
   // console.log(date)
   // console.log(room)
   // console.log(guest)
