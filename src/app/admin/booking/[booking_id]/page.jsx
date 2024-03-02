@@ -11,6 +11,7 @@ function BookingDetail({ params: { booking_id } }) {
   const [booking, setBooking] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [relatedPromotion, setRelatedPromotion] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,6 +27,8 @@ function BookingDetail({ params: { booking_id } }) {
         const data = response.data;
 
         setBooking(data.data);
+        setRelatedPromotion(data.data.rooms[0].promotion);
+
         setLoading(false);
         toast.success("Booking Details Fetched Successfully!", {
           position: "top-center",
@@ -43,41 +46,48 @@ function BookingDetail({ params: { booking_id } }) {
   }, [booking_id]);
 
   if (loading) {
-    toast.info("Loading...", {
-      position: "top-center",
-      autoClose: false,
-    });
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    toast.error(`Error: ${error}`, {
-      position: "top-center",
-      autoClose: false,
-    });
-
-    return null;
+    return <div>Error: {error}</div>;
   }
 
   if (!booking) {
-    toast.error("Failed to fetch booking details. Please try again.", {
-      position: "top-center",
-    });
-    return null;
+    return <div>Booking not found.</div>;
   }
 
   const {
     customerName,
+    roomAmenity,
     guestCount,
     checkInDate,
     checkOutDate,
     paymentType,
-    discount,
     totalPrice,
     additionalRequest,
+    bookingRequest,
     created_at,
     user: { email: customerEmail },
     customerBooking_room,
+    promotion,
   } = booking;
+
+  console.log("booking request", booking.bookingRequest);
+
+  const {
+    promotionCode,
+    discount,
+    name: promotionName,
+  } = relatedPromotion || {};
+
+  console.log(
+    "promotion detail",
+    promotion,
+    promotionCode,
+    discount,
+    promotionName,
+  );
 
   const stayDuration = Math.floor(
     (new Date(checkOutDate) - new Date(checkInDate)) / (1000 * 60 * 60 * 24),
@@ -235,19 +245,37 @@ function BookingDetail({ params: { booking_id } }) {
                     </span>
                   </div>
                 ))}
+
+                {booking.bookingRequest &&
+                  booking.bookingRequest
+                    .filter((request) => request.price !== 0)
+                    .map((request, index) => (
+                      <div
+                        key={index}
+                        className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap"
+                      >
+                        <span>{request.name}</span>
+                        <span className="grow text-right font-semibold max-md:max-w-full">
+                          {request.price.toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                          })}
+                        </span>
+                      </div>
+                    ))}
+
                 <div className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap">
-                  <span>{"Airport transfer"}</span>
+                  <span>{"Promotion Code"}</span>
 
                   <span className="grow text-right font-semibold max-md:max-w-full">
-                    {"200"}
+                    {relatedPromotion?.promotionCode || "N/A"}
                   </span>
                 </div>
 
                 <div className="flex justify-between gap-4 whitespace-nowrap py-3 text-base tracking-tight max-md:max-w-full max-md:flex-wrap">
-                  <span>{"Promotion code"}</span>
-                  
+                  <span>{"Discount"}</span>
+
                   <span className="grow text-right font-semibold max-md:max-w-full">
-                    {discount || "0.00"}
+                    {-relatedPromotion?.discount || "N/A"}
                   </span>
                 </div>
 
@@ -256,7 +284,9 @@ function BookingDetail({ params: { booking_id } }) {
                     Total
                   </div>
                   <span className="flex-auto text-right text-xl font-semibold stacked-fractions tracking-tight">
-                    {totalPrice.toLocaleString(undefined, {
+                    {(
+                      totalPrice - (relatedPromotion?.discount || 0)
+                    ).toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                     })}
                   </span>
@@ -268,7 +298,7 @@ function BookingDetail({ params: { booking_id } }) {
                   Additional Request
                 </div>
                 <div className="mt-2 max-md:max-w-full">
-                  {additionalRequest || "N/A"}
+                  {booking.additionalRequest || "N/A"}
                 </div>
               </div>
             </div>
