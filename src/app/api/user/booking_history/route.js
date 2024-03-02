@@ -12,8 +12,9 @@ export async function GET(request) {
         user_id: user_id,
       },
       orderBy: {
-        last_updated_at: "desc",
+        created_at: "desc",
       },
+
       include: {
         user: true,
         customerBooking_room: { include: { room: true } },

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import DateOnlySelector from "@/components/ui/testDatePicker"; // Ensure this path is correct
+import DateOnlySelector from "@/components/ui/DateOnlySelector"; // Ensure this path is correct
 
 function Page() {
   return (

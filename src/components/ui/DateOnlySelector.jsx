@@ -16,7 +16,6 @@ export default function DateOnlySelector({
   className,
   checkInOut,
   checkInDate,
-
   checkOutDate,
   bookedDate,
 }) {
@@ -34,7 +33,7 @@ export default function DateOnlySelector({
     }
     return "";
   };
-  let disableDate;
+
   if (bookedDate) {
     bookedDate.map((dateRange) => {
       const checkInDate = new Date(dateRange.checkInDate);
@@ -82,8 +81,8 @@ export default function DateOnlySelector({
             numberOfMonths={2}
             disabled={[
               (date) => date < new Date(new Date().setHours(0, 0, 0, 0)),
-              new Date(date?.from),
-              ...disableDate,
+              // new Date(date?.from),
+              // ...disableDate,
             ]}
           />
         </PopoverContent>
