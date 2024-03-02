@@ -1,8 +1,10 @@
 "use client";
-export default function LoadingPage() {
+export default function LoadingPage({ screen }) {
   return (
     <>
-      <div className="mx-10 my-20 bg-[#f1f2f6] p-10 xl:mx-[351px]">
+      <div
+        className={`mx-10 my-20 ${screen ? screen : "w-5/6"} bg-[#f1f2f6] p-10 xl:mx-[351px]`}
+      >
         <div className="flex flex-col items-center gap-5 bg-[#f1f2f6] md:h-64 md:flex-row ">
           <div className="box-preview h-64 w-64 animate-pulse rounded-xl bg-[#e4e6ed]"></div>
           <div className="w-64 md:h-64 md:w-3/5">

@@ -12,6 +12,9 @@ export async function middleware(request) {
   if (token && pathname.startsWith("/user")) {
     return res;
   }
+  if (!token && pathname.startsWith("/booking")) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
   if (token && token.role === "admin" && pathname.startsWith("/admin")) {
     return res;
   }
@@ -21,12 +24,9 @@ export async function middleware(request) {
   ) {
     return NextResponse.redirect(new URL("/", request.url));
   }
-  if (token) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
   return res;
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/login", "/register", "/user/:path*"],
+  matcher: ["/admin/:path*", "/login", "/register", "/user/:path*", "/booking"],
 };

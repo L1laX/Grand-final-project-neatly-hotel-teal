@@ -185,6 +185,7 @@ export default function FormPayment({
   const [unique_key_number, setUnique_key_number] = React.useState(0);
   const getClientSecret = async (amount, istrue) => {
     const unique_key = uuidv4();
+    console.log(values.customer_id, "values.customer_id");
     const response = await axios.post(
       "/api/user/payment_method/payment_intent",
       {
@@ -198,11 +199,12 @@ export default function FormPayment({
     );
     setClientSecret(response.data.clientSecret);
     setPaymentIntent_id(response.data.paymentIntent_id);
+    console.log(response.data, "response.data");
     setValues((prev) => ({
       ...values,
       ...prev,
-      payment_id: response.data.customer,
       order_id: response.data.paymentIntent_id,
+      payment_id: response.data.customer_id,
     }));
     setUnique_key_number(unique_key);
   };
@@ -228,6 +230,7 @@ export default function FormPayment({
       const newValue = {
         ...values,
         discount: applyPromotion.discount,
+        promotionCode: userPromotionCode,
         totalPrice: newTotalPrice,
       };
       setIsPromotion(true);
@@ -240,6 +243,7 @@ export default function FormPayment({
       const newValue = { ...values };
       const newTotalPrice = values.totalPrice + values.discount;
       delete newValue.discount;
+      delete newValue.promotionCode;
       setValues({ ...values, totalPrice: newTotalPrice });
       setDisplayCode("");
       getClientSecret(newTotalPrice, true);
@@ -249,7 +253,7 @@ export default function FormPayment({
       getClientSecret(values.totalPrice);
     }
   };
-
+  console.log(values, "values");
   React.useEffect(() => {
     checkPromotion(promotionCode);
   }, [promotionCode]);
