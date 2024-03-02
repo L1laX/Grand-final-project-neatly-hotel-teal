@@ -119,6 +119,7 @@ export async function GET(req, res) {
     where: {
       userBooking_id: null,
     },
+    include: { roomAmenity: true, roomGallery: true },
   });
 
   const allBookingRooms = await prisma.customerBooking.findMany({

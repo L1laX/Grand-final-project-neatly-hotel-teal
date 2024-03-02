@@ -22,17 +22,19 @@ import {
 } from "@/components/ui/popover";
 
 export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
-
-// แบบนี้วันที่ -1
+  // แบบนี้วันที่ -1
   // const dateString = JSON.stringify({
   //   from: date.from?.toISOString(),
   //   to: date.to?.toISOString(),
   // });
-  
-  const { date,setDate,roomAndGuest,setRoomAndGuest,calendarDesign } = handleDateRangeRoomGuest;
+
+  const { date, setDate, roomAndGuest, setRoomAndGuest, calendarDesign } =
+    handleDateRangeRoomGuest;
 
   const dateString = JSON.stringify({
-    from: date?.from ? format(date?.from, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
+    from: date?.from
+      ? format(date?.from, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
+      : null,
     to: date?.to ? format(date?.to, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx") : null,
   });
 
@@ -43,10 +45,10 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
 
   const sendValueToRoomDetails = {
     dateString,
-    roomAndGuestString
+    roomAndGuestString,
   };
-  console.log(sendValueToRoomDetails)
-  
+  console.log(sendValueToRoomDetails);
+
   // console.log(date)
   // console.log(room)
   // console.log(guest)
@@ -124,7 +126,7 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
               <div className="flex flex-col justify-center">
                 <span className="mb-1">Room</span>
               </div>
-              <div className="flex w-32 justify-end border-4 border-double border-indigo-600">
+              <div className="flex w-32 justify-end">
                 <button
                   disabled={roomAndGuest.room <= 1 ? true : false}
                   className={
@@ -147,7 +149,7 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
                     <span className="mb-[2.75px] text-lg">-</span>
                   </div>
                 </button>
-                <div className="inline w-10 border-4 border-double border-indigo-600 text-center">
+                <div className="inline w-10 text-center">
                   {roomAndGuest.room}
                 </div>
                 <button
@@ -168,7 +170,7 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
               <div className="flex flex-col justify-center">
                 <span className="mb-1">Guest</span>
               </div>
-              <div className="flex w-32 justify-end border-4 border-double border-indigo-600">
+              <div className="flex w-32 justify-end">
                 <button
                   disabled={roomAndGuest.guest <= 1 ? true : false}
                   className={
@@ -193,7 +195,7 @@ export function DateRangeRoomGuest({ className, handleDateRangeRoomGuest }) {
                     <span className="mb-[2.75px] text-lg">-</span>
                   </div>
                 </button>
-                <div className="inline w-10 border-4 border-double border-indigo-600 text-center">
+                <div className="inline w-10 text-center">
                   {roomAndGuest.guest}
                 </div>
                 <button

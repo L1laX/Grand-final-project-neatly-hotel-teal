@@ -37,6 +37,8 @@ export const RoomCard = ({
   dateRoomGuest,
   allRoomId,
   roomPromotionPrice,
+  roomAmenity,
+  roomGallery,
 }) => {
   const { data: session } = useSession();
   const router = useRouter();
@@ -73,6 +75,9 @@ export const RoomCard = ({
       price;
     router.push(url);
   };
+
+  console.log("roomAmenity", roomAmenity);
+  console.log("roomGallery", roomGallery);
 
   const [isFullScreen, setIsFullScreen] = useState(false);
   const toggleFullScreen = () => {
@@ -180,7 +185,7 @@ export const RoomCard = ({
                   <AlertDialogHeader>
                     <AlertDialogTitle>
                       <div className=" flex flex-row justify-between gap-5 p-4 md:ml-20">
-                        <h5>Superior Garden View</h5>
+                        <h5>{roomName}</h5>
 
                         <AlertDialogCancel>
                           <Image
@@ -198,18 +203,11 @@ export const RoomCard = ({
                       <div className="px-5 md:px-0">
                         <Carousel>
                           <CarouselContent>
-                            <CarouselItem className="basis-2/3">
-                              <img src={roomImage} alt="room" />
-                            </CarouselItem>
-                            <CarouselItem className="basis-2/3">
-                              <img src={roomImage} alt="room" />
-                            </CarouselItem>
-                            <CarouselItem className="basis-2/3">
-                              <img src={roomImage} alt="room" />
-                            </CarouselItem>
-                            <CarouselItem className="basis-2/3">
-                              <img src={roomImage} alt="room" />
-                            </CarouselItem>
+                            {roomGallery.map((item, index) => (
+                              <CarouselItem key={index} className="basis-2/3">
+                                <img src={item.image} alt="room" />
+                              </CarouselItem>
+                            ))}
                           </CarouselContent>
                           <CarouselNext />
                           <CarouselPrevious />
@@ -228,29 +226,11 @@ export const RoomCard = ({
                         <div className="py-5">
                           <h5 className="text-black">Room Amenities</h5>
                           <div className="flex flex-col justify-between gap-6 p-4 md:flex-row">
-                            <ul className="amenities-1 list-disc">
-                              <li className="bullet-text">Safe in Room</li>
-                              <li className="bullet-text">Air Conditioning</li>
-                              <li className="bullet-text">
-                                High-speed internet connection
-                              </li>
-                              <li className="bullet-text">Hairdryer</li>
-                              <li className="bullet-text">Shower</li>
-                              <li className="bullet-text">
-                                Bathroom amenities
-                              </li>
-                              <li className="bullet-text">Lamp</li>
-                            </ul>
-                            <ul className="amenities-2 list-disc">
-                              <li className="bullet-text">Minibar</li>
-                              <li className="bullet-text">Telephone</li>
-                              <li className="bullet-text">Ironing board</li>
-                              <li className="bullet-text">
-                                A floor only accessible via a guest room key
-                              </li>
-                              <li className="bullet-text">Alarm clock</li>
-                              <li className="bullet-text">Bathrobe</li>
-                            </ul>
+                            {roomAmenity?.map((item, index) => (
+                              <ul key={index} className="list-disc">
+                                <li className="bullet-text">{item.name}</li>
+                              </ul>
+                            ))}
                           </div>
                         </div>
                       </div>

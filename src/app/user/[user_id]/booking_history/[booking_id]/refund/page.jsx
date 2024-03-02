@@ -5,6 +5,7 @@ import Modal from "@/components/common/PopupModal";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import LoadingRoom from "@/components/common/LoadingRoom";
+import { format } from "date-fns";
 
 const RefundBooking = ({ params }) => {
   const router = useRouter();
@@ -33,7 +34,9 @@ const RefundBooking = ({ params }) => {
         alert(
           "Your refund request has been processed! We will notify you once the refund is completed.",
         );
-        router.push(`/user/${user_id}/booking_history`);
+        router.push(
+          `/user/${user_id}/booking_history/${booking_id}/refund/success`,
+        );
       }
     } catch (error) {
       console.error("Failed to delete booking order:", error);
@@ -83,14 +86,34 @@ const RefundBooking = ({ params }) => {
                   </h3>
                 )}
                 <p className=" body1 mb-10 text-[#646D89]">
-                  {refundBooking?.checkInDate} - {refundBooking?.checkOutDate}{" "}
+                  {isLoading ? (
+                    <>
+                      {format(
+                        new Date(refundBooking?.checkInDate),
+                        "eee, dd MMM yyyy",
+                      )}{" "}
+                      -{" "}
+                      {format(
+                        new Date(refundBooking?.checkOutDate),
+                        "eee, dd MMM yyyy",
+                      )}{" "}
+                    </>
+                  ) : null}
                   <br />
                   {refundBooking?.guestCount} Guests
                 </p>
               </div>
               <div className="right flex flex-col">
                 <p className=" body1 text-[#9aa1b9]">
-                  Booking date: {refundBooking?.created_at}
+                  Booking date:{" "}
+                  {isLoading ? (
+                    <>
+                      {format(
+                        new Date(refundBooking?.created_at),
+                        "eee, dd MMM yyyy",
+                      )}
+                    </>
+                  ) : null}
                 </p>
                 <p className=" mt-14 text-right">Total Refund</p>
                 <h5 className=" text-right">THB {refundBooking?.totalPrice}</h5>

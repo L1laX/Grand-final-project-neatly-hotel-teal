@@ -50,6 +50,7 @@ export default function RoomDetail({ searchParams }) {
       `/api/room_detail?checkin=${checkInDate}&checkout=${checkOutDate}&room=${roomAndGuest.room}&guest=${roomAndGuest.guest}`,
     );
     setRooms(result.data);
+    console.log(result.data);
   };
 
   useEffect(() => {
@@ -132,6 +133,8 @@ export default function RoomDetail({ searchParams }) {
               roomAvailable={item.availableRoom}
               allRoomId={item.room_id_list}
               roomPromotionPrice={item.promotionPrice}
+              roomAmenity={item.roomAmenity}
+              roomGallery={item.roomGallery}
             />
           ))
         ) : (

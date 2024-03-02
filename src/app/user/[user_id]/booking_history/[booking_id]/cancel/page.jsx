@@ -32,7 +32,9 @@ const CancelBooking = ({ params }) => {
       const res = await axios.put(`/api/user/booking_history/${booking_id}`);
       if (res.status === 200) {
         alert("Booking Order has been canceled");
-        router.push(`/user/${user_id}/booking_history`);
+        router.push(
+          `/user/${user_id}/booking_history/${booking_id}/cancel/success`,
+        );
       }
     } catch (error) {
       console.error("Failed to cancel booking order:", error);
@@ -83,7 +85,19 @@ const CancelBooking = ({ params }) => {
                 )}
 
                 <p className=" body1 mb-10 text-[#9aa1b9]">
-                  {cancelBooking?.checkInDate} - {cancelBooking?.checkOutDate}
+                  {isLoading ? (
+                    <>
+                      {format(
+                        new Date(cancelBooking?.checkInDate),
+                        "eee, dd MMM yyyy",
+                      )}{" "}
+                      -{" "}
+                      {format(
+                        new Date(cancelBooking?.checkOutDate),
+                        "eee, dd MMM yyyy",
+                      )}
+                    </>
+                  ) : null}
                   <br />
                   {cancelBooking?.guestCount} Guests
                 </p>
@@ -94,8 +108,15 @@ const CancelBooking = ({ params }) => {
               </div>
               <div className="right">
                 <p className=" body1 text-[#9aa1b9]">
-                  Booking date:
-                  {cancelBooking?.created_at}
+                  Booking date:{" "}
+                  {isLoading ? (
+                    <>
+                      {format(
+                        new Date(cancelBooking?.created_at),
+                        "eee, dd MMM yyyy",
+                      )}
+                    </>
+                  ) : null}
                 </p>
               </div>
             </div>

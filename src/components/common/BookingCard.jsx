@@ -52,15 +52,30 @@ export default function BookingCard({
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
 
-  const isTwoFourHrs = (booking) => {
+  const isTwoFourHrs = (hours) => {
     const now = new Date();
-    const userBookingDate = new Date(booking.created_at);
+    const userBookingDate = new Date(bookingdate);
     const withinHours = (now - userBookingDate) / (1000 * 60 * 60);
-    return withinHours < 24;
+    return withinHours < hours;
   };
 
-  console.log("Checkin:", customerCheckin);
-  console.log("Checkout:", customerCheckout);
+  const isCheckin = (checkin) => {
+    const now = new Date();
+    const userCheckin = new Date(checkin);
+
+    return now - userCheckin < 0;
+  };
+
+  console.log("isCheckin", isCheckin(customerCheckin));
+
+  const customerInfo = {
+    checkin: customerCheckin,
+    checkout: customerCheckout,
+    id: bookingId,
+  };
+
+  console.log("customerInfo**********", customerInfo);
+
   return (
     <div className="mb-10 flex w-full flex-col ">
       <p className=" text-sm text-[#9AA1B9]">
@@ -88,6 +103,10 @@ export default function BookingCard({
                 <p className="text-[#9AA1B9] md:text-right">
                   Cancellation date: {format(bookingdate, "eee, dd MMM yyyy")}
                 </p>
+              ) : null}
+              {paymentStatus !== "canceled" &&
+              isCheckin(customerCheckin) === false ? (
+                <p className="text-[#9AA1B9] md:text-right">Checked In</p>
               ) : null}
             </div>
           </div>
@@ -157,9 +176,9 @@ export default function BookingCard({
                       <p className="text-[#646D89]">Promotion Code :</p>
                       {promotionCode === null ? (
                         <div className="flex flex-row justify-between">
-                          <p className="text-[#646D89]">{promotionCode} code</p>
+                          <p className="text-[#646D89]">{promotionCode}</p>
                           <p className="pl-4 text-right font-semibold text-[#2A2E3F]">
-                            {promotionPrice} test
+                            {promotionPrice}
                           </p>
                         </div>
                       ) : null}
@@ -190,7 +209,8 @@ export default function BookingCard({
       <div className="mt-4 flex w-full items-center justify-between max-sm:flex-col">
         {/* Cancel Booking Button */}
         <div>
-          {paymentStatus === "canceled" ? (
+          {paymentStatus === "canceled" ||
+          isCheckin(customerCheckin) === false ? (
             <button
               className="visitlink"
               disabled={true}
@@ -319,7 +339,8 @@ export default function BookingCard({
 
           {/* Change Date Button */}
           <div className="max-sm:pb-3">
-            {paymentStatus === "canceled" ? (
+            {paymentStatus === "canceled" ||
+            isCheckin(customerCheckin) === false ? (
               <PrimaryBtn
                 disabled={true}
                 btnName="Change Date"
@@ -347,7 +368,7 @@ export default function BookingCard({
       <hr className="mt-10 w-full border-[1.75px]" />
 
       {/* Popup for Cancel Booking */}
-      {isTwoFourHrs ? (
+      {isTwoFourHrs(24) ? (
         <Modal
           showModal={showModal}
           handleCancel={() =>
@@ -358,7 +379,7 @@ export default function BookingCard({
           }}
           handleClose={() => setShowModal(false)}
           modalTitle="Cancel Booking"
-          modalContent="Are you sure you would like to cancel this booking? 24ชม.ต้องคืนเงินได้"
+          modalContent="Are you sure you would like to cancel this booking?"
           cancelButton="Yes, I want to cancel and request a refund"
           confirmButton="No, Don't cancel"
         />
@@ -374,7 +395,7 @@ export default function BookingCard({
           handleClose={() => setShowModal(false)}
           modalTitle="Cancel Booking"
           modalContent="Cancellation of the booking now will not be able to request a refund.
-        Are you sure you would like to cancel this booking? น้อยกว่า 24 ชม. ไม่สามารถคืนเงินได้"
+        Are you sure you would like to cancel this booking?"
           cancelButton="Yes, I want to cancel"
           confirmButton="No, Don't cancel"
         />
