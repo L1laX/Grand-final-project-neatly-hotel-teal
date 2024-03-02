@@ -5,7 +5,7 @@ import Modal from "@/components/common/PopupModal";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import axios from "axios";
-import DateOnlySelector from "@/components/ui/testDatePicker";
+import DateOnlySelector from "@/components/ui/DateOnlySelector";
 
 const ChangeDate = ({ params }) => {
   const router = useRouter();
@@ -29,6 +29,24 @@ const ChangeDate = ({ params }) => {
   useEffect(() => {
     getChangeDate();
   }, []);
+
+  const updateChangeDate = async (data) => {
+    try {
+      const res = await axios.put(
+        `/api/user/booking_history/${booking_id}`,
+        changeDate,
+      );
+
+      console.log(res);
+      if (res.status === 200)
+        router.push(
+          `/user/${user_id}/booking_history/${booking_id}/change_date/success`,
+        );
+    } catch (error) {
+      console.error("Error updating customer bookings:", error);
+    }
+  };
+
   const handleConfirmCancle = () => {
     setShowModal(true);
   };
@@ -89,7 +107,6 @@ const ChangeDate = ({ params }) => {
               </div>
               <p className=" body1 text-[#9aa1b9]">
                 Booking date:
-
                 {/* หรือจะใช้ loading เหมือนด้านบนก็ได้เหมือนกัน */}
                 {changeDate?.created_at
                   ? format(
@@ -135,7 +152,7 @@ const ChangeDate = ({ params }) => {
       <Modal
         showModal={showModal}
         handleCancel={handleCancel}
-        handleConfirm={handleCancel}
+        handleConfirm={() => updateChangeDate(changeDate)}
         modalTitle="Change Date "
         modalContent="Are you sure you want to change your check-in and check-out date?"
         cancelButton="No, I don't"

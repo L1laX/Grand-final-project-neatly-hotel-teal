@@ -8,8 +8,7 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import LoadingRoom from "@/components/common/LoadingRoom";
 
-function SuccessCancel({ params }) {
-  const { user_id, booking_id } = params;
+function SuccessCancel({ booking_id }) {
   const router = useRouter();
   const [cancelBooking, setCancelBooking] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
