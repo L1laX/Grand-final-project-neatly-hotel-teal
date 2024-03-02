@@ -51,7 +51,10 @@ export default function CheckoutForm({
       confirmParams: {},
     });
     if (data.error) {
-      alert(data.error.message);
+      toast.error(data.error.message, {
+        position: "top-center",
+        autoClose: 2000,
+      });
     }
 
     if (data.paymentIntent?.status === "succeeded") {
