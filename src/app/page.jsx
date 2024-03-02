@@ -228,13 +228,13 @@ export default function Home() {
           </p>
         </div>
       </section>
-      <section id="service" className="mb-20 flex items-center relative">
-        <div className="absolute z-50 lg:left-20 sm:left-14 left-3 top-1/2 transform -translate-y-1/2">
+      <section id="service" className="relative mb-20 flex items-center">
+        <div className="absolute left-3 top-1/2 z-50 -translate-y-1/2 transform sm:left-14 lg:left-20">
           <button className="" onClick={() => imgSlider?.current?.slickPrev()}>
             <NextPrevBtn className="h-8 w-8 rotate-180 transition duration-200 ease-in-out hover:scale-90 md:h-10 md:w-10  lg:h-14 lg:w-14" />
           </button>
         </div>
-        <div className="absolute z-50 lg:right-20 sm:right-14 right-3 top-1/2 transform -translate-y-1/2">
+        <div className="absolute right-3 top-1/2 z-50 -translate-y-1/2 transform sm:right-14 lg:right-20">
           <button className="" onClick={() => imgSlider?.current?.slickNext()}>
             <NextPrevBtn className="h-8 w-8 rotate-0 transition duration-200 ease-in-out hover:scale-90 md:h-10 md:w-10  lg:h-14 lg:w-14" />
           </button>
@@ -358,13 +358,15 @@ export default function Home() {
 
         <div className="flex w-11/12 grid-cols-5 grid-rows-9 flex-col gap-4 md:grid md:h-[84rem] lg:h-[120rem] lg:w-5/6">
           <div className="relative col-span-5 row-span-3 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
-            <Image
-              className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-              src={SuperiorGardenView}
-              alt="Superior Garden View"
-              layout="fill"
-              objectFit="cover"
-            />
+            <Link href="/room_detail/1c7f1802-b497-443d-88e1-e860bd224577">
+              <Image
+                className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                src={SuperiorGardenView}
+                alt="Superior Garden View"
+                layout="fill"
+                objectFit="cover"
+              />
+            </Link>
             <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
               <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
                 Superior Garden View
@@ -376,13 +378,15 @@ export default function Home() {
           </div>
 
           <div className="relative col-span-3 row-span-2 row-start-4 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
-            <Image
-              className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-              src={Deluxe}
-              alt="Deluxe"
-              layout="fill"
-              objectFit="cover"
-            />
+            <Link href="/room_detail/0c70f943-5312-46d8-9080-521526b2b831">
+              <Image
+                className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                src={Deluxe}
+                alt="Deluxe"
+                layout="fill"
+                objectFit="cover"
+              />
+            </Link>
             <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
               <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
                 Deluxe
@@ -394,13 +398,15 @@ export default function Home() {
           </div>
 
           <div className="relative col-span-2 col-start-4 row-span-2 row-start-4 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
-            <Image
-              className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-              src={Superior}
-              alt="Superior"
-              layout="fill"
-              objectFit="cover"
-            />
+            <Link href="/room_detail/70be1885-e697-47ee-98e4-679d67f13b55">
+              <Image
+                className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                src={Superior}
+                alt="Superior"
+                layout="fill"
+                objectFit="cover"
+              />
+            </Link>
             <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
               <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
                 Superior
@@ -412,13 +418,15 @@ export default function Home() {
           </div>
 
           <div className="relative col-span-2 row-span-4 row-start-6 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
-            <Image
-              className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-              src={PremierSeaView}
-              alt="Premier Sea View"
-              layout="fill"
-              objectFit="cover"
-            />
+            <Link href="/room_detail/6affa6d0-2993-43ff-94c0-96e7cb7a0c12">
+              <Image
+                className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                src={PremierSeaView}
+                alt="Premier Sea View"
+                layout="fill"
+                objectFit="cover"
+              />
+            </Link>
             <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
               <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
                 Premier Sea View
@@ -430,13 +438,15 @@ export default function Home() {
           </div>
 
           <div className="relative col-span-3 col-start-3 row-span-2 row-start-6 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
-            <Image
-              className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-              src={Supreme}
-              alt="Supreme"
-              layout="fill"
-              objectFit="cover"
-            />
+            <Link href="/room_detail/1212592a-55c8-48b5-b977-7d60de580dc1">
+              <Image
+                className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                src={Supreme}
+                alt="Supreme"
+                layout="fill"
+                objectFit="cover"
+              />
+            </Link>
             <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
               <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
                 Supreme
@@ -448,13 +458,15 @@ export default function Home() {
           </div>
 
           <div className="relative col-span-3 col-start-3 row-span-2 row-start-8 flex w-full cursor-pointer max-md:h-60 max-sm:h-48">
-            <Image
-              className="transform brightness-75 transition-transform duration-500 hover:scale-110"
-              src={Suite}
-              alt="Suite"
-              layout="fill"
-              objectFit="cover"
-            />
+            <Link href="/room_detail/77a26f05-297c-4930-aaf7-d3e10a77cd44">
+              <Image
+                className="transform brightness-75 transition-transform duration-500 hover:scale-110"
+                src={Suite}
+                alt="Suite"
+                layout="fill"
+                objectFit="cover"
+              />
+            </Link>
             <div className="z-10 mb-7 ml-5 self-end sm:mb-9 sm:ml-7 md:mb-12 md:ml-10 xl:mb-16 xl:ml-12">
               <p className="text-xl text-white sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
                 Suite

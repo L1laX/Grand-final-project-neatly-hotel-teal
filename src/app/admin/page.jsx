@@ -31,15 +31,15 @@ const columnstable = [
 function CustomerBooking() {
   const router = useRouter();
   const [columns, setColumns] = React.useState([...columnstable]);
-  const [search, setSearch] = useState("");
-  const [rows, setRows] = useState([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [totalRows, setTotalRows] = useState(0);
-  const [newRowsPerPage, setNewRowsPerPage] = useState(10);
+  const [search, setSearch] = React.useState("");
+  const [oldSearch, setOldSearch] = React.useState("");
+  const [page, setPage] = React.useState(0);
   const [highestPage, setHighestPage] = React.useState(0);
   const [newPage, setNewPage] = React.useState(0);
-  const [oldSearch, setOldSearch] = React.useState("");
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rows, setRows] = React.useState([]);
+  const [newRowsPerPage, setNewRowsPerPage] = React.useState(10);
+  const [totalPage, setTotalPage] = React.useState(0);
 
   const formatDate = (dateString) => {
     const options = {
@@ -50,7 +50,6 @@ function CustomerBooking() {
     };
     return new Date(dateString).toLocaleDateString("en-GB", options);
   };
-
   const fetchData = async (isNew) => {
     try {
       toast.info("Fetching Room Data...", {
@@ -58,11 +57,11 @@ function CustomerBooking() {
         autoClose: false,
       });
       const res = await axios.get(
-        `/api/admin/customer_booking?keywords=${search}&page=${newPage}&pageSize=${newRowsPerPage}`,
+        `/api/admin/customer_booking?keywords=${search}&page=${newPage}&pageSize=${rowsPerPage}`,
       );
       const data = res.data;
       isNew ? setRows([...data.data]) : setRows([...rows, ...data.data]);
-      setTotalRows(data.totalRows);
+      setTotalPage(data.totalRows);
       setColumns([...columnstable]);
       toast.dismiss();
     } catch (e) {
@@ -73,7 +72,6 @@ function CustomerBooking() {
       });
     }
   };
-  console.log(rows);
   useEffect(() => {
     if (newRowsPerPage !== rowsPerPage) {
       setNewRowsPerPage(rowsPerPage);
@@ -206,7 +204,7 @@ function CustomerBooking() {
             <TablePagination
               rowsPerPageOptions={[10, 25, 50, 100]}
               component="div"
-              count={totalRows}
+              count={totalPage}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

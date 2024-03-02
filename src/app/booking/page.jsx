@@ -21,7 +21,7 @@ export default function StepperController({ searchParams }) {
     dateString: { to: searchParams.to, from: searchParams.from },
     roomAndGuestString: { room: searchParams.room, guest: searchParams.guest },
   };
-  console.log(sendValueToRoomDetails);
+
   const [values, setValues] = useState({
     dateOfBirth: "",
     email: "",
@@ -97,6 +97,7 @@ export default function StepperController({ searchParams }) {
   };
 
   const [request, setRequest] = useState({});
+  console.log(request);
   const [promotionCode, setPromotionCode] = useState("");
   const getRequest = (e) => {
     const { name, checked } = e.target;
@@ -272,6 +273,7 @@ export default function StepperController({ searchParams }) {
                   getRequest={getRequest}
                   values={values}
                   request={request}
+                  setCurrentStep={setCurrentStep}
                 />
               )}
               {currentStep === 3 && (
@@ -374,7 +376,7 @@ export default function StepperController({ searchParams }) {
         </section>
       ) : (
         <div>
-          <SubmitTotal values={values} />
+          <SubmitTotal values={values} request={request} />
         </div>
       )}
       <ToastContainer containerId="id" />
