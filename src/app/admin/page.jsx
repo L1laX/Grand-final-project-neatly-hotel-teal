@@ -186,8 +186,8 @@ function CustomerBooking() {
                                 value = formatDate(row[column.id]);
                               } else if (column.id === "totalPrice") {
                                 value = row.totalPrice.toLocaleString("en-US", {
-                                  style: "currency",
-                                  currency: "USD", // Adjust currency code as necessary
+                                  // style: "currency",
+                                  // currency: "THB",
                                 });
                               }
                               return (

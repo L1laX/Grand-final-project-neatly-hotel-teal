@@ -42,7 +42,7 @@ export default function StepperController({ searchParams }) {
     //roomReserve:searchParams.room,
     guestCount: searchParams.guest,
     allRoomId: searchParams.allRoomId,
-    roomPrice: searchParams.roomPrice,
+    roomPrice: +searchParams.roomPrice,
     user_id: searchParams.userId,
     //nightReserve:(eachDayOfInterval({ start: new Date(searchParams.from), end: new Date(searchParams.to) })).length-1,
     totalPrice:
@@ -316,14 +316,22 @@ export default function StepperController({ searchParams }) {
                   <div className="room-price mb-10">
                     <ol className="flex flex-row justify-between">
                       <li>{values.roomName}</li>
-                      <li>{values.roomPrice}</li>
+                      <li>
+                        {values.roomPrice.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        })}
+                      </li>
                     </ol>
                     {/* Add-on Request */}
                     {request
                       ? Object.keys(request).map((key) => (
                           <ol className="flex flex-row justify-between">
                             <li className="body1 text-[#D5DFDA]">{[key]}</li>
-                            <li>{request[key]}</li>
+                            <li>
+                              {request[key].toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              })}
+                            </li>
                           </ol>
                         ))
                       : null}
@@ -339,7 +347,11 @@ export default function StepperController({ searchParams }) {
 
                   <div className="total-price mt-6 flex flex-row justify-between">
                     <p className="body1 text-[#D5DFDA]">Total</p>
-                    <h5 className="text-white">THB {values.totalPrice}</h5>
+                    <h5 className="text-white">
+                      {values.totalPrice.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      })}
+                    </h5>
                   </div>
                 </div>
               </div>

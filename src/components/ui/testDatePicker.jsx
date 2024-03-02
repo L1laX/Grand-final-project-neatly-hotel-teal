@@ -16,10 +16,13 @@ export default function DateOnlySelector({
   className,
   checkInOut,
   checkInDate,
+
+  checkOutDate,
+  bookedDate,
 }) {
   const [date, setDate] = useState({
-    from: checkInDate ? new Date(checkInDate) : null, // Ensure there's a check for null
-    to: addDays(new Date(), 20), // Use current date for demonstration
+    from: new Date(checkInDate), // Ensure there's a check for null
+    to: new Date(checkOutDate), // Use current date for demonstration
   });
 
   console.log("DATE", date);
@@ -31,6 +34,16 @@ export default function DateOnlySelector({
     }
     return "";
   };
+  let disableDate;
+  if (bookedDate) {
+    bookedDate.map((dateRange) => {
+      const checkInDate = new Date(dateRange.checkInDate);
+      const checkOutDate = new Date(dateRange.checkOutDate);
+      return (date) => date >= checkInDate && date <= checkOutDate;
+    });
+  }
+
+  console.log("testbookeddd", bookedDate ? bookedDate : null);
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -67,6 +80,11 @@ export default function DateOnlySelector({
             selected={date}
             onSelect={setDate}
             numberOfMonths={2}
+            disabled={[
+              (date) => date < new Date(new Date().setHours(0, 0, 0, 0)),
+              new Date(date?.from),
+              ...disableDate,
+            ]}
           />
         </PopoverContent>
       </Popover>

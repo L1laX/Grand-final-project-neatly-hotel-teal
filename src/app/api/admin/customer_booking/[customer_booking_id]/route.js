@@ -11,7 +11,11 @@ export async function GET(request, { params: { customer_booking_id } }) {
         user: true,
         customerBooking_room: {
           include: {
-            room: true,
+            room: {
+              include: {
+                roomAmenity: true,
+              },
+            },
           },
         },
         bookingRequest: true,
@@ -21,25 +25,31 @@ export async function GET(request, { params: { customer_booking_id } }) {
     if (!customerBooking) {
       return NextResponse.error("Customer booking not found", { status: 404 });
     }
-    console.log(customerBooking);
-    const rooms = customerBooking.customerBooking_room.map((bookingRoom) => ({
-      name: bookingRoom.room.name,
-      size: bookingRoom.room.size,
-      bedType: bookingRoom.room.bedType,
-      status: bookingRoom.room.status,
-      checkInDate: bookingRoom.room.checkInDate,
-      checkOutDate: bookingRoom.room.checkOutDate,
-      guests: bookingRoom.room.guests,
-      description: bookingRoom.room.description,
-      roomMainImage: bookingRoom.room.roomMainImage,
-      pricePerNight: bookingRoom.room.pricePerNight,
-      promotionPrice: bookingRoom.room.promotionPrice,
-      created_at: bookingRoom.room.created_at,
-      last_updated_at: bookingRoom.room.last_updated_at,
-      roomAmenity: bookingRoom.room.roomAmenity,
-      roomGallery: bookingRoom.room.roomGallery,
-      totalPrice: bookingRoom.totalPrice,
-    }));
+
+    // Manually fetch promotions if there's a logical way to relate them to the booking or rooms
+    // For demonstration, let's assume we fetch all promotions and filter them in the application code
+    const promotions = await prisma.promotion.findMany();
+    // You would need to filter or match these promotions based on your logic
+
+    const rooms = customerBooking.customerBooking_room.map((bookingRoom) => {
+      // Find related promotions based on your logic, for example, by room name
+      const relatedPromotion = promotions.find(
+        (p) => p.name === bookingRoom.room.name,
+      );
+
+      return {
+        ...bookingRoom.room,
+
+        promotion: relatedPromotion
+          ? {
+              promotionCode: relatedPromotion.promotionCode,
+              discount: relatedPromotion.discount,
+              name: relatedPromotion.name,
+            }
+          : null,
+        // Since room amenities are directly fetched, they should already be included in the bookingRoom.room object
+      };
+    });
 
     return NextResponse.json({
       success: true,

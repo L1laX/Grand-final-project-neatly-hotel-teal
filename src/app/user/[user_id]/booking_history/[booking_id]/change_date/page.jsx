@@ -26,15 +26,12 @@ const ChangeDate = ({ params }) => {
       console.error("Error fetching customer bookings:", error);
     }
   };
-
   useEffect(() => {
     getChangeDate();
   }, []);
-
   const handleConfirmCancle = () => {
     setShowModal(true);
   };
-
   const handleCancel = () => {
     setShowModal(false);
   };
@@ -60,7 +57,6 @@ const ChangeDate = ({ params }) => {
               />
             )}
           </div>
-
           <div className="booking-content flex flex-col lg:ml-9 lg:w-4/5">
             {/* Booking Detail */}
             <section className="flex flex-col lg:flex-row lg:justify-between">
@@ -93,6 +89,7 @@ const ChangeDate = ({ params }) => {
               </div>
               <p className=" body1 text-[#9aa1b9]">
                 Booking date:
+
                 {/* หรือจะใช้ loading เหมือนด้านบนก็ได้เหมือนกัน */}
                 {changeDate?.created_at
                   ? format(
@@ -103,6 +100,7 @@ const ChangeDate = ({ params }) => {
               </p>
             </section>
             {/* Changing Date */}
+
             {loading ? null : (
               <section className="changedate-container mt-6 rounded-md bg-white p-4">
                 <p className=" font-semibold text-[#424C6B]">Change Date</p>
@@ -127,20 +125,17 @@ const ChangeDate = ({ params }) => {
           >
             Back
           </button>
-
           <PrimaryBtn
             btnName="Confirm Change Date"
             handleClick={handleConfirmCancle}
           ></PrimaryBtn>
         </div>
       </section>
-
       {/* Popup */}
       <Modal
         showModal={showModal}
         handleCancel={handleCancel}
         handleConfirm={handleCancel}
-        handleClose={() => setShowModal(false)}
         modalTitle="Change Date "
         modalContent="Are you sure you want to change your check-in and check-out date?"
         cancelButton="No, I don't"
@@ -149,5 +144,4 @@ const ChangeDate = ({ params }) => {
     </>
   );
 };
-
 export default ChangeDate;
