@@ -5,10 +5,13 @@ import { useRouter } from "next/navigation";
 import PrimaryBtn from "@/components/common/PrimaryBtn";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { format } from "date-fns";
 
-function SuccessRefund({ booking_id }) {
+function SuccessRefund({ params }) {
+  const { user_id, booking_id } = params;
   const router = useRouter();
   const [refundBooking, setRefundBooking] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getBookingHistory = async () => {
     try {
@@ -43,19 +46,49 @@ function SuccessRefund({ booking_id }) {
         <div className="reserved-result-room flex w-full flex-col items-center divide-y-[1px] divide-[#5d7b6a] bg-[#465C50]">
           <div className="date-booking-form mx-10 my-6 flex w-5/6 flex-col rounded-sm">
             <div className="booking-date flex flex-col justify-between rounded bg-[#5D7B6A] p-6">
-              <h5 className=" text-white">{refundBooking?.room?.name}</h5>
+              <h5 className=" text-white">
+                {refundBooking?.customerBooking_room?.room?.name}
+              </h5>
               <h5 className=" mt-4 text-base font-medium text-white">
-                {refundBooking?.checkInDate} - {refundBooking?.checkOutDate}
+                {isLoading ? (
+                  <>
+                    {format(
+                      new Date(refundBooking?.checkInDate),
+                      "eee, dd MMM yyyy",
+                    )}{" "}
+                    -{" "}
+                    {format(
+                      new Date(refundBooking?.checkOutDate),
+                      "eee, dd MMM yyyy",
+                    )}
+                  </>
+                ) : null}
                 <p className=" body1 text-white">
                   {refundBooking?.guestCount} Guests
                 </p>
               </h5>
 
               <p className=" body1 mt-10 text-[#D5DFDA]">
-                Booking date: {refundBooking?.created_at}
+                Booking date:{" "}
+                {isLoading ? (
+                  <>
+                    {format(
+                      new Date(refundBooking?.created_at),
+                      "eee, dd MMM yyyy",
+                    )}
+                  </>
+                ) : null}
               </p>
               <p className=" body1 text-[#D5DFDA]">
-                Cancellation date: {refundBooking?.last_updated_at}
+                Cancellation date:{" "}
+                {isLoading ? (
+                  <>
+                    {format(
+                      new Date(refundBooking?.last_updated_at),
+                      "eee, dd MMM yyyy",
+                    )}
+                  </>
+                ) : null}
               </p>
             </div>
           </div>
