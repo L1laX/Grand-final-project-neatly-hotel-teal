@@ -183,9 +183,11 @@ export default function FormPayment({
   const [displayCode, setDisplayCode] = React.useState("");
   const [paymentIntent_id, setPaymentIntent_id] = React.useState("");
   const [unique_key_number, setUnique_key_number] = React.useState(0);
+  const [payment_id, setPayment_id] = React.useState(values.payment_id);
   const getClientSecret = async (amount, istrue) => {
     const unique_key = uuidv4();
-    console.log(values.customer_id, "values.customer_id");
+    console.log(payment_id, "values.customer_id");
+
     const response = await axios.post(
       "/api/user/payment_method/payment_intent",
       {
@@ -194,7 +196,7 @@ export default function FormPayment({
         amount: +amount,
         isUpdate: istrue ? true : false,
         intent_id: paymentIntent_id || null,
-        customer_id: values.payment_id || null,
+        customer_id: payment_id || null,
       },
     );
     setClientSecret(response.data.clientSecret);
@@ -206,6 +208,7 @@ export default function FormPayment({
       order_id: response.data.paymentIntent_id,
       payment_id: response.data.customer_id,
     }));
+    setPayment_id(response.data.customer_id);
     setUnique_key_number(unique_key);
   };
   const appearance = {

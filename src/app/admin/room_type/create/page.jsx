@@ -93,14 +93,9 @@ const crateRoomType = () => {
     }
     return uploadImage;
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const toasty = toast.info("Checking Data...", {
-      position: "top-center",
-      autoClose: 1000,
-    });
-
+    const id = toast.loading("Checking Data...");
     const newErrors = {
       mainImage: !values.roomMainImage,
       name: !values.name,
@@ -115,14 +110,15 @@ const crateRoomType = () => {
     };
     setErrors({ ...newErrors });
     if (Object.values(newErrors).includes(true))
-      return toast.update(toasty, {
+      return toast.update(id, {
         render: "Please fill in all the required fields",
         type: "error",
+        isLoading: false,
         autoClose: 3000,
       });
-    toast.update(toasty, {
+    toast.update(id, {
       render: "Creating Room ...",
-      type: "info",
+      isLoading: true,
       autoClose: 1000,
     });
     const uploadMainImage = await uploadImage(values.roomMainImage);
@@ -135,9 +131,10 @@ const crateRoomType = () => {
 
     const res = await axios.post("/api/admin/room_prop", newValues);
     if (res.status === 200) {
-      toast.update(toasty, {
+      toast.update(id, {
         render: "Room Created",
         type: "success",
+        isLoading: false,
         autoClose: 1000,
       });
       setTimeout(() => {

@@ -115,6 +115,7 @@ const page = ({ params: { room_id } }) => {
     }
   };
   const handleSubmit = async (e) => {
+    const id = toast.loading("Updating Room ...");
     e.preventDefault();
     const newErrors = {
       roomMainImage: !values.roomMainImage,
@@ -129,10 +130,7 @@ const page = ({ params: { room_id } }) => {
     };
     setErrors({ ...newErrors });
     if (Object.values(newErrors).includes(true)) return alert("Form Error");
-    toast.info("Updating Room ...", {
-      position: "top-center",
-      autoClose: 1000,
-    });
+
     const roomMainImage = await checkpicture(values.roomMainImage);
     const sendData = {
       ...values,
@@ -147,8 +145,11 @@ const page = ({ params: { room_id } }) => {
     }
     const result = await axios.put(`/api/admin/room_prop/${room_id}`, sendData);
     if (result.status === 200) {
-      toast.success("Room Updated Successfully!", {
-        position: "top-center",
+      toast.update(id, {
+        render: "Room Updated",
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
       });
       setTimeout(() => {
         router.push("/admin/room_type");
@@ -242,10 +243,10 @@ const page = ({ params: { room_id } }) => {
         showModal={showModal}
         handleCancel={handleCancel}
         handleConfirm={() => deleteRoom(room_id)}
-        modalTitle="Cancle and Refund this Booking"
-        modalContent="Are you sure you want to cancle this booking and refund?"
+        modalTitle="Delete Room"
+        modalContent="Are you sure you want to delete this room?"
         cancelButton="Cancle"
-        confirmButton="Confirm Cancle and Refund"
+        confirmButton="Confirm Delete"
       />
       <ToastContainer position="top-center" />
     </div>
