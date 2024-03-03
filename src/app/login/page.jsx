@@ -17,7 +17,7 @@ const Login = () => {
   const router = useRouter();
   const { asPath, pathname } = usePathname();
   let urlCallBack = null;
-  if (window) {
+  if (window !== undefined) {
     urlCallBack = `https://${window.location.hostname}/admin`;
   }
   console.log(urlCallBack, "urlCallBack");
