@@ -95,10 +95,7 @@ const Login = () => {
             secondaryButton="w-full"
             google={true}
             handleClick={() => {
-              signIn("google", {
-                callbackUrl:
-                  "https://grand-final-project-neatly-hotel-teal.vercel.app/",
-              });
+              signIn("google");
             }}
           />
         </div>
