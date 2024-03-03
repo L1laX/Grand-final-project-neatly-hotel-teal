@@ -18,6 +18,7 @@ export default function DateOnlySelector({
   checkInDate,
   checkOutDate,
   bookedDate,
+  setNewDate,
 }) {
   const [date, setDate] = useState({
     from: new Date(checkInDate), // Ensure there's a check for null
@@ -77,7 +78,10 @@ export default function DateOnlySelector({
             mode="range"
             defaultMonth={date?.from || new Date()}
             selected={date}
-            onSelect={setDate}
+            onSelect={(e) => {
+              setDate(e);
+              setNewDate(e);
+            }}
             numberOfMonths={2}
             disabled={[
               (date) => date < new Date(new Date().setHours(0, 0, 0, 0)),

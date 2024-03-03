@@ -25,23 +25,26 @@ export async function GET(request, { params: { booking_id } }) {
     });
 
     let bookedRoom = roomType.reduce((acc, room) => {
-      let bookings = room.customerBooking_room.map(booking => booking.customerBooking);
+      let bookings = room.customerBooking_room.map(
+        (booking) => booking.customerBooking,
+      );
       return [...acc, ...bookings];
     }, []);
 
-    bookedRoom = bookedRoom.map(room => {
+    bookedRoom = bookedRoom.map((room) => {
       return {
         checkInDate: room.checkInDate,
-        checkOutDate: room.checkOutDate
+        checkOutDate: room.checkOutDate,
       };
     });
 
     //เอาเฉพาะปัจจุบันไปจนถึงอนาคต
-    bookedRoom = bookedRoom.filter(room => Date.parse(room.checkInDate) >= Date.now());
+    bookedRoom = bookedRoom.filter(
+      (room) => Date.parse(room.checkInDate) >= Date.now(),
+    );
 
-    console.log(bookedRoom)
+    console.log(bookedRoom);
 
-    
     if (!isBookingOrder) {
       return NextResponse.json({
         status: 404,
@@ -52,7 +55,7 @@ export async function GET(request, { params: { booking_id } }) {
     return NextResponse.json({
       data: isBookingOrder,
       status: 200,
-      bookedRoom:bookedRoom,
+      bookedRoom: bookedRoom,
       message: "Booking Order has been fetched",
     });
   } catch (error) {
@@ -82,7 +85,36 @@ export async function PUT(request, { params: { booking_id } }) {
       message: "Booking Order has been cancled",
     });
   } catch (error) {
-    console.log("Error deleting Booking Order:", error);
+    console.log("Error cancel Booking Order:", error);
+    return NextResponse.json({
+      status: 500,
+      message: "Internal Server Error",
+    });
+  }
+}
+// ให้อัพเดทเวลาจอง
+export async function POST(request, { params: { booking_id } }) {
+  const { checkInDate, checkOutDate } = await request.json();
+
+  console.log("ggggg", checkInDate, checkOutDate);
+  try {
+    const changeBookingDate = await prisma.customerBooking.update({
+      where: {
+        id: booking_id,
+      },
+      data: {
+        checkInDate: new Date(checkInDate),
+        checkOutDate: new Date(checkOutDate),
+      },
+    });
+
+    return NextResponse.json({
+      data: changeBookingDate,
+      status: 200,
+      message: "Booking Date has been changed",
+    });
+  } catch (error) {
+    console.log("Error Change Booking Date:", error);
     return NextResponse.json({
       status: 500,
       message: "Internal Server Error",
