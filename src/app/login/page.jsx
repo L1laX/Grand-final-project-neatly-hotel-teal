@@ -5,7 +5,7 @@ import PrimaryBtn from "@/components/common/PrimaryBtn";
 import Link from "next/link";
 import Image from "next/legacy/image";
 import bg from "/src/asset/background/login-page/bg.png";
-import { use, useState } from "react";
+import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import SecondaryBtn from "@/components/common/SecondaryBtn";
 import { usePathname } from "next/navigation";
