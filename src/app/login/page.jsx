@@ -10,14 +10,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import SecondaryBtn from "@/components/common/SecondaryBtn";
 
-
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isValid, setIsValid] = useState(true);
   const router = useRouter();
   //get session data
-  const { data: session } = useSession();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = { username: e.target[0].value, password: e.target[1].value };
@@ -38,8 +36,6 @@ const Login = () => {
       console.error(e);
     }
   };
-
-  
 
   return (
     <div className="main-content relative flex">
@@ -99,7 +95,10 @@ const Login = () => {
             secondaryButton="w-full"
             google={true}
             handleClick={() => {
-              signIn("google", { callbackUrl: "http://localhost:3000/admin" });
+              signIn("google", {
+                callbackUrl:
+                  "https://grand-final-project-neatly-hotel-teal-gaeaz8q4d.vercel.app/",
+              });
             }}
           />
         </div>

@@ -13,6 +13,8 @@ import { supabase } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import DatePicker from "@/components/common/DatePicker";
 import { set } from "date-fns";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 //import Validation from "./registervalidation.js";
 const Register = () => {
   const router = useRouter();
@@ -163,16 +165,22 @@ const Register = () => {
       });
 
       if (error) {
-        error.includes("Username") &&
-          setUnique({ ...unique, username: "Username is already exists " });
-        error.includes("Email") &&
-          setUnique((pre) => ({ ...pre, email: "Email is already exists " }));
-        error.includes("Id number") &&
-          setUnique((pre) => ({
-            ...pre,
-            id_number: "Id number is already exists ",
-          }));
-        return alert(error);
+        error.includes("Username")
+          ? setUnique({ ...unique, username: "Username is already exists " })
+          : setUnique({ ...unique, username: "" });
+        error.includes("Email")
+          ? setUnique((pre) => ({ ...pre, email: "Email is already exists " }))
+          : setUnique((pre) => ({ ...pre, email: "" }));
+        error.includes("Id number")
+          ? setUnique((pre) => ({
+              ...pre,
+              id_number: "Id number is already exists ",
+            }))
+          : setUnique((pre) => ({ ...pre, id_number: "" }));
+        return toast.error(`${error}`, {
+          position: "top-right",
+          autoClose: 2000,
+        });
       }
 
       const data = await uploadAvatar(e);
@@ -180,9 +188,14 @@ const Register = () => {
       if (values.username.includes("admin")) {
         const sendingData = { ...values, image: publicUrl, role: "admin" };
         try {
+          toast.loading("Registering...");
           const result = await axios.post("/api/register", sendingData);
+          toast.success("Register success", {
+            position: "top-right",
+            autoClose: 2000,
+          });
+
           if (result.status === 201) {
-            router.push("/login");
           }
         } catch (e) {
           console.error(e);
@@ -190,9 +203,17 @@ const Register = () => {
       } else {
         const sendingData = { ...values, image: publicUrl };
         try {
+          toast.loading("Registering...");
           const result = await axios.post("/api/register", sendingData);
           if (result.status === 201) {
-            router.push("/login");
+            toast.dismiss();
+            toast.success("Register success", {
+              position: "top-right",
+              autoClose: 2000,
+            });
+            setTimeout(() => {
+              router.push("/login");
+            }, 2000);
           }
         } catch (e) {
           console.error(e);
@@ -282,7 +303,7 @@ const Register = () => {
                   />
                   {errors.password && (
                     <div className=" absolute -bottom-10 left-7 text-red-600 ">
-                      Password must be more than 12 characters
+                      Password must be more than 6 characters
                     </div>
                   )}
                 </div>
@@ -441,6 +462,7 @@ const Register = () => {
           </Link>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 };
