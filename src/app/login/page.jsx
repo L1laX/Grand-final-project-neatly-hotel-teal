@@ -97,7 +97,7 @@ const Login = () => {
             handleClick={() => {
               signIn("google", {
                 callbackUrl:
-                  "https://grand-final-project-neatly-hotel-teal.vercel.app/admin",
+                  "/admin",
               });
             }}
           />
