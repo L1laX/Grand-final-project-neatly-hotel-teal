@@ -16,7 +16,7 @@ model user {
   image           String?
   created_at      DateTime          @default(now()) @db.Timestamptz(3)
   updated_at      DateTime          @updatedAt @db.Timestamptz(3)
-  id              String            @id @default(uuid())
+  id              String            @id @default(cuid())
   emailVerified   DateTime?
   name            String?
   account         account[]
