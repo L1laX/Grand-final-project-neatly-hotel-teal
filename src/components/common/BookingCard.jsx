@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/accordion";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/common/PopupModal";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import { useState, useEffect } from "react";
 export default function BookingCard({
   bookingId,
@@ -62,25 +62,22 @@ export default function BookingCard({
   const isCheckin = (checkin) => {
     const now = new Date();
     const userCheckin = new Date(checkin);
-
     return now - userCheckin < 0;
   };
 
-  console.log("isCheckin", isCheckin(customerCheckin));
-
-  const customerInfo = {
-    checkin: customerCheckin,
-    checkout: customerCheckout,
-    id: bookingId,
+  const perNight = (checkInTime, checkOutTime) => {
+    const inTime = new Date(checkInTime).getTime() / (1000 * 60 * 60);
+    const outTime = new Date(checkOutTime).getTime() / (1000 * 60 * 60);
+    return (outTime - inTime) / 24 - 1;
   };
 
-  console.log("customerInfo**********", customerInfo);
+  console.log(perNight(customerCheckin, customerCheckout));
 
   return (
     <div className="mb-10 flex w-full flex-col ">
-      <p className=" text-sm text-[#9AA1B9]">
+      {/* <p className=" text-sm text-[#9AA1B9]">
         Booking ID: {bookingId.slice(0, 13)}*****
-      </p>
+      </p> */}
 
       <div className="flex flex-col items-center md:flex-row md:items-start">
         {/* Image */}
@@ -144,7 +141,10 @@ export default function BookingCard({
                 <AccordionContent className="flex flex-col text-lg">
                   <div className="mx-5 flex flex-col text-sm lg:mx-8 lg:text-lg xl:mx-14">
                     <div className="my-5 flex justify-between text-[#646D89]">
-                      <div>{guestAmount} Guests (1 Night)</div>
+                      <div>
+                        {guestAmount} Guests (
+                        {perNight(customerCheckin, customerCheckout)} Night)
+                      </div>
                       <div className="text-right max-sm:flex-col">
                         <div className="inline pl-4">Payment success via</div>
                         <div className="ml-2 inline font-semibold">
@@ -229,9 +229,9 @@ export default function BookingCard({
           )}
 
           {/* Delete Button : เดี๊ยวcommentออก */}
-          <button className="visitlink ml-4" onClick={handleDelete}>
+          {/* <button className="visitlink ml-4" onClick={handleDelete}>
             delete
-          </button>
+          </button> */}
         </div>
 
         {/* Popup Room Detail */}

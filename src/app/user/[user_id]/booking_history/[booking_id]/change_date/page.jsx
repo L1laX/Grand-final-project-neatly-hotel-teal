@@ -32,7 +32,7 @@ const ChangeDate = ({ params }) => {
 
   const updateChangeDate = async (data) => {
     try {
-      const res = await axios.put(
+      const res = await axios.delete(
         `/api/user/booking_history/${booking_id}`,
         changeDate,
       );
@@ -116,8 +116,8 @@ const ChangeDate = ({ params }) => {
                   : null}
               </p>
             </section>
-            {/* Changing Date */}
 
+            {/* Changing Date */}
             {loading ? null : (
               <section className="changedate-container mt-6 rounded-md bg-white p-4">
                 <p className=" font-semibold text-[#424C6B]">Change Date</p>

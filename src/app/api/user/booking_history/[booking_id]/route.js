@@ -25,23 +25,26 @@ export async function GET(request, { params: { booking_id } }) {
     });
 
     let bookedRoom = roomType.reduce((acc, room) => {
-      let bookings = room.customerBooking_room.map(booking => booking.customerBooking);
+      let bookings = room.customerBooking_room.map(
+        (booking) => booking.customerBooking,
+      );
       return [...acc, ...bookings];
     }, []);
 
-    bookedRoom = bookedRoom.map(room => {
+    bookedRoom = bookedRoom.map((room) => {
       return {
         checkInDate: room.checkInDate,
-        checkOutDate: room.checkOutDate
+        checkOutDate: room.checkOutDate,
       };
     });
 
     //เอาเฉพาะปัจจุบันไปจนถึงอนาคต
-    bookedRoom = bookedRoom.filter(room => Date.parse(room.checkInDate) >= Date.now());
+    bookedRoom = bookedRoom.filter(
+      (room) => Date.parse(room.checkInDate) >= Date.now(),
+    );
 
-    console.log(bookedRoom)
+    console.log(bookedRoom);
 
-    
     if (!isBookingOrder) {
       return NextResponse.json({
         status: 404,
@@ -52,7 +55,7 @@ export async function GET(request, { params: { booking_id } }) {
     return NextResponse.json({
       data: isBookingOrder,
       status: 200,
-      bookedRoom:bookedRoom,
+      bookedRoom: bookedRoom,
       message: "Booking Order has been fetched",
     });
   } catch (error) {
@@ -89,13 +92,17 @@ export async function PUT(request, { params: { booking_id } }) {
     });
   }
 }
-
+// ให้อัพเดทเวลาจอง
 export async function DELETE(request, { params: { booking_id } }) {
   console.log(booking_id);
   try {
-    const deleteBookingOrder = await prisma.customerBooking.delete({
+    const changeBookingDate = await prisma.customerBooking.update({
       where: {
         id: booking_id,
+      },
+      data: {
+        checkInDate: true,
+        checkOutDate: true,
       },
     });
 

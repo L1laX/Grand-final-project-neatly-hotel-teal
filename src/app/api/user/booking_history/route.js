@@ -17,7 +17,9 @@ export async function GET(request) {
 
       include: {
         user: true,
-        customerBooking_room: { include: { room: true } },
+        customerBooking_room: {
+          include: { room: true },
+        },
         bookingRequest: true,
       },
     });
