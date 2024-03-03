@@ -6,15 +6,21 @@ import Link from "next/link";
 import Image from "next/legacy/image";
 import bg from "/src/asset/background/login-page/bg.png";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import SecondaryBtn from "@/components/common/SecondaryBtn";
+import { usePathname } from "next/navigation";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isValid, setIsValid] = useState(true);
   const router = useRouter();
+  const { asPath, pathname } = usePathname();
+  let urlCallBack = null;
+  if (window) {
+    urlCallBack = `https://${window.location.hostname}/admin`;
+  }
+  console.log(urlCallBack, "urlCallBack");
   //get session data
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -96,8 +102,7 @@ const Login = () => {
             google={true}
             handleClick={() => {
               signIn("google", {
-                callbackUrl:
-                  "/admin",
+                callbackUrl: urlCallBack,
               });
             }}
           />
