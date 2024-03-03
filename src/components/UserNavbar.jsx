@@ -64,7 +64,7 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
                   fill="currentFill"
                 />
               </svg>
-              <span class="sr-only">Loading...</span>
+              <span className="sr-only">Loading...</span>
             </div>
           ) : (
             <div className="logo flex">
@@ -148,7 +148,7 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
                     fill="currentFill"
                   />
                 </svg>
-                <span class="sr-only">Loading...</span>
+                <span className="sr-only">Loading...</span>
               </div>
             ) : (
               <div className="flex items-center gap-5">

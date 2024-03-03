@@ -10,6 +10,8 @@ import { v4 as uuidv4 } from "uuid";
 import { useSession } from "next-auth/react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import DatePicker from "@/components/common/DatePicker";
 export default function UserProfile({ params: { user_id } }) {
   const router = useRouter();
@@ -48,9 +50,9 @@ export default function UserProfile({ params: { user_id } }) {
   // fetching data
   const getUserProfile = async () => {
     try {
+      toast.loading("Loading...");
       const response = await axios.get(`/api/user/edit_profile/${user_id}`);
       // console.log(response.data);
-
       const {
         id_number,
         dateOfBirth,
@@ -66,6 +68,7 @@ export default function UserProfile({ params: { user_id } }) {
         image,
       });
       setOldAvatar(image);
+      toast.dismiss();
     } catch (error) {
       console.log("Fetching API failed...", error);
     }
@@ -108,20 +111,6 @@ export default function UserProfile({ params: { user_id } }) {
     setUserProfiles({ ...userProfiles, country: value });
   };
 
-  // updated data
-  const updatedProfile = async () => {
-    try {
-      const response = await axios.put(`/api/user/edit_profile/${user_id}`, {
-        ...userProfiles,
-      });
-
-      setUserProfiles(response.data);
-    } catch (error) {
-      console.log("Fetching data failed...", error);
-    }
-  };
-  console.log(session, "session");
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -160,7 +149,10 @@ export default function UserProfile({ params: { user_id } }) {
           email: userProfiles.email,
         },
       });
-      alert("Update success");
+      toast.success("Update success", {
+        position: "top-center",
+        autoClose: 3000,
+      });
       return router.refresh();
     }
     //if not update image
@@ -347,6 +339,7 @@ export default function UserProfile({ params: { user_id } }) {
             )}
           </div>
         </div>
+        <ToastContainer position="top-center" />
       </div>
     </form>
   );

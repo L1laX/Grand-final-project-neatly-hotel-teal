@@ -186,7 +186,6 @@ export const RoomCard = ({
                     <AlertDialogTitle>
                       <div className=" flex flex-row justify-between gap-5 p-4 md:ml-20">
                         <h5>{roomName}</h5>
-
                         <AlertDialogCancel>
                           <Image
                             className="cursor-pointer"
@@ -205,7 +204,16 @@ export const RoomCard = ({
                           <CarouselContent>
                             {roomGallery.map((item, index) => (
                               <CarouselItem key={index} className="basis-2/3">
-                                <img src={item.image} alt="room" />
+                                <div className="relative h-[16rem] md:h-[20rem] lg:h-[24rem] xl:h-[40rem]">
+                                  <Image
+                                    className="cursor-grab active:cursor-grabbing"
+                                    layout="fill"
+                                    objectFit="cover"
+                                    src={item.image}
+                                    alt="Suite"
+                                    unoptimized
+                                  />
+                                </div>
                               </CarouselItem>
                             ))}
                           </CarouselContent>
@@ -225,7 +233,7 @@ export const RoomCard = ({
                         {/* Room Amenities */}
                         <div className="py-5">
                           <h5 className="text-black">Room Amenities</h5>
-                          <div className="flex flex-col justify-between gap-6 p-4 md:flex-row">
+                          <div className="flex flex-col flex-wrap justify-between gap-6 p-4 ">
                             {roomAmenity?.map((item, index) => (
                               <ul key={index} className="list-disc">
                                 <li className="bullet-text">{item.name}</li>

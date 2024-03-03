@@ -19,10 +19,10 @@ const BookingHistory = ({ params }) => {
       const res = await axios.get(
         `/api/user/booking_history?userId=${user_id}`,
       );
-      if (res.status === 200) {
+      if (res.data.data.length !== 0 && res.status === 200) {
         setIsLoading(true);
+        setCustomerBooking(res.data.data);
       }
-      setCustomerBooking(res.data.data);
       console.log(res.data.data);
     } catch (error) {
       console.error("Error fetching customer bookings:", error);
@@ -54,6 +54,7 @@ const BookingHistory = ({ params }) => {
 
         {/* Conditional Rendering List */}
         {isLoading ? (
+          customerBooking.length !== 0 &&
           customerBooking.map((booking) => (
             <BookingCard
               key={booking.id}
