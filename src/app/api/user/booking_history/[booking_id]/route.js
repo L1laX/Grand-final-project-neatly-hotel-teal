@@ -85,7 +85,7 @@ export async function PUT(request, { params: { booking_id } }) {
       message: "Booking Order has been cancled",
     });
   } catch (error) {
-    console.log("Error deleting Booking Order:", error);
+    console.log("Error cancel Booking Order:", error);
     return NextResponse.json({
       status: 500,
       message: "Internal Server Error",
@@ -93,16 +93,41 @@ export async function PUT(request, { params: { booking_id } }) {
   }
 }
 // ให้อัพเดทเวลาจอง
-export async function DELETE(request, { params: { booking_id } }) {
-  console.log(booking_id);
+export async function POST(request, { params: { booking_id } }) {
+  const { checkInDate, checkOutDate } = await request.json();
+
+  console.log("ggggg", checkInDate, checkOutDate);
   try {
     const changeBookingDate = await prisma.customerBooking.update({
       where: {
         id: booking_id,
       },
       data: {
-        checkInDate: true,
-        checkOutDate: true,
+        checkInDate: new Date(checkInDate),
+        checkOutDate: new Date(checkOutDate),
+      },
+    });
+
+    return NextResponse.json({
+      data: changeBookingDate,
+      status: 200,
+      message: "Booking Date has been changed",
+    });
+  } catch (error) {
+    console.log("Error Change Booking Date:", error);
+    return NextResponse.json({
+      status: 500,
+      message: "Internal Server Error",
+    });
+  }
+}
+
+export async function DELETE(request, { params: { booking_id } }) {
+  console.log(booking_id);
+  try {
+    const deleteBookingOrder = await prisma.customerBooking.delete({
+      where: {
+        id: booking_id,
       },
     });
 

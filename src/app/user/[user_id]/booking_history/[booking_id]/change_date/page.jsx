@@ -6,15 +6,19 @@ import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import axios from "axios";
 import DateOnlySelector from "@/components/ui/DateOnlySelector";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ChangeDate = ({ params }) => {
   const router = useRouter();
   const { user_id, booking_id } = params;
   const [showModal, setShowModal] = useState(false);
   const [changeDate, setChangeDate] = useState([]);
+  const [newDate, setNewDate] = useState({});
   const [loading, setLoading] = useState(true);
   const [bookedDate, setBookedDate] = useState([]);
-
+  console.log(changeDate, "ffff");
+  console.log(newDate, "อยากเล่น Dota2 แล้วนะ");
   const getChangeDate = async () => {
     try {
       const res = await axios.get(`/api/user/booking_history/${booking_id}`);
@@ -30,18 +34,25 @@ const ChangeDate = ({ params }) => {
     getChangeDate();
   }, []);
 
-  const updateChangeDate = async (data) => {
+  const updateChangeDate = async () => {
     try {
-      const res = await axios.delete(
-        `/api/user/booking_history/${booking_id}`,
-        changeDate,
-      );
+      console.log(changeDate, "chagfeee");
+      const res = await axios.post(`/api/user/booking_history/${booking_id}`, {
+        checkInDate: newDate.from,
+        checkOutDate: newDate.to,
+      });
 
       console.log(res);
       if (res.status === 200)
-        router.push(
-          `/user/${user_id}/booking_history/${booking_id}/change_date/success`,
-        );
+        toast.success("Your booking date has been changed!", {
+          position: "top-center",
+          autoClose: 1000,
+        });
+      setChangeDate({
+        ...changeDate,
+        checkInDate: newDate.from,
+        checkOutDate: newDate.to,
+      });
     } catch (error) {
       console.error("Error updating customer bookings:", error);
     }
@@ -127,6 +138,7 @@ const ChangeDate = ({ params }) => {
                     checkInDate={changeDate?.checkInDate}
                     checkOutDate={changeDate?.checkOutDate}
                     bookedDate={bookedDate}
+                    setNewDate={setNewDate}
                   />
                 </div>
               </section>
@@ -152,12 +164,17 @@ const ChangeDate = ({ params }) => {
       <Modal
         showModal={showModal}
         handleCancel={handleCancel}
-        handleConfirm={() => updateChangeDate(changeDate)}
+        handleConfirm={() =>
+          updateChangeDate(changeDate) && setShowModal(false)
+        }
+        handleClose={() => setShowModal(false)}
         modalTitle="Change Date "
         modalContent="Are you sure you want to change your check-in and check-out date?"
         cancelButton="No, I don't"
         confirmButton="Yes, I want to change"
       />
+
+      <ToastContainer />
     </>
   );
 };
