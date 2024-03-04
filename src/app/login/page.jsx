@@ -15,10 +15,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isValid, setIsValid] = useState(true);
   const router = useRouter();
-  const { asPath, pathname } = usePathname();
-  let urlCallBack = null;
-
-  console.log(urlCallBack, "urlCallBack");
   //get session data
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,12 +36,6 @@ const Login = () => {
       console.error(e);
     }
   };
-
-  useEffect(() => {
-    if (window !== undefined) {
-      urlCallBack = `https://${window.location.hostname}/admin`;
-    }
-  }, []);
 
   return (
     <div className="main-content relative flex">
@@ -105,9 +95,7 @@ const Login = () => {
             secondaryButton="w-full"
             google={true}
             handleClick={() => {
-              signIn("google", {
-                callbackUrl: urlCallBack,
-              });
+              signIn("google");
             }}
           />
         </div>
