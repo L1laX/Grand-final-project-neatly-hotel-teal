@@ -7,9 +7,24 @@ export async function GET(request, { params: { user_id } }) {
       where: { user_id: user_id },
       include: { user: true },
     });
+    const idOAuth = await prisma.user.findUnique({
+      where: {
+        id: user_id,
+      },
+    });
+
+    if (!userProfileData && idOAuth) {
+      return NextResponse.json({
+        message: "first login oauth user",
+        data: idOAuth,
+      });
+    }
 
     if (!userProfileData) {
-      return NextResponse.json({ error: "User Account not found" });
+      return NextResponse.json(
+        { error: "User Account not found" },
+        { status: 400 },
+      );
     }
 
     console.log({ data: userProfileData });

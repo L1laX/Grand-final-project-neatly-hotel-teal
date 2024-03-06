@@ -53,6 +53,15 @@ export default function UserProfile({ params: { user_id } }) {
       toast.loading("Loading...");
       const response = await axios.get(`/api/user/edit_profile/${user_id}`);
       // console.log(response.data);
+      console.log(response);
+      if (response.data.message === "first login oauth user") {
+        setUserProfiles({
+          fullName: response.data.data.name,
+          image: response.data.data.image,
+        });
+        setOldAvatar(response.data.data.image);
+        return toast.dismiss();
+      }
       const {
         id_number,
         dateOfBirth,
@@ -60,7 +69,7 @@ export default function UserProfile({ params: { user_id } }) {
         user: { email, image, name },
       } = response.data.data;
       setUserProfiles({
-        fullName: name,
+        fullName: response.data.data.name,
         id_number,
         dateOfBirth,
         country,
