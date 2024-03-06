@@ -11,6 +11,7 @@ import axios from "axios";
 import { supabase } from "@/lib/supabase";
 const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
   const { data: session, status } = useSession();
+  console.log(session);
   const router = useRouter();
   const [hotelLogoPreview, setHotelLogoPreview] = useState("");
   const [loading, setLoading] = useState(true);
@@ -126,7 +127,9 @@ const UserNavbar = ({ aboutid, serviceid, roomsid }) => {
 
                 <AvatarDropdown
                   image={session?.user.image}
-                  name={session?.user.username}
+                  name={
+                    session?.user.username || session?.user.name.split(" ")[0]
+                  }
                   session_id={session?.user.id}
                 />
               </div>
