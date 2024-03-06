@@ -18,7 +18,7 @@ export async function POST(request, response) {
     console.log(e);
     return NextResponse.json({ error: e.message }, { status: 500 });
   }
-  console.log(customer, "customer");
+
   if (isUpdate && intent_id) {
     console.log(
       amount,
@@ -57,7 +57,7 @@ export async function POST(request, response) {
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
       paymentIntent_id: paymentIntent.id,
-      customer_id: customer.id,
+      customer_id: customer_id ? customer_id : customer.id,
     });
   } catch (e) {
     return NextResponse.json({ error: e.message }, { status: 500 });
